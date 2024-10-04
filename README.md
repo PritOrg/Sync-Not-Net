@@ -1,0 +1,2 @@
+# Sync Not Net
+ The application is designed for organizational use, allowing staff to share information quickly and efficiently. The platform supports real-time updates, where changes to a notebook are instantly visible to all users. Permission control ensures that only authorized individuals can make changes. The system will be developed using the MERN stack (MongoDB, Express, React, Node.js) with a focus on scalability and ease of use.
