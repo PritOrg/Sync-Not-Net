@@ -1,4 +1,4 @@
-## Sync Not Net: Where Code Meets Poetry
+## Sync Not Net
 
 In a world where code and prose were once sworn enemies, one hero dared to dream of a union between the two. Behold, Sync Not Net, the revolutionary tool that transforms your Notepad vibes into a Code Editor paradise!
 
