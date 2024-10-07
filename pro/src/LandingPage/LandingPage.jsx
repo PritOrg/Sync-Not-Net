@@ -8,7 +8,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import HistoryIcon from '@mui/icons-material/History';
 import EditIcon from '@mui/icons-material/Edit';
 import PeopleIcon from '@mui/icons-material/People';
-
+import {useNavigate} from 'react-router-dom'
 const useStyles = makeStyles((theme) => ({
   gradientBackground: {
     minHeight: '100vh',
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 
 function LandingPage() {
   const classes = useStyles();
-
+  const navigate = useNavigate();
   return (
     <div className={classes.gradientBackground}>
       <Container>
@@ -135,7 +135,7 @@ function LandingPage() {
                 </li>
               </ul>
 
-              <Button variant="contained" className={classes.button}>
+              <Button variant="contained" className={classes.button} onClick={()=>{navigate('/SigninSignup')}}>
                 Get Started
               </Button>
             </Box>

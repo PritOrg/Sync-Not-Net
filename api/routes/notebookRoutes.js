@@ -5,9 +5,10 @@ const User = require('../models/userModel');
 
 // Create a new notebook
 router.post('/', async (req, res) => {
-  const { title, content, creatorID, permissions } = req.body;
+  const { title, content,  permissions ,collaborators,tags} = req.body;
+  const creatorID = req.user.id;
   try {
-    const notebook = new Notebook({ title, content, creatorID, permissions });
+    const notebook = new Notebook({ title, content, creatorID, permissions ,collaborators,tags});
     await notebook.save();
     res.status(201).json(notebook);
   } catch (error) {
@@ -19,8 +20,14 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   const { userID } = req.query;  // Optional filter by creatorID or collaboratorID
   try {
-    const notebooks = await Notebook.find({ $or: [{ creatorID: userID }, { collaborators: userID }] });
+    if (userID) {
+      const notebooks = await Notebook.find({ $or: [{ creatorID: userID }, { collaborators: userID }] });
+      res.json(notebooks);
+    }
+
+    const notebooks = await Notebook.find();
     res.json(notebooks);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -40,20 +47,20 @@ router.get('/', async (req, res) => {
 // });
 
 // Get notebook (with password protection)
-router.post('/:id/access', async (req, res) => {
-  const { password } = req.body;  // The password the user provides
+router.get('/:id/access', async (req, res) => {
+  // const { password } = req.body;  // The password the user provides
   try {
     const notebook = await Notebook.findById(req.params.id);
     if (!notebook) {
       return res.status(404).json({ message: 'Notebook not found' });
     }
 
-    if (notebook.password) {
-      const isMatch = await bcrypt.compare(password, notebook.password);
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid password' });
-      }
-    }
+    // if (notebook.password) {
+    //   const isMatch = await bcrypt.compare(password, notebook.password);
+    //   if (!isMatch) {
+    //     return res.status(401).json({ message: 'Invalid password' });
+    //   }
+    // }
 
     res.json(notebook);
   } catch (error) {
@@ -88,18 +95,32 @@ router.put('/:id', async (req, res) => {
 // Delete notebook
 router.delete('/:id', async (req, res) => {
   try {
+    // Ensure that req.user is available (this should be set by authentication middleware)
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'Unauthorized, user not found' });
+    }
+
     const notebook = await Notebook.findById(req.params.id);
+    
+    // Check if the notebook exists
     if (!notebook) {
       return res.status(404).json({ message: 'Notebook not found' });
     }
+
+    // Ensure the creator of the notebook is the one deleting it
     if (notebook.creatorID.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Only the creator can delete this notebook' });
     }
-    await notebook.remove();
+
+    // Delete the notebook
+    await Notebook.findByIdAndDelete(req.params.id);
     res.json({ message: 'Notebook deleted' });
+    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 module.exports = router;
