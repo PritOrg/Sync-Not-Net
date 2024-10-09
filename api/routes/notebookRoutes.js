@@ -2,17 +2,30 @@ const express = require('express');
 const router = express.Router();
 const Notebook = require('../models/notebookModel');
 const User = require('../models/userModel');
+const bcrypt = require('bcrypt');
 
-// Create a new notebook
+// Save or update notebook (used for creating and saving notebooks)
 router.post('/', async (req, res) => {
-  const { title, content,  permissions ,collaborators,tags} = req.body;
-  const creatorID = req.user.id;
+  const { title, content, permissions, collaborators, password, tags } = req.body;
+
   try {
-    const notebook = new Notebook({ title, content, creatorID, permissions ,collaborators,tags});
-    await notebook.save();
-    res.status(201).json(notebook);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
+
+    const newNotebook = new Notebook({
+      title,
+      content,
+      permissions,
+      collaborators,
+      password: hashedPassword,
+      tags,
+    });
+
+    await newNotebook.save();
+    res.status(201).json(newNotebook);
+  } catch (err) {
+    console.log(err);
+    
+    res.status(500).json({ message: 'Error saving notebook' });
   }
 });
 
@@ -47,26 +60,40 @@ router.get('/', async (req, res) => {
 // });
 
 // Get notebook (with password protection)
+// Get notebook access based on ID and check password
 router.get('/:id/access', async (req, res) => {
-  // const { password } = req.body;  // The password the user provides
   try {
     const notebook = await Notebook.findById(req.params.id);
+
     if (!notebook) {
       return res.status(404).json({ message: 'Notebook not found' });
     }
 
-    // if (notebook.password) {
-    //   const isMatch = await bcrypt.compare(password, notebook.password);
-    //   if (!isMatch) {
-    //     return res.status(401).json({ message: 'Invalid password' });
-    //   }
-    // }
-
-    res.json(notebook);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const requiresPassword = notebook.password ? true : false;
+    
+    if (requiresPassword) {
+      res.status(200).json({
+        requiresPassword: true,
+        password: notebook.password, // Send hashed password to compare on frontend
+        title: notebook.title,
+        content: notebook.content,
+        collaborators: notebook.collaborators,
+        permissions: notebook.permissions,
+      });
+    } else {
+      res.status(200).json({
+        requiresPassword: false,
+        title: notebook.title,
+        content: notebook.content,
+        collaborators: notebook.collaborators,
+        permissions: notebook.permissions,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching notebook' });
   }
 });
+
 
 // Update notebook (restricted by permissions)
 router.put('/:id', async (req, res) => {

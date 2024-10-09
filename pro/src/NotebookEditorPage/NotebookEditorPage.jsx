@@ -20,14 +20,16 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { Editor } from '@monaco-editor/react';
 import { io } from 'socket.io-client';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import bcrypt from 'bcryptjs';
 
 const quillModules = {
   toolbar: [
-    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    [{ header: '1' }, { header: '2' }, { font: [] }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
     ['bold', 'italic', 'underline', 'strike'],
-    [{ 'color': [] }, { 'background': [] }],
-    [{ 'align': [] }],
+    [{ color: [] }, { background: [] }],
+    [{ align: [] }],
     ['link', 'image', 'video'],
     ['clean'],
   ],
@@ -42,13 +44,13 @@ function NotebookEditor() {
   const [saveMessage, setSaveMessage] = useState(false);
   const [autoSave, setAutoSave] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
-  const [editorChangeWarning, setEditorChangeWarning] = useState(false); // Warning for editor change
-
-  // New state variables
+  const [editorChangeWarning, setEditorChangeWarning] = useState(false);
   const [permissions, setPermissions] = useState('creator-only');
-  const [collaborators, setCollaborators] = useState('');
+  const [collaborators, setCollaborators] = useState([]);
   const [password, setPassword] = useState('');
   const [tags, setTags] = useState('');
+  const [accessGranted, setAccessGranted] = useState(false);
+  const [notebookHasPassword, setNotebookHasPassword] = useState(false);
   const navigate = useNavigate();
   const saveTimeout = useRef(null);
   const location = useLocation();
@@ -56,28 +58,67 @@ function NotebookEditor() {
 
   useEffect(() => {
     if (notebookId) {
-      fetchNotebook(notebookId);
+      checkNotebookAccess(notebookId);
     }
   }, [notebookId]);
 
   useEffect(() => {
     if (content || title) {
-      if (autoSave) {
+      if (autoSave && accessGranted) {
         clearTimeout(saveTimeout.current);
         saveTimeout.current = setTimeout(handleAutoSave, 2000);
       }
     }
-  }, [content, title, autoSave]);
+  }, [content, title, autoSave, accessGranted]);
 
-  const fetchNotebook = (id) => {
-    socket.emit('joinNotebook', id);
+  const checkNotebookAccess = (id) => {
     fetch(`http://localhost:5000/api/notebooks/${id}/access`, {
       headers: { Authorization: localStorage.getItem('token') },
     })
-      .then(res => res.json())
-      .then(data => {
-        setTitle(data.title);
-        setContent(data.content);
+      .then((res) => res.json())
+      .then(async (data) => {
+        if (data.requiresPassword) {
+          setNotebookHasPassword(true);
+          const { value: enteredPassword } = await Swal.fire({
+            title: 'Enter Notebook Password',
+            input: 'password',
+            inputPlaceholder: 'Enter your password',
+            inputAttributes: {
+              autocapitalize: 'off',
+              autocorrect: 'off',
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+          });
+
+          if (enteredPassword && bcrypt.compareSync(enteredPassword, data.password)) {
+            setAccessGranted(true);
+            setTitle(data.title);
+            setContent(data.content);
+            setCollaborators(data.collaborators);
+            setPermissions(data.permissions);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Access Denied',
+              text: 'Incorrect password!',
+            });
+            navigate('/notebooks'); // Redirect user if access is denied
+          }
+        } else {
+          setAccessGranted(true);
+          setTitle(data.title);
+          setContent(data.content);
+          setCollaborators(data.collaborators);
+          setPermissions(data.permissions);
+        }
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to access notebook.',
+        });
       });
   };
 
@@ -85,8 +126,10 @@ function NotebookEditor() {
     if (!notebookId) {
       setOpenDialog(true);
     } else {
-      socket.emit('updateNotebook', notebookId, { title, content });
-      setSaveMessage(true);
+      if (accessGranted) {
+        socket.emit('updateNotebook', notebookId, { title, content });
+        setSaveMessage(true);
+      }
     }
   };
 
@@ -99,10 +142,9 @@ function NotebookEditor() {
       title,
       content,
       permissions,
-      collaborators: collaborators.split(',').map(collab => collab.trim()),
+      collaborators,
       password,
-      tags: tags.split(',').map(tag => tag.trim()),
-      
+      tags: tags.split(',').map((tag) => tag.trim()),
     };
 
     fetch('http://localhost:5000/api/notebooks', {
@@ -113,11 +155,17 @@ function NotebookEditor() {
       },
       body: JSON.stringify(newNotebook),
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log(data);
-        
         navigate('/notebook', { state: { notebookId: data._id } });
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to create notebook.',
+        });
       });
 
     setOpenDialog(false);
@@ -126,18 +174,20 @@ function NotebookEditor() {
 
   const handleAutoSave = () => {
     if (content || title) {
-      socket.emit('updateNotebook', notebookId, { title, content });
+      if (accessGranted) {
+        socket.emit('updateNotebook', notebookId, { title, content });
+      }
     }
   };
 
   const toggleEditor = () => {
-    setEditorChangeWarning(true); // Open the warning dialog
+    setEditorChangeWarning(true);
   };
 
   const handleEditorChangeConfirmation = (confirm) => {
     setEditorChangeWarning(false);
     if (confirm) {
-      setUseQuill(!useQuill); // Switch the editor
+      setUseQuill(!useQuill);
     }
   };
 
@@ -181,14 +231,21 @@ function NotebookEditor() {
 
       <Button
         variant="contained"
-        sx={{ marginBottom: '20px', backgroundColor: '#61dafb', color: '#000' }}
+        sx={{ marginBottom: '10px', backgroundColor: '#61dafb', color: '#000' }}
         onClick={toggleEditor}
       >
         {useQuill ? 'Switch to Code Editor' : 'Switch to Text Editor'}
       </Button>
 
       <FormControlLabel
-        control={<Switch checked={autoSave} onChange={handleAutoSaveToggle} />}
+        control={
+          <Switch
+            checked={autoSave}
+            onChange={handleAutoSaveToggle}
+            color="primary"
+            sx={{ marginLeft: '20px' }}
+          />
+        }
         label="Autosave"
         sx={{ marginBottom: '20px' }}
       />
@@ -219,7 +276,7 @@ function NotebookEditor() {
             onChange={(value) => setContent(value)}
             options={{
               minimap: { enabled: false },
-              fontSize: 16,
+              fontSize: 20,
               scrollBeyondLastLine: false,
               automaticLayout: true,
             }}
@@ -245,66 +302,62 @@ function NotebookEditor() {
         message="Notebook saved!"
       />
 
-      {/* Dialog for notebook settings */}
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>Notebook Settings</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus
             margin="dense"
-            label="Password"
-            type="password"
+            label="Collaborators"
             fullWidth
-            variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Permissions"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={permissions}
-            onChange={(e) => setPermissions(e.target.value)}
-            helperText="e.g., creator-only, anyone"
-          />
-          <TextField
-            margin="dense"
-            label="Collaborators (comma-separated)"
-            type="text"
-            fullWidth
-            variant="outlined"
             value={collaborators}
             onChange={(e) => setCollaborators(e.target.value)}
           />
           <TextField
             margin="dense"
-            label="Tags (comma-separated)"
-            type="text"
+            label="Permissions"
             fullWidth
-            variant="outlined"
+            value={permissions}
+            onChange={(e) => setPermissions(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Password"
+            fullWidth
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Tags"
+            fullWidth
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button onClick={handleDialogSave}>Create Notebook</Button>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDialogSave} color="primary">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
 
-      {/* Dialog for editor change warning */}
-      <Dialog open={editorChangeWarning} onClose={() => setEditorChangeWarning(false)}>
-        <DialogTitle>Warning: Editor Change</DialogTitle>
+      <Dialog open={editorChangeWarning}>
+        <DialogTitle>Switch Editor</DialogTitle>
         <DialogContent>
           <Typography>
-            Changing the editor type will modify the content formatting. Please copy your content before switching to avoid data loss.
+            Switching editor will change your formatting. Please copy your content before switching.
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleEditorChangeConfirmation(false)}>Cancel</Button>
-          <Button onClick={() => handleEditorChangeConfirmation(true)}>Switch Editor</Button>
+          <Button onClick={() => handleEditorChangeConfirmation(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleEditorChangeConfirmation(true)} color="primary">
+            Confirm
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>

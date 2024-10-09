@@ -13,14 +13,7 @@ const notebookModel = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
+  
 
-// Pre-save hook for hashing the notebook password if it exists
-notebookModel.pre('save', async function (next) {
-  if (this.isModified('password') && this.password) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  }
-  next();
-});
 
 module.exports = mongoose.model('Notebook', notebookModel);
