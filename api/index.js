@@ -36,17 +36,21 @@ app.use('/api/notebooks', verifyToken, notebookRoutes);  // Protected routes
 // Real-time with Socket.io
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
+  const activeUsers = new Map(); // Map of notebookId -> array of users typing
 
   // Join the notebook room based on its ID
-  socket.on('joinNotebook', (notebookId) => {
+  socket.on('joinNotebook', (notebookId, userId) => {
     socket.join(notebookId);
-    console.log(`User joined notebook room: ${notebookId}`);
+    activeUsers.set(socket.id, { notebookId, userId });
+  
+    // Broadcast to others in the room that a new user has joined
+    socket.to(notebookId).emit('userJoined', userId);
+    console.log(`User ${userId} joined notebook room: ${notebookId}`);
   });
-
-  // Listen for notebook content updates
-  socket.on('updateNotebook', async (notebookId, updatedContent) => {
-    console.log(`Notebook ${notebookId} updated by user`);
-
+  
+  // Listen for notebook content updates and broadcast to all clients except the sender
+  socket.on('updateNotebook', async (notebookId, updatedContent, userId) => {
+    console.log(`Notebook ${notebookId} updated by user ${userId}`);
     try {
       // Update the notebook in the database
       const notebook = await Notebook.findById(notebookId);
@@ -55,21 +59,38 @@ io.on('connection', (socket) => {
         notebook.content = updatedContent.content || notebook.content;
         notebook.version += 1; // Increment version
         await notebook.save();
-
-        // Emit the update to everyone in the room
-        io.to(notebookId).emit('notebookUpdated', notebook);
-      } else {
-        console.log('Notebook not found');
+  
+        // Broadcast to all clients except the sender
+        socket.to(notebookId).emit('notebookUpdated', {
+          notebookId,
+          title: notebook.title,
+          content: notebook.content,
+          userId,
+        });
       }
     } catch (error) {
       console.error('Error updating notebook:', error);
     }
   });
-
-  // Handle disconnect
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
+  
+  // Notify users when someone starts typing
+  socket.on('typing', ({ notebookId, userId }) => {
+    socket.to(notebookId).emit('userTyping', userId);
   });
+  
+  // Notify users when someone stops typing
+  socket.on('stopTyping', ({ notebookId, userId }) => {
+    socket.to(notebookId).emit('userStoppedTyping', userId);
+  });
+  
+  // Cleanup on disconnect
+  socket.on('disconnect', () => {
+    const user = activeUsers.get(socket.id);
+    if (user) {
+      const { notebookId, userId } = user;
+      activeUsers.delete(socket.id);
+      socket.to(notebookId).emit('userLeft', userId);
+    }});
 });
 
 // Server listening

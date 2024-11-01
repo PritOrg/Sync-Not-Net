@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const notebookModel = new mongoose.Schema({
   title: { type: String, required: true },
@@ -10,10 +9,12 @@ const notebookModel = new mongoose.Schema({
   password: { type: String }, // Optional password protection
   version: { type: Number, default: 1 },
   tags: [String],
+  editorMode: { type: String, default: 'quill' }, // 'quill' or 'monaco'
+  urlIdentifier: { type: String, unique: true},
+  autoSave: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
   
-
 
 module.exports = mongoose.model('Notebook', notebookModel);

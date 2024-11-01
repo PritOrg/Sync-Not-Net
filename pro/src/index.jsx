@@ -4,24 +4,26 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import LandingPage from './LandingPage/LandingPage';
 import NotebookEditor from './NotebookEditorPage/NotebookEditorPage';
-import PastelBackground from './Components/PastelBackground';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignInSignUpPage from './SigninSignup/SigninSignupPage';
 import NotebooksPage from './NotebooksPage/NotebooksPage';
+import Layout from './Components/Layout';
+import ProfilePage from './Profile/ProfilePage';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <Router>
-    <PastelBackground>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path='/Notebook' element={<NotebookEditor />} />
-        <Route path='/SigninSignup' element={<SignInSignUpPage />} />
-        <Route path='/notebooks' element={<NotebooksPage />} />
+        <Route element={<Layout />}>
+          <Route index element={<LandingPage />} />
+          <Route path='/Notebook/:urlIdentifier' element={<NotebookEditor />} />
+          <Route path='/SigninSignup' element={<SignInSignUpPage />} />
+          <Route path='/notebooks' element={<NotebooksPage />} />
+          <Route path='/profile' element={<ProfilePage />} />
+        </Route>
       </Routes>
-    </PastelBackground>
   </Router>
 );
 reportWebVitals();

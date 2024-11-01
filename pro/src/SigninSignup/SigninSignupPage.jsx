@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation to the notebook list page
-import { Box, Button, TextField, Typography, Snackbar } from '@mui/material';
-// import { io } from 'socket.io-client'; // Optional for real-time features
+import { useNavigate } from 'react-router-dom';
+import { 
+  Box, 
+  Button, 
+  TextField, 
+  Typography, 
+  Alert,
+  IconButton,
+  InputAdornment,
+  CircularProgress,
+  Paper
+} from '@mui/material';
+import { Visibility, VisibilityOff, Email, Person, Lock } from '@mui/icons-material';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 
@@ -9,44 +19,57 @@ const SignInSignUpPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   
-  const [isSignUp, setIsSignUp] = useState(false); // Toggle between sign-in and sign-up
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState(''); // Only needed for sign-up
-  const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar to show error message
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: ''
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (prop) => (event) => {
+    setFormData({ ...formData, [prop]: event.target.value });
+    setError(''); // Clear error when user starts typing
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    
     try {
-      if (isSignUp) {
-        // Sign Up logic
-        const response = await axios.post('http://localhost:5000/api/users/register', { name, email, password });
-        console.log(response.data); // Handle successful registration
-        navigate('/notebooks'); // Redirect to notebook list
-      } else {
-        // Login logic
-        const response = await axios.post('http://localhost:5000/api/users/login', { email, password });
-        console.log(response.data); // Handle successful login
-        localStorage.setItem('token', response.data.token); // Store token for authentication
-        navigate('/notebooks'); // Redirect to notebook list
+      const endpoint = isSignUp ? '/api/users/register' : '/api/users/login';
+      const payload = isSignUp 
+        ? { name: formData.name, email: formData.email, password: formData.password } 
+        : { email: formData.email, password: formData.password };
+
+      const response = await axios.post(`http://localhost:5000${endpoint}`, payload);
+      console.log(response);
+      
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        navigate('/notebooks');
       }
     } catch (error) {
-      if (!isSignUp && error.response.status === 404) {
-        // User does not exist, switch to Sign Up with email prefilled
+      const message = error.response?.message || 'An error occurred';
+      if (!isSignUp && error.response?.status === 404) {
         setIsSignUp(true);
-        setPassword(''); // Clear password
-        setErrorMessage('User does not exist. Please register.');
+        setFormData(prev => ({ ...prev, password: '' }));
+        setError('Account not found. Please register.');
       } else {
-        setErrorMessage('Error: ' + error.response.data.message);
+        setError(message);
       }
-      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
 
   const toggleForm = () => {
     setIsSignUp(!isSignUp);
-    setErrorMessage('');
+    setError('');
+    setFormData({ email: formData.email, password: '', name: '' });
   };
 
   return (
@@ -57,67 +80,137 @@ const SignInSignUpPage = () => {
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '100vh',
-        background: 'none', // Keep the random pastel background as is
         padding: '20px',
       }}
     >
-      <Box
+      <Paper
+        elevation={8}
         sx={{
-          width: '400px',
+          width: { xs: '90%', sm: '400px' },
           padding: '40px',
-          backgroundColor: '#fff',
-          borderRadius: '15px',
-          boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
-          textAlign: 'center',
+          borderRadius: '20px',
+          transition: 'transform 0.2s ease-in-out',
+          '&:hover': {
+            transform: 'translateY(-5px)'
+          }
         }}
       >
-        <Typography variant="h4" sx={{ marginBottom: '20px', fontWeight: 'bold', color: theme.palette.primary.main }}>
-          {isSignUp ? 'Register' : 'Login'}
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            marginBottom: '30px', 
+            fontWeight: 700,
+            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent'
+          }}
+        >
+          {isSignUp ? 'Create Account' : 'Welcome Back'}
         </Typography>
+
+        {error && (
+          <Alert 
+            severity="error" 
+            sx={{ mb: 2, borderRadius: '8px' }}
+            onClose={() => setError('')}
+          >
+            {error}
+          </Alert>
+        )}
 
         <form onSubmit={handleFormSubmit}>
           {isSignUp && (
             <TextField
               label="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formData.name}
+              onChange={handleChange('name')}
               fullWidth
               margin="normal"
               variant="outlined"
               required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Person color="primary" />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ mb: 2 }}
             />
           )}
 
           <TextField
             label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange('email')}
             fullWidth
             margin="normal"
             variant="outlined"
             required
             type="email"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Email color="primary" />
+                </InputAdornment>
+              ),
+            }}
+            sx={{ mb: 2 }}
           />
 
           <TextField
             label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange('password')}
             fullWidth
             margin="normal"
             variant="outlined"
             required
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Lock color="primary" />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
 
           <Button
             variant="contained"
-            color="primary"
             fullWidth
             type="submit"
-            sx={{ marginTop: '20px', padding: '10px', backgroundColor: theme.palette.primary.dark }}
+            disabled={loading}
+            sx={{
+              marginTop: '24px',
+              padding: '12px',
+              borderRadius: '8px',
+              textTransform: 'none',
+              fontSize: '1.1rem',
+              background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 6px 12px rgba(0,0,0,0.2)'
+              },
+              transition: 'all 0.2s ease-in-out'
+            }}
           >
-            {isSignUp ? 'Register' : 'Login'}
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              isSignUp ? 'Create Account' : 'Sign In'
+            )}
           </Button>
         </form>
 
@@ -125,21 +218,19 @@ const SignInSignUpPage = () => {
           onClick={toggleForm}
           sx={{
             marginTop: '20px',
-            textDecoration: 'underline',
             color: theme.palette.primary.main,
+            textTransform: 'none',
+            '&:hover': {
+              background: 'transparent',
+              color: theme.palette.primary.dark
+            }
           }}
         >
-          {isSignUp ? 'Already have an account? Login' : "Don't have an account? Register"}
+          {isSignUp 
+            ? 'Already have an account? Sign in' 
+            : "Don't have an account? Create one"}
         </Button>
-      </Box>
-
-      {/* Snackbar for error messages */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message={errorMessage}
-      />
+      </Paper>
     </Box>
   );
 };
