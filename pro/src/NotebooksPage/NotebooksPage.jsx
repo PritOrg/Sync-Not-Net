@@ -20,6 +20,7 @@ const NotebooksPage = () => {
   const [notebooks, setNotebooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const API_BASE_URL = process.env.BACKEND_URL;
 
   // Function to strip HTML tags and decode entities
   const stripHtml = (html) => {
@@ -32,7 +33,7 @@ const NotebooksPage = () => {
     const fetchNotebooks = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/notebooks', {
+        const response = await axios.get(`${API_BASE_URL}/api/notebooks`, {
           headers: {
             "Authorization": token,
           },
