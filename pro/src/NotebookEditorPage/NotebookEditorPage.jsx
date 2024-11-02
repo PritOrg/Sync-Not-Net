@@ -26,7 +26,7 @@ import PasswordPrompt from './PasswordPrompt';
 import Swal from 'sweetalert2';
 import { io } from 'socket.io-client';
 import { useNavigate, useParams } from 'react-router-dom';
-const API_BASE_URL = process.env.BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const saveThrottleInterval = 5000; // Throttle save every 5 seconds
 const typingDelay = 100; // Throttle typing check every 100ms
@@ -274,7 +274,6 @@ const NotebookEditor = () => {
     loadNotebook();
   }, [urlIdentifier_from_url]);
   const initializeNotebook = (data) => {
-    console.log(data);
 
     setNotebookData(data);
     setTitle(data.title);

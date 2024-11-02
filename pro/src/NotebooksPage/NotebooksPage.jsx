@@ -16,11 +16,11 @@ import axios from 'axios';
 import { format, formatDistanceToNow } from 'date-fns';
 import { Edit, Timer, CalendarMonth, OpenInNew } from '@mui/icons-material';
 
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const NotebooksPage = () => {
   const [notebooks, setNotebooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const API_BASE_URL = process.env.BACKEND_URL;
 
   // Function to strip HTML tags and decode entities
   const stripHtml = (html) => {

@@ -14,11 +14,11 @@ import {
 import { Visibility, VisibilityOff, Email, Person, Lock } from '@mui/icons-material';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const SignInSignUpPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const API_BASE_URL = process.env.BACKEND_URL;
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
@@ -45,9 +45,7 @@ const SignInSignUpPage = () => {
       const payload = isSignUp 
         ? { name: formData.name, email: formData.email, password: formData.password } 
         : { email: formData.email, password: formData.password };
-
       const response = await axios.post(`${API_BASE_URL + endpoint}`, payload);
-      console.log(response);
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
