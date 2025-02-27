@@ -1163,173 +1163,49 @@ function Layout(props) {
       >
         <Outlet />
         
-        {/* Footer */}
-        <Box
-          component="footer"
-          sx={{
-            mt: 'auto',
-            py: 4,
-            px: 3,
-            bgcolor: alpha(currentTheme.background.subtle, 0.5),
-            borderTop: '1px solid',
-            borderColor: currentTheme.divider,
-          }}
-        >
-          <Container maxWidth="lg">
-            <Grid container spacing={3} alignItems="center">
-              <Grid xs={12} md={4}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: { xs: 2, md: 0 } }}>
-                  <Box sx={{ 
-                    position: 'relative', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    width: 32, 
-                    height: 32, 
-                    borderRadius: 1,
-                    background: currentTheme.primary.gradient,
-                    boxShadow: `0 2px 8px ${alpha(currentTheme.primary.main, 0.3)}`
-                  }}>
-                    <Book size={18} color="white" />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 700,
-                      letterSpacing: -0.5,
-                      background: currentTheme.primary.gradient,
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      color: 'transparent',
-                    }}
-                  >
-                    SyncNote
-                  </Typography>
-                </Box>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                  Your modern note-taking solution. Organize thoughts, collaborate, and access your notes from anywhere.
-                </Typography>
-              </Grid>
-              
-              <Grid xs={6} md={3}>
-                <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
-                  Product
-                </Typography>
-                <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
-                  {['Features', 'Pricing', 'Templates', 'Privacy', 'Terms'].map((item) => (
-                    <Box component="li" key={item} sx={{ mb: 1 }}>
-                      <Link
-                        to={`/${item.toLowerCase()}`}
-                        style={{ textDecoration: 'none' }}
-                        onClick={() => window.scrollTo(0, 0)}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: currentTheme.text.secondary,
-                            '&:hover': {
-                              color: currentTheme.primary.main,
-                            }
-                          }}
-                        >
-                          {item}
-                        </Typography>
-                      </Link>
-                    </Box>
-                  ))}
-                </Box>
-              </Grid>
-              
-              <Grid xs={6} md={3}>
-                <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
-                  Support
-                </Typography>
-                <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
-                  {['Help Center', 'Contact Us', 'Community', 'Status', 'Blog'].map((item) => (
-                    <Box component="li" key={item} sx={{ mb: 1 }}>
-                      <Link
-                        to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
-                        style={{ textDecoration: 'none' }}
-                        onClick={() => window.scrollTo(0, 0)}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: currentTheme.text.secondary,
-                            '&:hover': {
-                              color: currentTheme.primary.main,
-                            }
-                          }}
-                        >
-                          {item}
-                        </Typography>
-                      </Link>
-                    </Box>
-                  ))}
-                </Box>
-              </Grid>
-              
-              <Grid xs={12} md={2}>
-                <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2, mt: { xs: 2, md: 0 } }}>
-                  Connect
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  {[
-                    { icon: Twitter, label: 'Twitter' },
-                    { icon: Facebook, label: 'Facebook' },
-                    { icon: Instagram, label: 'Instagram' },
-                    { icon: Linkedin, label: 'LinkedIn' }
-                  ].map((social) => (
-                    <Tooltip key={social.label} title={social.label}>
-                      <IconButton
-                        size="small"
-                        sx={{
-                          color: currentTheme.text.secondary,
-                          '&:hover': {
-                            color: currentTheme.primary.main,
-                            bgcolor: alpha(currentTheme.primary.main, 0.1)
-                          }
-                        }}
-                      >
-                        <social.icon size={18} />
-                      </IconButton>
-                    </Tooltip>
-                  ))}
-                </Box>
-              </Grid>
-              
-              <Grid xs={12}>
-                <Divider sx={{ my: 3, borderColor: currentTheme.divider }} />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-                  <Typography variant="caption" color="text.disabled">
-                    © {new Date().getFullYear()} SyncNote. All rights reserved.
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 3 }}>
-                    {['Privacy Policy', 'Terms of Service', 'Cookies'].map((item) => (
-                      <Link
-                        key={item}
-                        to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
-                        style={{ textDecoration: 'none' }}
-                      >
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: currentTheme.text.disabled,
-                            '&:hover': {
-                              color: currentTheme.text.secondary,
-                            }
-                          }}
-                        >
-                          {item}
-                        </Typography>
-                      </Link>
-                    ))}
-                  </Box>
-                </Box>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
+       {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">Sync Note Net</h3>
+              <p className="text-gray-400">
+                The intelligent collaborative note-taking platform for modern teams.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Product</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Security</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Enterprise</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Resources</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Documentation</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">API</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Company</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Legal</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+            <p>© 2025 Sync Note Net. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
       </Box>
     </Box>
   );
