@@ -234,7 +234,7 @@ function Layout(props) {
   const handleLogout = () => {
     // Add logout logic here
     handleMenuClose();
-    navigate('/login');
+    navigate('/SignInSignUp');
   };
 
   const handleSearchSubmit = (e) => {
