@@ -116,7 +116,7 @@ function Layout() {
   const handleLogout = () => {
     // Add logout logic here
     handleMenuClose();
-    navigate('/login');
+    navigate('/SignInSignUp');
   };
 
   return (
