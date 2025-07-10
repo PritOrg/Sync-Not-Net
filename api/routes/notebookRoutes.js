@@ -12,6 +12,13 @@ const {
 } = require('../middlewares/validation');
 const { optionalAuth, verifyToken } = require('../middlewares/verifyToken');
 const logger = require('../utils/logger');
+const { 
+  convertToXMLFormat, 
+  extractContentFromXML, 
+  updateXMLContent,
+  generateEmptyXMLContent,
+  validateXMLStructure
+} = require('../utils/notebookFormatUtils');
 
 // Helper function to get io instance from app
 const getIO = (req) => {
@@ -145,10 +152,11 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
       return res.json({
         _id: notebook._id,
         title: notebook.title,
-        content: notebook.content,
+        content: extractContentFromXML(notebook.content), // Send plain content to frontend
         urlIdentifier: notebook.urlIdentifier,
         permissions: notebook.permissions,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         tags: notebook.tags,
         version: notebook.version,
@@ -203,10 +211,11 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
       return res.json({
         _id: notebook._id,
         title: notebook.title,
-        content: notebook.content,
+        content: extractContentFromXML(notebook.content), // Send plain content to frontend
         urlIdentifier: notebook.urlIdentifier,
         permissions: notebook.permissions,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         tags: notebook.tags,
         version: notebook.version,
@@ -309,10 +318,11 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
         return res.json({
           _id: notebook._id,
           title: notebook.title,
-          content: notebook.content,
+          content: extractContentFromXML(notebook.content), // Send plain content to frontend
           urlIdentifier: notebook.urlIdentifier,
           permissions: notebook.permissions,
           editorMode: notebook.editorMode,
+          language: notebook.language,
           autoSave: notebook.autoSave,
           tags: notebook.tags,
           version: notebook.version,
@@ -441,10 +451,11 @@ router.post('/:urlIdentifier/verify-password', optionalAuth, catchAsync(async (r
   res.json({
     _id: notebook._id,
     title: notebook.title,
-    content: notebook.content,
+    content: extractContentFromXML(notebook.content), // Send plain content to frontend
     urlIdentifier: notebook.urlIdentifier,
     permissions: notebook.permissions,
     editorMode: notebook.editorMode,
+    language: notebook.language,
     autoSave: notebook.autoSave,
     tags: notebook.tags,
     version: notebook.version,
@@ -469,7 +480,7 @@ router.post('/:urlIdentifier/verify-password', optionalAuth, catchAsync(async (r
 
 // Create new notebook with enhanced validation and security
 router.post('/', verifyToken, validateNotebookCreation, catchAsync(async (req, res) => {
-  const { title, content, permissions, collaborators, password, tags, editorMode, autoSave } = req.body;
+  const { title, content, permissions, collaborators, password, tags, editorMode, autoSave, language } = req.body;
 
   // Ensure collaborators is an array of user IDs
   let collaboratorIds = [];
@@ -501,16 +512,22 @@ router.post('/', verifyToken, validateNotebookCreation, catchAsync(async (req, r
   // Hash password if provided
   const hashedPassword = password ? await bcrypt.hash(password, 12) : null;
 
+  // Ensure content is in XML format
+  const xmlContent = content ? 
+    convertToXMLFormat(content, language || 'javascript', editorMode || 'quill') : 
+    generateEmptyXMLContent(language || 'javascript');
+
   // Create new notebook
   const newNotebook = new Notebook({
     creatorID: req.user.id,
     title: title || 'Untitled Notebook',
-    content: content || '',
+    content: xmlContent,
     permissions: permissions || 'everyone',
     collaborators: collaboratorIds,
     password: hashedPassword,
     tags: tags || [],
     editorMode: editorMode || 'quill',
+    language: language || 'javascript',
     autoSave: autoSave !== undefined ? autoSave : true,
     urlIdentifier,
   });
@@ -526,7 +543,7 @@ router.post('/', verifyToken, validateNotebookCreation, catchAsync(async (req, r
     notebook: {
       _id: newNotebook._id,
       title: newNotebook.title,
-      content: newNotebook.content,
+      content: extractContentFromXML(newNotebook.content), // Send plain content to frontend
       permissions: newNotebook.permissions,
       collaborators: newNotebook.collaborators,
       tags: newNotebook.tags,
@@ -714,6 +731,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         urlIdentifier: notebook.urlIdentifier,
         permissions: notebook.permissions,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         tags: notebook.tags,
         createdAt: notebook.createdAt,
@@ -743,6 +761,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         urlIdentifier: notebook.urlIdentifier,
         permissions: notebook.permissions,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         tags: notebook.tags,
         createdAt: notebook.createdAt,
@@ -758,7 +777,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
           name: collab.name,
           email: collab.email
         })),
-        content: notebook.content,
+        content: extractContentFromXML(notebook.content), // Send plain content to frontend
         requiresPassword: false,
         hasAccess: true,
         accessLevel: 'edit',
@@ -786,6 +805,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         urlIdentifier: notebook.urlIdentifier,
         permissions: notebook.permissions,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         tags: notebook.tags,
         createdAt: notebook.createdAt,
@@ -815,6 +835,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         urlIdentifier: notebook.urlIdentifier,
         permissions: notebook.permissions,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         tags: notebook.tags,
         createdAt: notebook.createdAt,
@@ -830,7 +851,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
           name: collab.name,
           email: collab.email
         })),
-        content: notebook.content,
+        content: extractContentFromXML(notebook.content), // Send plain content to frontend
         requiresPassword: false,
         hasAccess: true,
         accessLevel: 'edit',
@@ -851,6 +872,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         urlIdentifier: notebook.urlIdentifier,
         permissions: notebook.permissions,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         tags: notebook.tags,
         createdAt: notebook.createdAt,
@@ -880,6 +902,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         urlIdentifier: notebook.urlIdentifier,
         permissions: notebook.permissions,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         tags: notebook.tags,
         createdAt: notebook.createdAt,
@@ -895,7 +918,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
           name: collab.name,
           email: collab.email
         })),
-        content: notebook.content,
+        content: extractContentFromXML(notebook.content), // Send plain content to frontend
         requiresPassword: false,
         hasAccess: true,
         accessLevel: 'edit',
@@ -912,107 +935,107 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
 }));
 
 // Verify notebook password
-router.post('/:urlIdentifier/verify-password', validateNotebookAccess, catchAsync(async (req, res) => {
-  const { password, guestId, guestName } = req.body;
+// router.post('/:urlIdentifier/verify-password', validateNotebookAccess, catchAsync(async (req, res) => {
+//   const { password, guestId, guestName } = req.body;
 
-  if (!password) {
-    return res.status(400).json({
-      error: 'Password required',
-      message: 'Please provide a password'
-    });
-  }
+//   if (!password) {
+//     return res.status(400).json({
+//       error: 'Password required',
+//       message: 'Please provide a password'
+//     });
+//   }
 
-  const notebook = await Notebook.findOne({ urlIdentifier: req.params.urlIdentifier });
+//   const notebook = await Notebook.findOne({ urlIdentifier: req.params.urlIdentifier });
 
-  if (!notebook) {
-    return res.status(404).json({
-      error: 'Notebook not found',
-      message: 'The requested notebook does not exist'
-    });
-  }
+//   if (!notebook) {
+//     return res.status(404).json({
+//       error: 'Notebook not found',
+//       message: 'The requested notebook does not exist'
+//     });
+//   }
 
-  if (!notebook.password) {
-    return res.status(400).json({
-      error: 'No password required',
-      message: 'This notebook is not password protected'
-    });
-  }
+//   if (!notebook.password) {
+//     return res.status(400).json({
+//       error: 'No password required',
+//       message: 'This notebook is not password protected'
+//     });
+//   }
 
-  const isPasswordValid = await bcrypt.compare(password, notebook.password);
+//   const isPasswordValid = await bcrypt.compare(password, notebook.password);
 
-  if (!isPasswordValid) {
-    logger.warn(`Invalid password attempt for notebook ${notebook.urlIdentifier}`);
-    return res.status(401).json({
-      error: 'Invalid password',
-      message: 'The password you entered is incorrect'
-    });
-  }
+//   if (!isPasswordValid) {
+//     logger.warn(`Invalid password attempt for notebook ${notebook.urlIdentifier}`);
+//     return res.status(401).json({
+//       error: 'Invalid password',
+//       message: 'The password you entered is incorrect'
+//     });
+//   }
 
-  // Password is valid - return notebook content
-  await notebook.populate('creatorID', 'name email');
-  await notebook.populate('collaborators', 'name email');
+//   // Password is valid - return notebook content
+//   await notebook.populate('creatorID', 'name email');
+//   await notebook.populate('collaborators', 'name email');
 
-  // If guest credentials are present, return guest info and set accessLevel/userRole accordingly
-  if (guestId && guestName) {
-    return res.json({
-      _id: notebook._id,
-      title: notebook.title,
-      content: notebook.content,
-      urlIdentifier: notebook.urlIdentifier,
-      permissions: notebook.permissions,
-      editorMode: notebook.editorMode,
-      autoSave: notebook.autoSave,
-      tags: notebook.tags,
-      version: notebook.version,
-      creator: {
-        id: notebook.creatorID._id,
-        name: notebook.creatorID.name,
-        email: notebook.creatorID.email
-      },
-      collaborators: notebook.collaborators.map(collab => ({
-        id: collab._id,
-        name: collab.name,
-        email: collab.email
-      })),
-      hasAccess: true,
-      accessLevel: 'edit',
-      userRole: 'guest',
-      guestUser: {
-        id: guestId,
-        name: guestName,
-        role: 'guest'
-      },
-      message: 'Password verified successfully (guest)'
-    });
-  }
+//   // If guest credentials are present, return guest info and set accessLevel/userRole accordingly
+//   if (guestId && guestName) {
+//     return res.json({
+//       _id: notebook._id,
+//       title: notebook.title,
+//       content: notebook.content,
+//       urlIdentifier: notebook.urlIdentifier,
+//       permissions: notebook.permissions,
+//       editorMode: notebook.editorMode,
+//       autoSave: notebook.autoSave,
+//       tags: notebook.tags,
+//       version: notebook.version,
+//       creator: {
+//         id: notebook.creatorID._id,
+//         name: notebook.creatorID.name,
+//         email: notebook.creatorID.email
+//       },
+//       collaborators: notebook.collaborators.map(collab => ({
+//         id: collab._id,
+//         name: collab.name,
+//         email: collab.email
+//       })),
+//       hasAccess: true,
+//       accessLevel: 'edit',
+//       userRole: 'guest',
+//       guestUser: {
+//         id: guestId,
+//         name: guestName,
+//         role: 'guest'
+//       },
+//       message: 'Password verified successfully (guest)'
+//     });
+//   }
 
-  // Otherwise, treat as authenticated user
-  res.json({
-    _id: notebook._id,
-    title: notebook.title,
-    content: notebook.content,
-    urlIdentifier: notebook.urlIdentifier,
-    permissions: notebook.permissions,
-    editorMode: notebook.editorMode,
-    autoSave: notebook.autoSave,
-    tags: notebook.tags,
-    version: notebook.version,
-    creator: {
-      id: notebook.creatorID._id,
-      name: notebook.creatorID.name,
-      email: notebook.creatorID.email
-    },
-    collaborators: notebook.collaborators.map(collab => ({
-      id: collab._id,
-      name: collab.name,
-      email: collab.email
-    })),
-    hasAccess: true,
-    accessLevel: 'edit',
-    userRole: 'owner', // fallback, frontend should set this based on auth
-    message: 'Password verified successfully'
-  });
-}));
+//   // Otherwise, treat as authenticated user
+//   res.json({
+//     _id: notebook._id,
+//     title: notebook.title,
+//     content: notebook.content,
+//     urlIdentifier: notebook.urlIdentifier,
+//     permissions: notebook.permissions,
+//     editorMode: notebook.editorMode,
+//     autoSave: notebook.autoSave,
+//     tags: notebook.tags,
+//     version: notebook.version,
+//     creator: {
+//       id: notebook.creatorID._id,
+//       name: notebook.creatorID.name,
+//       email: notebook.creatorID.email
+//     },
+//     collaborators: notebook.collaborators.map(collab => ({
+//       id: collab._id,
+//       name: collab.name,
+//       email: collab.email
+//     })),
+//     hasAccess: true,
+//     accessLevel: 'edit',
+//     userRole: 'owner', // fallback, frontend should set this based on auth
+//     message: 'Password verified successfully'
+//   });
+// }));
 // Register guest user for public collaboration
 router.post('/:urlIdentifier/register-guest', catchAsync(async (req, res) => {
   const { guestName } = req.body;
@@ -1075,10 +1098,11 @@ router.post('/:urlIdentifier/register-guest', catchAsync(async (req, res) => {
   res.json({
     _id: notebook._id,
     title: notebook.title,
-    content: notebook.content,
+    content: extractContentFromXML(notebook.content), // Send plain content to frontend
     urlIdentifier: notebook.urlIdentifier,
     permissions: notebook.permissions,
     editorMode: notebook.editorMode,
+    language: notebook.language,
     autoSave: notebook.autoSave,
     tags: notebook.tags,
     version: notebook.version,
@@ -1168,6 +1192,7 @@ router.put('/:id', optionalAuth, async (req, res) => {
     password,
     tags,
     urlIdentifier,
+    language
   } = req.body;
 
   try {
@@ -1183,10 +1208,10 @@ router.put('/:id', optionalAuth, async (req, res) => {
     const isAuthenticated = !!req.user;
     const isCreator = isAuthenticated && notebook.creatorID.toString() === req.user.id.toString();
     const isCollaborator = isAuthenticated && notebook.collaborators.some(collab => collab.toString() === req.user.id.toString());
-    const isPublicNotebook = notebook.permissions.toString() === 'everyone' && !notebook.password;
+    const isPublicNotebook = notebook.permissions.toString() === 'everyone' ;
 
     // Check if user has edit permissions
-    const hasEditAccess = isCreator || isCollaborator || isPublicNotebook;
+    const hasEditAccess = isCreator || isCollaborator || isPublicNotebook ||notebook.permissions.toString() === 'everyone';
 
     if (!hasEditAccess) {
       return res.status(403).json({
@@ -1196,7 +1221,7 @@ router.put('/:id', optionalAuth, async (req, res) => {
     }
 
     // Only owner can change settings fields (permissions, collaborators, password, urlIdentifier)
-    const allowedFields = ['title', 'content', 'editorMode', 'autoSave', 'tags'];
+    const allowedFields = ['title', 'content', 'editorMode', 'autoSave', 'tags', 'language'];
     if (isCreator) {
       allowedFields.push('permissions', 'collaborators', 'password', 'urlIdentifier');
     }
@@ -1214,7 +1239,12 @@ router.put('/:id', optionalAuth, async (req, res) => {
       // Only update allowed fields for public users
       allowedFields.forEach(field => {
         if (req.body[field] !== undefined) {
-          notebook[field] = req.body[field];
+          if (field === 'content') {
+            // Ensure content is stored in XML format for public users too
+            notebook[field] = updateXMLContent(notebook.content, req.body[field], notebook.language, notebook.editorMode);
+          } else {
+            notebook[field] = req.body[field];
+          }
         }
       });
     } else {
@@ -1235,8 +1265,17 @@ router.put('/:id', optionalAuth, async (req, res) => {
 
       // Update fields only if provided in request body
       if (title !== undefined) notebook.title = title;
-      if (content !== undefined) notebook.content = content;
+      if (content !== undefined) {
+        // Ensure content is stored in XML format
+        notebook.content = updateXMLContent(notebook.content, content, notebook.language, notebook.editorMode);
+      }
       if (editorMode !== undefined) notebook.editorMode = editorMode;
+      // Ensure language is always defined
+      if (typeof language === 'undefined' || language === null) {
+        notebook.language = notebook.language || 'javascript';
+      } else {
+        notebook.language = language;
+      }
       if (autoSave !== undefined) notebook.autoSave = autoSave;
       if (tags !== undefined) notebook.tags = tags;
 
@@ -1275,11 +1314,12 @@ router.put('/:id', optionalAuth, async (req, res) => {
       io.emit('notebookUpdated', {
         id: notebook._id,
         title: notebook.title,
-        content: notebook.content,
+        content: extractContentFromXML(notebook.content), // Send plain content to frontend
         permissions: notebook.permissions,
         collaborators: notebook.collaborators,
         tags: notebook.tags,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         urlIdentifier: notebook.urlIdentifier,
         version: notebook.version,
@@ -1295,11 +1335,12 @@ router.put('/:id', optionalAuth, async (req, res) => {
       notebook: {
         _id: notebook._id,
         title: notebook.title,
-        content: notebook.content,
+        content: extractContentFromXML(notebook.content), // Send plain content to frontend
         permissions: notebook.permissions,
         collaborators: notebook.collaborators,
         tags: notebook.tags,
         editorMode: notebook.editorMode,
+        language: notebook.language,
         autoSave: notebook.autoSave,
         urlIdentifier: notebook.urlIdentifier,
         version: notebook.version,

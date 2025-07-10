@@ -1811,3 +1811,34 @@
     '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
   timestamp: '2025-07-10 19:29:53'
 }
+{
+  service: 'sync-not-net-api',
+  errors: {
+    permissions: ValidatorError: `collaborators` is not a valid enum value for path `permissions`.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: '`collaborators` is not a valid enum value for path `permissions`.',
+        type: 'enum',
+        enumValues: [ 'everyone', 'creator-only' ],
+        path: 'permissions',
+        fullPath: undefined,
+        value: 'collaborators'
+      },
+      kind: 'enum',
+      path: 'permissions',
+      value: 'collaborators',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  statusCode: 500,
+  status: 'error',
+  message: 'ERROR: Notebook validation failed: permissions: `collaborators` is not a valid enum value for path `permissions`.',
+  level: 'error',
+  timestamp: '2025-07-11 00:33:16'
+}

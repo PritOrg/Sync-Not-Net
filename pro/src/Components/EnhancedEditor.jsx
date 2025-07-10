@@ -55,6 +55,8 @@ const EnhancedEditor = ({
   content = '',
   onChange,
   onSave,
+// Export ToggleButton and ToggleButtonGroup for use in parent (after function definition)
+
   editorMode = 'rich', // 'rich' or 'code'
   onModeChange, // New prop to handle mode changes
   language = 'javascript',
@@ -72,6 +74,55 @@ const EnhancedEditor = ({
   const editorRef = useRef(null);
   const quillRef = useRef(null);
 
+  // Define functions before useEffect that uses them
+  const handleSave = useCallback(() => {
+    if (onSave) {
+      onSave({}, true); // Pass empty settings and true for manual save
+      setLastSaved(new Date());
+    }
+  }, [onSave]);
+
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
+  }, []);
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Save shortcut (Ctrl+S or Cmd+S)
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        handleSave();
+      }
+      
+      // Fullscreen shortcut (F11)
+      if (event.key === 'F11') {
+        event.preventDefault();
+        toggleFullscreen();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleSave, toggleFullscreen]);
+
+  // Utility to strip HTML tags (for code mode)
+  const stripHtmlTags = (html) => {
+    if (!html) return '';
+    let text = html;
+    // Convert <br> and <br/> to newlines
+    text = text.replace(/<br\s*\/?>/gi, '\n');
+    // Convert <p> and </p> to newlines (preserve paragraph breaks)
+    text = text.replace(/<p[^>]*>/gi, '');
+    text = text.replace(/<\/p>/gi, '\n');
+    // Remove all other tags
+    text = text.replace(/<[^>]+>/g, '');
+    // Replace multiple consecutive newlines with a single newline
+    text = text.replace(/\n{2,}/g, '\n');
+    // Remove leading/trailing whitespace/newlines
+    return text.trim();
+  }
+
   // Sync mode with prop changes
   useEffect(() => {
     setMode(editorMode);
@@ -81,6 +132,18 @@ const EnhancedEditor = ({
   useEffect(() => {
     setSelectedLanguage(language);
   }, [language]);
+
+  // When switching to code mode, strip HTML tags from content
+  useEffect(() => {
+    if (mode === 'code' && content && /<[^>]+>/.test(content)) {
+      // Only update if content contains HTML tags
+      const plain = stripHtmlTags(content);
+      if (plain !== content) {
+        // Call onChange to update parent state
+        if (onChange) onChange(plain);
+      }
+    }
+  }, [mode, content, onChange]);
 
   // Note: Auto-save functionality is handled by the parent component (NotebookEditorPage)
   // This component only handles manual saves when the user explicitly clicks save
@@ -273,17 +336,6 @@ const EnhancedEditor = ({
       }
   }, [selectedLanguage]);
 
-  const handleSave = useCallback(() => {
-    if (onSave) {
-      onSave({}, true); // Pass empty settings and true for manual save
-      setLastSaved(new Date());
-    }
-  }, [onSave]);
-
-  const toggleFullscreen = useCallback(() => {
-    setIsFullscreen(prev => !prev);
-  }, []);
-
   // Handle editor mount
   const handleEditorDidMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
@@ -415,6 +467,7 @@ const EnhancedEditor = ({
                   </Box>
                 );
               }}
+              title="Select programming language for syntax highlighting and auto-formatting"
             >
               {SUPPORTED_LANGUAGES.map((lang) => (
                 <MenuItem key={lang.value} value={lang.value}>
@@ -445,6 +498,15 @@ const EnhancedEditor = ({
 
         <Box sx={{ flexGrow: 1 }} />
 
+        {/* Helpful Tips */}
+        {mode === 'code' && (
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
+              💡 Alt+Shift+F to format • Ctrl+Z/Y for undo/redo
+            </Typography>
+          </Box>
+        )}
+
         {/* Status */}
         {lastSaved && (
           <Chip
@@ -456,13 +518,13 @@ const EnhancedEditor = ({
         )}
 
         {/* Actions */}
-        <Tooltip title="Save">
+        <Tooltip title="Save your work (Ctrl+S)">
           <IconButton onClick={handleSave} size="small">
             <SaveIcon fontSize="small" />
           </IconButton>
         </Tooltip>
 
-        <Tooltip title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}>
+        <Tooltip title={isFullscreen ? "Exit Fullscreen (F11)" : "Enter Fullscreen (F11)"}>
           <IconButton onClick={toggleFullscreen} size="small">
             {isFullscreen ? <FullscreenExitIcon fontSize="small" /> : <FullscreenIcon fontSize="small" />}
           </IconButton>
@@ -490,7 +552,7 @@ const EnhancedEditor = ({
           <Editor
             height="100%"
             language={selectedLanguage}
-            value={content}
+            value={mode === 'code' ? stripHtmlTags(content) : content}
             onChange={onChange}
             onMount={handleEditorDidMount}
             theme="custom-light"
@@ -522,6 +584,13 @@ const EnhancedEditor = ({
       </Box>
     </Paper>
   );
-};
+}
 
+// Export ToggleButton and ToggleButtonGroup for use in parent
+EnhancedEditor.ToggleButton = ToggleButton;
+EnhancedEditor.ToggleButtonGroup = ToggleButtonGroup;
+
+
+EnhancedEditor.ToggleButton = ToggleButton;
+EnhancedEditor.ToggleButtonGroup = ToggleButtonGroup;
 export default EnhancedEditor;

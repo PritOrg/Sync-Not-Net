@@ -22,7 +22,8 @@ import {
   Card,
   CardContent,
   Fade,
-  Backdrop
+  Backdrop,
+  Snackbar
 } from '@mui/material';
 import {
   Edit as EditIcon,
@@ -63,7 +64,7 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [error, setError] = useState('');
 
   const [userData, setUserData] = useState({
@@ -146,7 +147,6 @@ const ProfilePage = () => {
   const handleSaveProfile = async () => {
     setLoading(true);
     setError('');
-    setSuccess('');
 
     try {
       const token = localStorage.getItem('token');
@@ -165,7 +165,11 @@ const ProfilePage = () => {
       if (response.ok) {
         const data = await response.json();
         setUserData(data.user);
-        setSuccess('Profile updated successfully');
+        setSnackbar({
+          open: true,
+          message: 'Profile updated successfully!',
+          severity: 'success'
+        });
         setIsEditing(false);
         
         // Update local storage user data
@@ -177,10 +181,18 @@ const ProfilePage = () => {
         }));
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Failed to update profile');
+        setSnackbar({
+          open: true,
+          message: errorData.message || 'Failed to update profile',
+          severity: 'error'
+        });
       }
     } catch (err) {
-      setError('Failed to update profile');
+      setSnackbar({
+        open: true,
+        message: 'Network error. Please try again.',
+        severity: 'error'
+      });
     } finally {
       setLoading(false);
     }
@@ -199,7 +211,6 @@ const ProfilePage = () => {
 
     setLoading(true);
     setError('');
-    setSuccess('');
 
     try {
       const token = localStorage.getItem('token');
@@ -216,7 +227,11 @@ const ProfilePage = () => {
       });
 
       if (response.ok) {
-        setSuccess('Password changed successfully');
+        setSnackbar({
+          open: true,
+          message: 'Password changed successfully!',
+          severity: 'success'
+        });
         setShowPasswordDialog(false);
         setFormData(prev => ({
           ...prev,
@@ -268,16 +283,7 @@ const ProfilePage = () => {
               </Button>
             </Box>
 
-            {/* Success/Error Messages */}
-            {success && (
-              <Alert 
-                severity="success" 
-                sx={{ mb: 3, borderRadius: 2 }}
-                onClose={() => setSuccess('')}
-              >
-                {success}
-              </Alert>
-            )}
+            {/* Error Messages */}
             {error && (
               <Alert 
                 severity="error" 
@@ -453,6 +459,57 @@ const ProfilePage = () => {
                 </Grid>
               ))}
             </Grid>
+
+            {/* Helpful Tips Section */}
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                borderRadius: 3,
+                border: '1px solid #e3f2fd',
+                p: 3,
+                mb: 4,
+                bgcolor: '#f8faff',
+                ...getAnimationStyles(slideIn, 'normal', '0.6s'),
+              }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#1565c0' }}>
+                💡 Profile Tips & Features
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                    🔒 Keep Your Account Secure
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Update your password regularly and use a strong, unique password for your account.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                    📊 Track Your Progress
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Monitor your notebook creation and collaboration stats to see your productivity.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                    👥 Collaboration Made Easy
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Share notebooks with custom permissions - perfect for team projects and documentation.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                    ⚡ Pro Tips
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Use auto-save to never lose work • Try both Rich Text and Code modes • Set passwords for sensitive content
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper>
 
             {/* Tabs Section */}
             <Paper 

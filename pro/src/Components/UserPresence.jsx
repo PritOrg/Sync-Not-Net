@@ -48,33 +48,13 @@ const StyledBadge = styled(Badge)(({ theme, status }) => ({
   },
 }));
 
-const UserPresence = ({ notebookId, currentUser }) => {
-  const [activeUsers, setActiveUsers] = useState([]);
+const UserPresence = ({ notebookId, currentUser, activeUsers = [] }) => {
   const [typingUsers, setTypingUsers] = useState(new Set());
   const [expanded, setExpanded] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState({ connected: false });
 
   useEffect(() => {
-    // Listen for user presence events
-    const handleUserJoined = (data) => {
-      setActiveUsers(prev => {
-        const exists = prev.find(user => user.id === data.user.id);
-        if (!exists) {
-          return [...prev, { ...data.user, status: 'online', joinedAt: data.timestamp }];
-        }
-        return prev;
-      });
-    };
-
-    const handleUserLeft = (data) => {
-      setActiveUsers(prev => prev.filter(user => user.id !== data.user.id));
-      setTypingUsers(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(data.user.id);
-        return newSet;
-      });
-    };
-
+    // Listen for typing events only
     const handleUserTyping = (data) => {
       setTypingUsers(prev => new Set([...prev, data.user.id]));
       
@@ -96,29 +76,19 @@ const UserPresence = ({ notebookId, currentUser }) => {
       });
     };
 
-    const handleJoinedNotebook = (data) => {
-      setActiveUsers(data.currentUsers || []);
-    };
-
     const handleConnectionStatusChanged = (status) => {
       setConnectionStatus(status);
     };
 
     // Register event listeners
-    socketClient.on('userJoined', handleUserJoined);
-    socketClient.on('userLeft', handleUserLeft);
     socketClient.on('userTyping', handleUserTyping);
     socketClient.on('userStoppedTyping', handleUserStoppedTyping);
-    socketClient.on('joinedNotebook', handleJoinedNotebook);
     socketClient.on('connectionStatusChanged', handleConnectionStatusChanged);
 
     // Cleanup
     return () => {
-      socketClient.off('userJoined', handleUserJoined);
-      socketClient.off('userLeft', handleUserLeft);
       socketClient.off('userTyping', handleUserTyping);
       socketClient.off('userStoppedTyping', handleUserStoppedTyping);
-      socketClient.off('joinedNotebook', handleJoinedNotebook);
       socketClient.off('connectionStatusChanged', handleConnectionStatusChanged);
     };
   }, []);
@@ -153,7 +123,13 @@ const UserPresence = ({ notebookId, currentUser }) => {
       .slice(0, 2);
   };
 
-  const visibleUsers = expanded ? activeUsers : activeUsers.slice(0, 3);
+  // Filter out the current user from the active users list
+  const displayedUsers = activeUsers.filter(user => {
+    // If currentUser is undefined/null, don't filter anything
+    if (!currentUser || !currentUser.id) return true;
+    return user.id !== currentUser.id;
+  });
+  const visibleUsers = expanded ? displayedUsers : displayedUsers.slice(0, 3);
 
   return (
     <Paper
@@ -171,7 +147,7 @@ const UserPresence = ({ notebookId, currentUser }) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <VisibilityIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
           <Typography variant="subtitle2" fontWeight={600}>
-            Active Users ({activeUsers.length})
+            Active Users ({displayedUsers.length})
           </Typography>
         </Box>
         
@@ -268,7 +244,7 @@ const UserPresence = ({ notebookId, currentUser }) => {
 
         <Collapse in={expanded}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
-            {activeUsers.slice(3).map((user) => {
+            {displayedUsers.slice(3).map((user) => {
               const status = getUserStatus(user.id);
               return (
                 <Box
@@ -336,7 +312,7 @@ const UserPresence = ({ notebookId, currentUser }) => {
           </Box>
         </Collapse>
 
-        {activeUsers.length === 0 && (
+        {displayedUsers.length === 0 && (
           <Box
             sx={{
               textAlign: 'center',

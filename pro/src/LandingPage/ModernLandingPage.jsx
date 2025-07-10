@@ -387,6 +387,212 @@ const ModernLandingPage = () => {
         </Container>
       </Box>
 
+      {/* Quick Start Tips Section */}
+      <Box sx={{ py: 8, backgroundColor: '#f8fafc' }}>
+        <Container maxWidth="lg">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <Typography
+              variant="h3"
+              component="h2"
+              sx={{
+                fontWeight: 700,
+                color: theme.palette.text.primary,
+                mb: 2,
+                textAlign: 'center'
+              }}
+            >
+              Get Started in 3 Easy Steps
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                color: theme.palette.text.secondary,
+                textAlign: 'center',
+                mb: 6,
+                maxWidth: 600,
+                mx: 'auto'
+              }}
+            >
+              Everything you need to know to start collaborating on notebooks immediately
+            </Typography>
+
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={4}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Card
+                    sx={{
+                      textAlign: 'center',
+                      p: 3,
+                      height: '100%',
+                      borderRadius: 3,
+                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                      border: `2px solid ${theme.palette.primary.main}`,
+                      position: 'relative'
+                    }}
+                  >
+                    <Chip
+                      label="Step 1"
+                      color="primary"
+                      sx={{
+                        position: 'absolute',
+                        top: -10,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        fontWeight: 600
+                      }}
+                    />
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                        🚀 Create or Join
+                      </Typography>
+                      <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mb: 2 }}>
+                        Start a new notebook or join an existing one with a shared link
+                      </Typography>
+                      <Box sx={{ bgcolor: '#e3f2fd', p: 2, borderRadius: 2 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: theme.palette.info.dark }}>
+                          💡 Pro Tip: Use "Create New" for your own projects, or paste a shared link to collaborate!
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Card>
+                </motion.div>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <Card
+                    sx={{
+                      textAlign: 'center',
+                      p: 3,
+                      height: '100%',
+                      borderRadius: 3,
+                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                      border: `2px solid ${theme.palette.success.main}`,
+                      position: 'relative'
+                    }}
+                  >
+                    <Chip
+                      label="Step 2"
+                      color="success"
+                      sx={{
+                        position: 'absolute',
+                        top: -10,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        fontWeight: 600
+                      }}
+                    />
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.success.main }}>
+                        ✏️ Choose Your Mode
+                      </Typography>
+                      <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mb: 2 }}>
+                        Switch between Rich Text for notes and Code Mode for programming
+                      </Typography>
+                      <Box sx={{ bgcolor: '#e8f5e8', p: 2, borderRadius: 2 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: theme.palette.success.dark }}>
+                          🎯 Quick Tip: Use Ctrl+S to save, Alt+Shift+F to format code!
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Card>
+                </motion.div>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <Card
+                    sx={{
+                      textAlign: 'center',
+                      p: 3,
+                      height: '100%',
+                      borderRadius: 3,
+                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                      border: `2px solid ${theme.palette.warning.main}`,
+                      position: 'relative'
+                    }}
+                  >
+                    <Chip
+                      label="Step 3"
+                      color="warning"
+                      sx={{
+                        position: 'absolute',
+                        top: -10,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        fontWeight: 600
+                      }}
+                    />
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.warning.main }}>
+                        🤝 Share & Collaborate
+                      </Typography>
+                      <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mb: 2 }}>
+                        Invite others with custom permissions and watch changes in real-time
+                      </Typography>
+                      <Box sx={{ bgcolor: '#fff3e0', p: 2, borderRadius: 2 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: theme.palette.warning.dark }}>
+                          🔒 Security: Set passwords and permissions to control access levels!
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Card>
+                </motion.div>
+              </Grid>
+            </Grid>
+
+            {/* Additional Tips */}
+            <Box sx={{ mt: 6, textAlign: 'center' }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: theme.palette.text.primary }}>
+                🎓 Pro Tips for Power Users
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ bgcolor: 'white', p: 3, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 500, color: theme.palette.text.primary, mb: 1 }}>
+                      ⌨️ Keyboard Shortcuts
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+                      Ctrl+S (Save) • F11 (Fullscreen) • Ctrl+Z/Y (Undo/Redo) • Alt+Shift+F (Format Code)
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ bgcolor: 'white', p: 3, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 500, color: theme.palette.text.primary, mb: 1 }}>
+                      🔄 Auto-Save Magic
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+                      Enable auto-save to never lose your work. Changes sync instantly across all devices!
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          </motion.div>
+        </Container>
+      </Box>
+
       {/* CTA Section */}
       <Box
         sx={{

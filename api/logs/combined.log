@@ -72215,3 +72215,3424 @@
   service: 'sync-not-net-api',
   timestamp: '2025-07-10 19:31:42'
 }
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:16'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:16'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:17'
+}
+{
+  message: 'User Beta tester connected with socket pN9OWyNTXGEOg-ydAAAC',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:17'
+}
+{
+  message: 'User TRENDING MITRA connected with socket htwoBjCVr_3gtaSDAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:17'
+}
+{
+  message: 'User Beta tester connected with socket gAOATDKbHsg2T2zRAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:17'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:17'
+}
+{
+  message: 'User Beta tester connected with socket yRVo50c_UI0YxnINAAAG',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:17'
+}
+{
+  message: 'User Beta tester connected with socket NJozx0109afKweaHAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:17'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:18'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:18'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:13:57 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:43:57'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:14:10 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 594 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:44:10'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:46:12'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:16:12 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:46:12'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:16:12 +0000] "GET /api/notebooks/MY-007 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:46:12'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:16:12 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:46:12'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:16:12 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:46:12'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:19:56 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 594 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:49:56'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:20:45 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 401 78 "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:50:45'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:20:52 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 594 "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:50:52'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:42'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:42'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'User TRENDING MITRA connected with socket rneo4NgWz0_XVrIxAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'User Beta tester connected with socket nkn7dIbYv7N6O9haAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'User Beta tester connected with socket rW45dMyTF11ghp2UAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'User Beta tester connected with socket 6LHLwePclfOMOz35AAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'User Beta tester connected with socket hIpa6H-Y1_is67-vAAAE',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:53:43'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:19'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:19'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'User TRENDING MITRA connected with socket G9_YjtRJUQGSZHH1AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'User Beta tester connected with socket OZkmK3pKIZ3J1LBRAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'User Beta tester connected with socket 8P7jlhEhddXu-JVZAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'User Beta tester connected with socket QmP4JsLDnYbwMl9nAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'User Beta tester connected with socket 03mTBALnpJeAcVB3AAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:20'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:43'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:43'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:44'
+}
+{
+  message: 'User Beta tester connected with socket TjKe3W6aXeaTQgTWAAAC',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:44'
+}
+{
+  message: 'User Beta tester connected with socket 2dHBCxeXkKHIWINdAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:44'
+}
+{
+  message: 'User Beta tester connected with socket _aGOkC7MnW8TxpaTAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:44'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:44'
+}
+{
+  message: 'User TRENDING MITRA connected with socket hADyyUKf7d1Cx9S-AAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:44'
+}
+{
+  message: 'User Beta tester connected with socket qDbiUX7AplYDhPgrAAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:44'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:44'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:45'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:53'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:53'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:54'
+}
+{
+  message: 'User Beta tester connected with socket Bn8M3FZ2xKoy2GneAAAC',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:54'
+}
+{
+  message: 'User Beta tester connected with socket O3TN2Et8BwmtweqnAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:54'
+}
+{
+  message: 'User Beta tester connected with socket 8kYceDXvKI8MOZuBAAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:54'
+}
+{
+  message: 'User Beta tester connected with socket 6rYkktG1_kXNt0jrAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:54'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:55'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:55'
+}
+{
+  message: 'User TRENDING MITRA connected with socket ODwowBIAD2v9XYRFAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:55'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 19:54:55'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:00:07'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:30:07 +0000] "GET /api/notebooks/MY-007 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:00:07'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:30:07 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:00:07'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:30:08 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:00:08'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:30:08 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:00:08'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:31:59 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 594 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:01:59'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:32:48 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:02:48'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:32:54 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 594 "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:02:54'
+}
+{
+  message: 'User TRENDING MITRA connected with socket PHQr7fDsLRXmBMgPAAAL',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:51'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:51 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:51'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:51 +0000] "GET /api/notebooks/MY-007 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:51'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:51'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:55'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:56 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:56'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:56 +0000] "GET /api/notebooks/MY-007 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:56'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:56 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:56'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:56 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:56'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:56 +0000] "GET /api/notebooks/MY-007 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:56'
+}
+{
+  message: 'User TRENDING MITRA disconnected from notebook 686eae541aebc0e6d20d5627. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:56'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:57 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:57'
+}
+{
+  message: 'User TRENDING MITRA connected with socket xYlOvE0AYmjj87CeAAAN',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:57'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:34:57 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 200 247 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:04:57'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:35:07 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 595 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:05:07'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:05:07'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p>","editorMode":"quill","autoSave":false}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:08:36'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:38:36 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 522 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:08:36'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p>","editorMode":"quill","autoSave":true}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:08:42'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:38:42 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 521 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:08:42'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p>","editorMode":"quill","autoSave":true}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:08:47'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:38:47 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 521 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:08:47'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p>","editorMode":"quill","autoSave":false}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:08:56'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:38:57 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 522 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:08:57'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p><p><br></p><p>MUMBAI TO RAJKOT</p>","editorMode":"quill","autoSave":true}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:09:12'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:39:12 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 555 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:09:12'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p><p><br></p><p>MUMBAI TO RAJKOT</p><p><br></p><p>tAME JOTA JAAJO</p>","editorMode":"quill","autoSave":true}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:09:24'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:39:24 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 588 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:09:24'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:39:33 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 682 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:09:33'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:09:33'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p><p><br></p><p>MUMBAI TO RAJKOT</p><p><br></p><p>tAME JOTA JAAJO</p>","editorMode":"quill","autoSave":false}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:10:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:40:56 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 589 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:10:56'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:41:12 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 683 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:11:12'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p><p><br></p><p>MUMBAI TO RAJKOT</p><p><br></p><p>tAME JOTA JAAJO</p>","editorMode":"quill","autoSave":false}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:11:17'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:41:18 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 603 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:11:18'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>TRENDIND MITRA IS NOW AVAILABLE FOR YOU</p><p><br></p><p>MUMBAI TO RAJKOT</p><p><br></p><p>tAME JOTA JAAJO</p>","editorMode":"quill","autoSave":false}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:11:30'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:41:30 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 603 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:11:30'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:52'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:52'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:52'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:52'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:45:52 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:52'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:45:52 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:52'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:45:52 +0000] "GET /api/notebooks/MY-007 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:52'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:45:52 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:52'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:45:53 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:53'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:45:53 +0000] "GET /api/notebooks/MY-007 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:15:53'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:47:08 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 683 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:17:08'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:17:08'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:48:14 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 683 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:18:14'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"def p(a,b):\\r\\n    print(a,b)","editorMode":"quill","autoSave":false}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:18:42'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:48:42 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 519 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:18:42'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:49:30 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:19:30'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:49:30 +0000] "GET /api/users/stats HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:19:30'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:49:34 +0000] "GET /api/notebooks/MY-007 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:19:34'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:49:37 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 200 2123 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:19:37'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:49:42 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:19:42'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:49:46 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 599 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:19:46'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:50:47 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 600 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:20:47'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:20:47'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<!DOCTYPE html>\\r\\n<a>monika</a>","editorMode":"quill","autoSave":false}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:21:38'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:51:38 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 508 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:21:38'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:51:46 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:21:46'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:51:50 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:21:50'
+}
+{
+  message: 'User TRENDING MITRA disconnected from notebook 686e99e1214549e06a966634. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:21:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:52:01 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 200 2126 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:22:01'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:52:02 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:22:02'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:52:06 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:22:06'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:52:29 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:22:29'
+}
+{
+  message: 'Public save request for notebook 686eae541aebc0e6d20d5627: {"title":"Never Before","content":"<p>monika</p>","editorMode":"quill","autoSave":false}',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:22:31'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:52:31 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627 HTTP/1.1" 200 503 "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:22:31'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:37'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:37'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:38'
+}
+{
+  message: 'User Beta tester connected with socket gFaOZptgRcc892YYAAAC',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:38'
+}
+{
+  message: 'User Beta tester connected with socket yGnjDU7aSXLOfX2fAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:38'
+}
+{
+  message: 'User Beta tester connected with socket v6MufMKMKf4jbZa_AAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:39'
+}
+{
+  message: 'User TRENDING MITRA connected with socket qxTAf4rcCDTh1KvLAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:39'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686e99e1214549e06a966634',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:39'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:39'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:39'
+}
+{
+  message: 'User Beta tester connected with socket tUwmXK3S1fL1Gq2uAAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:39'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:39'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:39'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:54:55 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:54:55 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:54:55 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:14:54:55 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:24:55'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:25'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:25'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:26'
+}
+{
+  message: 'User TRENDING MITRA connected with socket l2LLIHLxHYYRszZZAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:26'
+}
+{
+  message: 'User Beta tester connected with socket xuu_yWBM5LI-UUuWAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:27'
+}
+{
+  message: 'User Beta tester connected with socket Zu_fkCz82CfLa7SPAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:27'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:27'
+}
+{
+  message: 'User Beta tester connected with socket MJ27qFz9MmA0eqKSAAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:27'
+}
+{
+  message: 'User Beta tester connected with socket KtcN8sSC3a0YlImXAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:27'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:27'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:27'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:41'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:41'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'User Beta tester connected with socket Tclz_wSc6bqjp_-hAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'User Beta tester connected with socket Zr7wAmHBmdPo0enZAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'User TRENDING MITRA connected with socket Aoic7xVVzZXm70qYAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'User Beta tester connected with socket ObWptQHRu8sOeiUcAAAE',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'User Beta tester connected with socket IKFBZbYCPGCzZzJGAAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:43'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:54'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:54'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:56'
+}
+{
+  message: 'User Beta tester connected with socket g_l92jpo7xSM72VSAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:56'
+}
+{
+  message: 'User Beta tester connected with socket fGh2i2pzgVyMngOwAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:56'
+}
+{
+  message: 'User Beta tester connected with socket pEuuoULHpn5h6v7_AAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:56'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:56'
+}
+{
+  message: 'User TRENDING MITRA connected with socket zFQirsM4HKOT-oenAAAE',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:57'
+}
+{
+  message: 'User TRENDING MITRA (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:57'
+}
+{
+  message: 'User Beta tester connected with socket D_TOdQOKVf7y1RfyAAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:57'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:25:57'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:48:38'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:48:38'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:48:39'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:19:35 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:49:35'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:19:35 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 200 2179 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:49:35'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:19:41 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:49:41'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:19:41 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:49:41'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:19:54 +0000] "POST /api/users/login HTTP/1.1" 401 71 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:49:54'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:20:01 +0000] "POST /api/users/login HTTP/1.1" 401 71 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:50:01'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:20:11 +0000] "POST /api/users/login HTTP/1.1" 401 71 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:50:11'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:20:13 +0000] "POST /api/users/login HTTP/1.1" 401 71 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:50:13'
+}
+{
+  message: 'New user registered: pritmail@mail.com',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:50:49'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:20:49 +0000] "POST /api/users/register HTTP/1.1" 201 391 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:50:49'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:20:50 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 200 103 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:50:50'
+}
+{
+  message: 'User prite two mail connected with socket ozi8h4HROTQIU-dsAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:01'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:21:01 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 200 247 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:01'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:21:09 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 608 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:09'
+}
+{
+  message: 'User prite two mail (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:09'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:21:17 +0000] "GET /api/users/profile HTTP/1.1" 200 177 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:17'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:21:17 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:17'
+}
+{
+  message: 'User prite two mail disconnected from notebook 686eae541aebc0e6d20d5627. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:20'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:21:21 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:21'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:21:21 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:21'
+}
+{
+  message: 'User prite two mail connected with socket -eSODZidV8_SJWmFAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:21'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:21:25 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 608 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:25'
+}
+{
+  message: 'User prite two mail (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:25'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:21:47 +0000] "POST /api/users/login HTTP/1.1" 429 46 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:51:47'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:22:20 +0000] "POST /api/users/login HTTP/1.1" 429 46 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:52:20'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:22:25 +0000] "POST /api/users/login HTTP/1.1" 429 46 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:52:25'
+}
+{
+  message: 'User prite two mail disconnected from notebook 686eae541aebc0e6d20d5627. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:52:37'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:22:59 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 200 255 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:52:59'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:23:02 +0000] "POST /api/notebooks/the-path-of-neo/register-guest HTTP/1.1" 200 664 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:53:02'
+}
+{
+  message: `Public save request for notebook 686f734a9840f0639fc70bbc: {"title":"The One","content":"body {\\r\\n  margin: 0;\\r\\n  font-family: 'Poppins, sans-serif';\\r\\n  -webkit-font-smoothing: antialiased;\\r\\n  -moz-osx-font-smoothing: grayscale;\\r\\n}\\r\\n\\r\\ncode {\\r\\n  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',\\r\\n    monospace;\\r\\n}","editorMode":"monaco","autoSave":false}`,
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:53:53'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:23:54 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 716 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:53:54'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:24:00 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:54:00'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:24:02 +0000] "POST /api/notebooks/the-path-of-neo/register-guest HTTP/1.1" 200 901 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:54:02'
+}
+{
+  message: `Public save request for notebook 686f734a9840f0639fc70bbc: {"title":"The One","content":"body {\\r\\n  margin: 0;\\r\\n  font-family: 'Poppins, sans-serif';\\r\\n  -webkit-font-smoothing: antialiased;\\r\\n  -moz-osx-font-smoothing: grayscale;\\r\\n}\\r\\n\\r\\ncode {\\r\\n  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;\\r\\n}","editorMode":"monaco","autoSave":false}`,
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:54:33'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:24:33 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 709 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:54:33'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:24:59 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:54:59'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:25:02 +0000] "POST /api/notebooks/the-path-of-neo/register-guest HTTP/1.1" 200 894 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:55:02'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:57:20'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:57:20'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 20:57:22'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:40:00 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:10:00'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:40:00 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:10:00'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:40:35 +0000] "POST /api/notebooks/the-path-of-neo/register-guest HTTP/1.1" 200 893 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:10:35'
+}
+{
+  message: 'User Anonymous connected with socket EuQ7FtIcfsSDVnrJAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:12:19'
+}
+{
+  message: 'User Anonymous connected with socket XTlXeyBsn3wvV9SgAAAE',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:12:19'
+}
+{
+  message: 'User Anonymous connected with socket bOxtiWR4U34uiPOzAAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:12:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:42:19 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:12:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:42:19 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:12:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:42:33 +0000] "POST /api/notebooks/the-path-of-neo/register-guest HTTP/1.1" 200 893 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:12:33'
+}
+{
+  message: `Public save request for notebook 686f734a9840f0639fc70bbc: {"title":"The One","content":"body {\\r\\n  margin: 0;\\r\\n  font-family: 'Poppins, sans-serif';\\r\\n  -webkit-font-smoothing: antialiased;\\r\\n  -moz-osx-font-smoothing: grayscale;\\r\\n}\\r\\n\\r\\ncode {\\r\\n  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;\\r\\n}\\r\\n\\r\\n.h{\\r\\n  color: aliceblue;\\r\\n}","editorMode":"monaco","autoSave":false}`,
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:13:30'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:43:30 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 748 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:13:30'
+}
+{
+  message: `Public save request for notebook 686f734a9840f0639fc70bbc: {"title":"The One","content":"body {\\r\\n  margin: 0;\\r\\n  font-family: 'Poppins, sans-serif';\\r\\n  -webkit-font-smoothing: antialiased;\\r\\n  -moz-osx-font-smoothing: grayscale;\\r\\n}\\r\\n\\r\\ncode {\\r\\n  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;\\r\\n}\\r\\n\\r\\n.h{\\r\\n  color: aliceblue;\\r\\n}","editorMode":"monaco","autoSave":false}`,
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:13:30'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:43:30 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 748 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:13:30'
+}
+{
+  message: 'User Anonymous connected with socket n-AV4obSINmvhP-AAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:13:37'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:43:37 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:13:37'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:43:42 +0000] "POST /api/notebooks/the-path-of-neo/register-guest HTTP/1.1" 200 930 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:13:42'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:43:53 +0000] "POST /api/notebooks/the-path-of-neo/register-guest HTTP/1.1" 200 932 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:13:53'
+}
+{
+  message: 'User Anonymous connected with socket -zKi_R3X_gkcWVMUAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:15'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:44:15 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:15'
+}
+{
+  message: 'User Anonymous connected with socket TflSBhTHTEOdFluUAAAL',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:20'
+}
+{
+  message: 'User logged in: beta@gmail.com',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:33'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:44:33 +0000] "POST /api/users/login HTTP/1.1" 200 369 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:33'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:44:35 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 200 2448 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:35'
+}
+{
+  message: 'User Beta tester connected with socket 875MH3AYUuxOAkP-AAAN',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:39'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:44:40 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 200 854 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:40'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:14:40'
+}
+{
+  message: 'User Anonymous connected with socket 1rjdTDMXjo9xfRW6AAAP',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:15:57'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:45:57 +0000] "GET /api/users/profile HTTP/1.1" 200 171 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:15:57'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:45:57 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:15:57'
+}
+{
+  message: 'User Beta tester connected with socket MaaB9kfq3TXNWQLiAAAR',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:00'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:46:00 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:00'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:00'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:08'
+}
+{
+  message: 'User Anonymous connected with socket -dYldimw0tAq3DBcAAAV',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:08'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:46:08 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:08'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:46:08 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:08'
+}
+{
+  message: 'User Beta tester connected with socket ji8UnfsOvWlmYDlaAAAU',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:09'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:16:09'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:18:27'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:18:27'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:48:27 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:18:27'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:48:27 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:18:27'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:18:58'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:18:58'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:48:59 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:18:59'
+}
+{
+  message: 'User Beta tester connected with socket jtawTOzB5D6rebSWAAAY',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:18:59'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:49:00 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:19:00'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:49:00 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:19:00'
+}
+{
+  message: '::1 - - [10/Jul/2025:15:49:00 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:19:00'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:19:00'
+}
+{
+  message: 'User Beta tester connected with socket 5lqTt9GjU1hfL3cKAAAZ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:19:00'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:19:00'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:19:17'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 21:19:17'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:37:21'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:37:21'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:37:22'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:09:21 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:39:21'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:09:21 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:39:21'
+}
+{
+  message: 'User Beta tester connected with socket DDOJX3YoJhm18c96AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:39:24'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:09:24 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:39:24'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:39:24'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:41:07'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:11:07 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:41:07'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:12:50 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 500 62 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:42:50'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:48:19'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:48:19'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:48:21'
+}
+{
+  message: 'User Beta tester connected with socket un0nPDiYUc7fsAe-AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:48:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:48:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:48:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:50:01'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:20:02 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:50:02'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:20:37 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 500 62 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:50:37'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:51:54'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:51:54'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:51:55'
+}
+{
+  message: 'User Beta tester connected with socket xQLvEdwX0ciQS_ozAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:51:55'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:51:55'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:51:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:24:46 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 734 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:54:46'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:25:26 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 734 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:55:26'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:06'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:06'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:10'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:10'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:12'
+}
+{
+  message: 'User Beta tester connected with socket -G6JOSsJjhT_rW-fAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:12'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:12'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:12'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:14'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:14'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:15'
+}
+{
+  message: 'User Beta tester connected with socket e4bc6lEjtaK40pM4AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:15'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:15'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:15'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:20'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:20'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:21'
+}
+{
+  message: 'User Beta tester connected with socket yswqpnOO_Lp1i7O2AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:21'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:48'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:48'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:49'
+}
+{
+  message: 'User Beta tester connected with socket s3-DZXRyKEV1DQURAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:49'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:49'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:58:49'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:29:13 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 727 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:13'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:33'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:33'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:34'
+}
+{
+  message: 'User Beta tester connected with socket 21alsdNCBeEBX_r4AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:35'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:35'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:35'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:51'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:51'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:52'
+}
+{
+  message: 'User Beta tester connected with socket C-izxzVpBxRsx8uPAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:52'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:52'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 22:59:52'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:00:08'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:30:14 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:00:14'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:30:14 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 200 2441 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:00:14'
+}
+{
+  message: 'User Beta tester connected with socket ZXCkqjwbql9WatwpAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:00:23'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:30:23 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 200 847 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:00:23'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:00:23'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:06:15'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:36:17 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:06:17'
+}
+{
+  message: 'User Beta tester connected with socket QvdL0VJws2YvoEQ6AAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:06:17'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:36:17 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:06:17'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:06:17'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:09:30'
+}
+{
+  message: 'User Beta tester connected with socket prGvjTPc7A0DPkl5AAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:09:31'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:39:31 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:09:31'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:39:31 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:09:31'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:09:31'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:40:48 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 728 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:10:48'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:10:51'
+}
+{
+  message: 'User Beta tester connected with socket UdGdOLM7Kzf_mYi7AAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:10:51'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:40:51 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:10:51'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:40:52 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 200 848 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:10:52'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:10:52'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:13:18'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:43:18 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:13:18'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:20:18'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:50:18 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:20:18'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:52:06 +0000] "PUT /api/notebooks/686f734a9840f0639fc70bbc HTTP/1.1" 200 460 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:22:06'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:22:18'
+}
+{
+  message: 'User Beta tester connected with socket T_MFjEA7w3oTJMLJAAAL',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:22:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:52:19 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:22:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:17:52:19 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 200 580 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:22:19'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:22:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:00:34 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:30:34'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:00:47 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:30:47'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:00:59 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:30:59'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:01:10 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:31:10'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:01:20 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:31:20'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:01:30 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:31:30'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:01:59 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:31:59'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:02:07 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:32:07'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:02:22 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:32:22'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:02:40 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:32:40'
+}
+{
+  message: 'User Beta tester connected with socket 1eL5qBW4HP3O5BY0AAAN',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:33:18'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:33:18'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:03:18 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:33:18'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:33:40'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:03:40 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:33:40'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:33:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:03:55 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:33:55'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:34:05'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:04:05 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:34:05'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:34:14'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:04:14 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:34:14'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:44:58'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:44:58'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:44:59'
+}
+{
+  message: 'User Beta tester connected with socket nIZwWumeJxg4lCFSAAAC',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:44:59'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:44:59'
+}
+{
+  message: 'User Beta tester connected with socket sk4KTtAkJVYt8Jw1AAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:44:59'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:44:59'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:07'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:07'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:08'
+}
+{
+  message: 'User Beta tester connected with socket gL0biBvtS9kobrasAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:08'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:08'
+}
+{
+  message: 'User Beta tester connected with socket wbTWjOJu1KwDqgl2AAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:09'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:09'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:24'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:24'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:25'
+}
+{
+  message: 'User Beta tester connected with socket VFZ2WHNSZXsLj6X6AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:25'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:25'
+}
+{
+  message: 'User Beta tester connected with socket CKjSvus2SG_Rr8NZAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:26'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:46:26'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:47:28'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:47:28'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:47:30'
+}
+{
+  message: 'User Beta tester connected with socket 5IHzMC33ODHHWz9hAAAC',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:47:30'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:47:30'
+}
+{
+  message: 'User Beta tester connected with socket UOySuSSyEyWvuPKrAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:47:30'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:47:30'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:48:56'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:48:56'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:48:57'
+}
+{
+  message: 'User Beta tester connected with socket oFurSunt2-z3z-9DAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:48:57'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:48:57'
+}
+{
+  message: 'User Beta tester connected with socket G7isBjj0qeq0lnDwAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:48:57'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:48:57'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:49'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:49'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:50'
+}
+{
+  message: 'User Beta tester connected with socket S9iDyZaVeaPHVeR1AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:50'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:50'
+}
+{
+  message: 'User Beta tester connected with socket ijSnidGBWwR5GAU2AAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:51'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:51'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:59'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:52:59'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:00'
+}
+{
+  message: 'User Beta tester connected with socket 6TUsl1HxNGf6Lqw0AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:00'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:00'
+}
+{
+  message: 'User Beta tester connected with socket Ywubn66L-8l_Mwh8AAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:01'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:01'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:15'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:15'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:16'
+}
+{
+  message: 'User Beta tester connected with socket 09bFP5gcvA0eWMClAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:16'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:16'
+}
+{
+  message: 'User Beta tester connected with socket cPaUs37c3kVWObxPAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:17'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:17'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:41'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:41'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:41'
+}
+{
+  message: 'User Beta tester connected with socket bXPe-umohW7UDGi6AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:41'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:42'
+}
+{
+  message: 'User Beta tester connected with socket SiRnKVKtjQ7WTzW_AAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:42'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:42'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:55'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:55'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:56'
+}
+{
+  message: 'User Beta tester connected with socket ShodNnEEgNGypOOPAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:56'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:57'
+}
+{
+  message: 'User Beta tester connected with socket mOS3s9MxMsZOs5xGAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:57'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:53:57'
+}
+{
+  message: 'SIGINT received, shutting down gracefully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:54:04'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:57:30'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:57:30'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:57:31'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:27:58 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:57:58'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:27:59 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 200 2174 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-10 23:57:59'
+}
+{
+  message: 'SIGINT received, shutting down gracefully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:03:14'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:07'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:07'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:08'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:18 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:18'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:18 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:18'
+}
+{
+  message: 'User Beta tester connected with socket YjnvWCzKTYgIEHqnAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:20'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:21 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:21'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:44 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:44'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:44 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:44'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:46 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:46'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:50 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:50'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:50 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:50'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:34:55 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:04:55'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:06:33'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:37:03 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:07:03'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:37:03 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:07:03'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:37:04 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:07:04'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:37:04 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:07:04'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:37:09 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:07:09'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:37:10 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:07:10'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:37:14 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:07:14'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:37:15 +0000] "GET /api/users/stats HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:07:15'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:38:03 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:08:03'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:42:45 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:12:45'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:42:45 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:12:45'
+}
+{
+  message: 'User Beta tester connected with socket LjmjqDpY-azMOs_dAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:16:43'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:46:43 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:16:43'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:16:43'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:47:55 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 200 255 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:17:55'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:48:01 +0000] "POST /api/notebooks/the-path-of-neo/register-guest HTTP/1.1" 200 656 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:18:01'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:25:46'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:55:46 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:25:46'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:55:47 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:25:47'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:25:59'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:55:59 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:25:59'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:55:59 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:25:59'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:26:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:56:19 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:26:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:56:19 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:26:19'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:26:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:57:19 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:27:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:57:19 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:27:19'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:27:19'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:57:35 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:27:35'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:57:35 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:27:35'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:27:36'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:59:27 +0000] "GET /api/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:29:27'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:59:27 +0000] "GET /api/notebooks/my-notebooks?page=1&limit=10&sortBy=updatedAt&sortOrder=desc HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:29:27'
+}
+{
+  message: 'User Beta tester connected with socket YAz2NsjD0arWT4n9AAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:29:36'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:59:36 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 200 246 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:29:36'
+}
+{
+  message: '::1 - - [10/Jul/2025:18:59:57 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 607 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:29:57'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:29:57'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:29:57'
+}
+{
+  message: '::1 - - [10/Jul/2025:19:00:13 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:30:13'
+}
+{
+  message: '::1 - - [10/Jul/2025:19:00:25 +0000] "POST /api/notebooks/my-my-note-0098/verify-password HTTP/1.1" 200 607 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:30:25'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    permissions: ValidatorError: `collaborators` is not a valid enum value for path `permissions`.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: '`collaborators` is not a valid enum value for path `permissions`.',
+        type: 'enum',
+        enumValues: [ 'everyone', 'creator-only' ],
+        path: 'permissions',
+        fullPath: undefined,
+        value: 'collaborators'
+      },
+      kind: 'enum',
+      path: 'permissions',
+      value: 'collaborators',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  statusCode: 500,
+  status: 'error',
+  message: 'ERROR: Notebook validation failed: permissions: `collaborators` is not a valid enum value for path `permissions`.',
+  level: 'error',
+  timestamp: '2025-07-11 00:33:16'
+}
+{
+  message: '::1 - - [10/Jul/2025:19:03:16 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627/permissions HTTP/1.1" 500 52 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:33:16'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:19'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:19'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:20'
+}
+{
+  message: 'User Beta tester connected with socket s5KAVROYYve1_TAwAAAC',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:20'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686eae541aebc0e6d20d5627',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:21'
+}
+{
+  message: 'User Beta tester connected with socket GshPoY1xgWUslrU0AAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:21'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:37:21'
+}
+{
+  message: '::1 - - [10/Jul/2025:19:08:14 +0000] "PUT /api/notebooks/686eae541aebc0e6d20d5627/permissions HTTP/1.1" 200 143 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:38:14'
+}
+{
+  message: '::1 - - [10/Jul/2025:19:08:23 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 403 87 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:38:23'
+}
+{
+  message: '::1 - - [10/Jul/2025:19:08:26 +0000] "GET /api/notebooks/my-my-note-0098 HTTP/1.1" 403 87 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:38:26'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686eae541aebc0e6d20d5627. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:38:56'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:43:28'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:43:28'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:43:29'
+}
+{
+  message: 'User Beta tester connected with socket j3DM-mM9p1HlT9vLAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:43:29'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:43:29'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2025-07-11 00:43:29'
+}

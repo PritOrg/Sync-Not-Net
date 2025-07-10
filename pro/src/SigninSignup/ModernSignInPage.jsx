@@ -615,6 +615,37 @@ const ModernSignInPage = () => {
             By continuing, you agree to our Terms of Service and Privacy Policy
           </Typography>
         </motion.div>
+
+        {/* Helpful Tips Section */}
+        <Box sx={{ mt: 4, textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}>
+            🎯 Quick Start Tips
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center', mb: 3 }}>
+            <Chip
+              label="🚀 Create notebooks instantly"
+              variant="outlined"
+              color="primary"
+              sx={{ borderRadius: 3 }}
+            />
+            <Chip
+              label="👥 Collaborate in real-time"
+              variant="outlined"
+              color="success"
+              sx={{ borderRadius: 3 }}
+            />
+            <Chip
+              label="🔒 Share with custom permissions"
+              variant="outlined"
+              color="warning"
+              sx={{ borderRadius: 3 }}
+            />
+          </Box>
+          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 400, mx: 'auto' }}>
+            Sign up to unlock all features including auto-save, unlimited notebooks, 
+            and advanced collaboration tools. Or continue as a guest to try it out!
+          </Typography>
+        </Box>
       </Container>
 
       {/* Snackbar for success messages */}

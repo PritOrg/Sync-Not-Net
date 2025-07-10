@@ -543,6 +543,37 @@ const NotebooksPage = () => {
         </Box>
       </motion.div>
 
+      {/* Helpful Tips Banner */}
+      {!loading && notebooks.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <Alert
+            severity="info"
+            sx={{
+              mb: 3,
+              borderRadius: 2,
+              bgcolor: 'rgba(33, 150, 243, 0.1)',
+              borderLeft: `4px solid ${theme.palette.info.main}`,
+              '& .MuiAlert-icon': {
+                color: theme.palette.info.main
+              }
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+              🎯 Quick Tips for Better Productivity
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              • Use <strong>Ctrl+S</strong> to save quickly • Toggle <strong>Auto-Save</strong> to never lose work • 
+              Try <strong>Rich Text</strong> for notes, <strong>Code Mode</strong> for programming • 
+              Share with custom permissions and passwords for security
+            </Typography>
+          </Alert>
+        </motion.div>
+      )}
+
       {/* Controls Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -662,21 +693,29 @@ const NotebooksPage = () => {
                 'Try using different keywords or browse all your notebooks' :
                 tabValue === 1 ?
                   'Click the heart icon on any notebook to add it to your favorites' :
-                  'Start creating notebooks to capture your ideas and notes'
+                  'Start creating notebooks to capture your ideas and notes. Switch between rich text and code modes, collaborate in real-time!'
               }
             </Typography>
 
             {searchQuery.trim() === '' && tabValue !== 1 && (
-              <ModernActionButton
-                variant="contained"
-                startIcon={<Add />}
-                onClick={handleCreateNotebook}
-                sx={{
-                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                }}
-              >
-                Create Your First Notebook
-              </ModernActionButton>
+              <>
+                <ModernActionButton
+                  variant="contained"
+                  startIcon={<Add />}
+                  onClick={handleCreateNotebook}
+                  sx={{
+                    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                    mb: 2
+                  }}
+                >
+                  Create Your First Notebook
+                </ModernActionButton>
+                
+                <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                  💡 Pro tip: Use rich text for documentation, code mode for programming. 
+                  Alt+Shift+F formats code automatically!
+                </Typography>
+              </>
             )}
           </Box>
         </motion.div>

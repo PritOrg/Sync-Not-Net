@@ -92,10 +92,16 @@ const EnhancedUserPresence = ({
     }
   };
 
-  const displayedUsers = currentUsers.slice(0, maxDisplayed);
-  const remainingCount = Math.max(0, userCount - maxDisplayed);
 
-  if (userCount === 0) {
+  // Filter out the current user from the list
+  const filteredUsers = currentUsers.filter(user => {
+    if (!currentUser || !currentUser.id) return true;
+    return user.id !== currentUser.id;
+  });
+  const displayedUsers = filteredUsers.slice(0, maxDisplayed);
+  const remainingCount = Math.max(0, filteredUsers.length - maxDisplayed);
+
+  if (filteredUsers.length === 0) {
     return null;
   }
 
@@ -268,11 +274,11 @@ const EnhancedUserPresence = ({
       >
         <Box sx={{ p: 2 }}>
           <Typography variant="h6" gutterBottom>
-            Online Users ({userCount})
+            Online Users ({filteredUsers.length})
           </Typography>
           <Divider sx={{ mb: 1 }} />
           <List dense sx={{ py: 0 }}>
-            {currentUsers.map((user, index) => (
+            {filteredUsers.map((user, index) => (
               <ListItem
                 key={user.id}
                 sx={{

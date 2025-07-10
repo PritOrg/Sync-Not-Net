@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   TextField,
@@ -12,7 +13,8 @@ import {
   Divider,
   Fade,
   CircularProgress,
-  Backdrop
+  Backdrop,
+  useTheme
 } from '@mui/material';
 import {
   Save as SaveIcon,
@@ -28,15 +30,16 @@ import {
   ArrowBack as ArrowBackIcon
 } from '@mui/icons-material';
 import EnhancedEditor from '../Components/EnhancedEditor';
+import { fadeIn, getAnimationStyles } from '../utils/animations';
 import SettingsDialog from './SettingsDialog';
 import UnifiedAccessPrompt from './UnifiedAccessPrompt';
 import PasswordSettingsDialog from './PasswordSettingsDialog';
 import PermissionsSettingsDialog from './PermissionsSettingsDialog';
 import CollaboratorsSettingsDialog from './CollaboratorsSettingsDialog';
 import Swal from 'sweetalert2';
-import { useNavigate, useParams } from 'react-router-dom';
 import socketClient from '../utils/socketClient';
 import UserPresence from '../Components/UserPresence';
+import { processContentFromBackend, prepareContentForBackend } from '../utils/contentUtils';
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const SAVE_THROTTLE = 5000;
@@ -60,6 +63,7 @@ const registerGuest = async (guestName, urlId) => {
 const NotebookEditor = () => {
   const { urlIdentifier: urlIdentifier_from_url } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   console.log('NotebookEditor component loaded with urlIdentifier:', urlIdentifier_from_url);
 
@@ -68,6 +72,7 @@ const NotebookEditor = () => {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [editorMode, setEditorMode] = useState('quill');
+  const [language, setLanguage] = useState('javascript');
   const [autoSave, setAutoSave] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAccessPromptOpen, setIsAccessPromptOpen] = useState(false);
@@ -83,6 +88,7 @@ const NotebookEditor = () => {
   const [userRole, setUserRole] = useState('viewer');
 
   // Real-time collaboration state
+  const [activeUsers, setActiveUsers] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
   const [conflictData, setConflictData] = useState(null);
@@ -91,6 +97,7 @@ const NotebookEditor = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [typingTimeout, setTypingTimeout] = useState(null);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
   const [lastSavedTime, setLastSavedTime] = useState(null);
   const [accessLevel, setAccessLevel] = useState('read'); // 'read', 'write', 'owner'
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
@@ -132,12 +139,28 @@ const NotebookEditor = () => {
     };
 
     const handleNotebookUpdated = (data) => {
-      if (data.updatedBy.id !== currentUser?.id) {
-        // Update from another user
-        setContent(data.content);
-        setTitle(data.title);
-        setLastSavedVersion(data.version);
-        showNotification('Notebook updated by ' + data.updatedBy.name);
+      // Defensive: ensure data and updatedBy are defined and have id
+      if (!data || !data.updatedBy || typeof data.updatedBy.id === 'undefined') {
+        // Fallback: just update if not from this user (or if cannot determine)
+        if (!currentUser || !currentUser.id || !data.updatedBy || data.updatedBy?.id !== currentUser.id) {
+          if (typeof data.content !== 'undefined') {
+            const processedContent = processContentFromBackend(data.content);
+            setContent(processedContent);
+          }
+          if (typeof data.title !== 'undefined') setTitle(data.title);
+          if (typeof data.version !== 'undefined') setLastSavedVersion(data.version);
+          showNotification('Notebook updated');
+        }
+        return;
+      }        if (data.updatedBy.id !== currentUser?.id) {
+          // Update from another user
+          if (typeof data.content !== 'undefined') {
+            const processedContent = processContentFromBackend(data.content);
+            setContent(processedContent);
+          }
+          if (typeof data.title !== 'undefined') setTitle(data.title);
+          if (typeof data.version !== 'undefined') setLastSavedVersion(data.version);
+          showNotification('Notebook updated by ' + (data.updatedBy.name || 'another user'), 'info');
       }
     };
 
@@ -145,19 +168,42 @@ const NotebookEditor = () => {
       setLastSavedVersion(data.version);
       setIsSaving(false);
       setLastSavedTime(new Date());
-      showNotification('Changes saved successfully');
+      showNotification('Changes saved successfully', 'success');
     };
 
     const handleConflictDetected = (data) => {
       setConflictData(data);
       setIsSaving(false);
-      showNotification('Conflict detected! Please resolve conflicts.');
+      showNotification('Conflict detected! Please resolve conflicts.', 'warning');
     };
 
     const handleSocketError = (error) => {
       console.error('Socket error:', error);
       setConnectionError(error.message || 'Socket error occurred');
-      showNotification('Connection error: ' + (error.message || 'Unknown error'));
+      showNotification('Connection error: ' + (error.message || 'Unknown error'), 'error');
+    };
+
+    const handleJoinedNotebook = (data) => {
+      console.log('Joined notebook room:', data);
+      if (data.currentUsers) {
+        setActiveUsers(data.currentUsers);
+      }
+    };
+
+    const handleUserJoined = (data) => {
+      console.log('User joined:', data);
+      if (data.user) {
+        setActiveUsers(prev => [...prev, data.user]);
+        showNotification(`${data.user.name} joined the notebook`, 'info');
+      }
+    };
+
+    const handleUserLeft = (data) => {
+      console.log('User left:', data);
+      if (data.user) {
+        setActiveUsers(prev => prev.filter(u => u.id !== data.user.id));
+        showNotification(`${data.user.name} left the notebook`, 'info');
+      }
     };
 
     // Register event listeners
@@ -166,6 +212,9 @@ const NotebookEditor = () => {
     socketClient.on('updateConfirmed', handleUpdateConfirmed);
     socketClient.on('conflictDetected', handleConflictDetected);
     socketClient.on('socketError', handleSocketError);
+    socketClient.on('joinedNotebook', handleJoinedNotebook);
+    socketClient.on('userJoined', handleUserJoined);
+    socketClient.on('userLeft', handleUserLeft);
 
     return () => {
       // Cleanup event listeners
@@ -174,6 +223,9 @@ const NotebookEditor = () => {
       socketClient.off('updateConfirmed', handleUpdateConfirmed);
       socketClient.off('conflictDetected', handleConflictDetected);
       socketClient.off('socketError', handleSocketError);
+      socketClient.off('joinedNotebook', handleJoinedNotebook);
+      socketClient.off('userJoined', handleUserJoined);
+      socketClient.off('userLeft', handleUserLeft);
     };
   }, [navigate, currentUser?.id]);
 
@@ -186,24 +238,26 @@ const NotebookEditor = () => {
 
   // Helper functions for saving
   const cleanDataForSave = useCallback((data) => {
-    return {
-      title: data.title,
-      content: data.content,
-      editorMode: data.editorMode,
-      autoSave: data.autoSave,
-      password: data.password,
-      requiresPassword: data.requiresPassword,
-      collaborators: data.collaborators,
-      urlIdentifier: data.urlIdentifier,
-    };
-  }, []);
+    // Only allow owner to send restricted fields
+    const restrictedFields = ['permissions', 'collaborators', 'password', 'urlIdentifier', 'creatorID', 'version', 'createdAt', 'updatedAt'];
+    const allowedFields = ['title', 'content', 'editorMode', 'autoSave', 'tags'];
+    let result = {};
+    if (userRole === 'owner' || accessLevel === 'owner') {
+      // Owner: send everything present in data
+      result = { ...data };
+    } else {
+      // Non-owner: only send allowed fields
+      allowedFields.forEach(field => {
+        if (data[field] !== undefined) {
+          result[field] = data[field];
+        }
+      });
+    }
+    return result;
+  }, [userRole, accessLevel]);
 
   // Save notebook function with improved error handling
   const saveNotebook = useCallback(async (id, data) => {
-    if (!isConnected) {
-      throw new Error('No connection to server. Please check your internet connection.');
-    }
-
     setIsSaving(true);
     try {
       const token = localStorage.getItem('token');
@@ -232,7 +286,7 @@ const NotebookEditor = () => {
     } finally {
       setIsSaving(false);
     }
-  }, [isConnected]);
+  }, []);
 
   // Auto-save function with improved error handling
   const autoSaveNotebook = useCallback(async () => {
@@ -241,7 +295,7 @@ const NotebookEditor = () => {
     try {
       const dirtyData = {
         title,
-        content,
+        content: prepareContentForBackend(content),
         editorMode,
         autoSave,
       };
@@ -305,8 +359,13 @@ const NotebookEditor = () => {
     console.log('Initializing notebook with data:', data);
     setNotebookData(data);
     setTitle(data.title || '');
-    setContent(data.content || '');
+    
+    // Process content from backend (extract from XML if needed)
+    const processedContent = processContentFromBackend(data.content || '');
+    setContent(processedContent);
+    
     setEditorMode(data.editorMode || 'quill');
+    setLanguage(data.language || 'javascript');
     // Only update autoSave if we're not preserving local settings
     if (!preserveLocalSettings) {
       // Ensure we properly handle the autoSave boolean
@@ -322,6 +381,12 @@ const NotebookEditor = () => {
     else if (data.userRole === 'guest' && (data.permissions === 'everyone' || data.accessLevel === 'edit')) setAccessLevel('edit');
     else setAccessLevel('read');
     if (data.userRole) setUserRole(data.userRole);
+
+    // Join notebook room for collaboration if socket is connected
+    if (socketClient.socket && socketClient.isConnected && data._id) {
+      console.log('Joining notebook room:', data._id);
+      socketClient.socket.emit('joinNotebook', data._id);
+    }
   };
 
   // Enhanced fetchNotebookData with better error handling and access control
@@ -373,6 +438,7 @@ const NotebookEditor = () => {
       console.error('Error fetching notebook:', error);
       setConnectionError(error.message);
       setSnackbarMessage(error.message || 'Error loading notebook');
+      setSnackbarSeverity('error');
       setSnackbarOpen(true);
 
       // Handle specific error cases
@@ -444,9 +510,10 @@ const NotebookEditor = () => {
     loadNotebook();
   }, [urlIdentifier_from_url, fetchNotebookData]);
 
-  // Helper functions
-  const showNotification = (message) => {
+  // Helper functions for better UX
+  const showNotification = (message, severity = 'info') => {
     setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
     setSnackbarOpen(true);
   };
 
@@ -459,77 +526,59 @@ const NotebookEditor = () => {
 
 
   const handleSave = async (settingsData = {}, isManualSave = true) => {
-    if (!firstSaveDone) {
-      setIsSettingsOpen(true);
-      return;
-    }
-
-    // For manual saves, show confirmation dialog
-    if (isManualSave) {
-      Swal.fire({
-        title: 'Save Notebook?',
-        text: "Do you want to save the changes?",
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: 'Save',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          const dirtyData = {
-            title,
-            content,
-            editorMode,
-            autoSave,
-            ...settingsData,
-          };
-
-          const cleanData = cleanDataForSave(dirtyData);
-
-          try {
-            await saveNotebook(notebookData._id, cleanData);
-            setFirstSaveDone(true);
-            showNotification('Your notebook has been saved');
-            Swal.fire('Saved!', 'Your notebook has been saved.', 'success');
-          } catch (error) {
-            Swal.fire('Error!', error.message, 'error');
-          }
-        }
-      });
-    } else {
-      // For auto-saves, save silently without dialog
-      const dirtyData = {
-        title,
-        content,
-        editorMode,
-        autoSave,
-        ...settingsData,
-      };
-
-      const cleanData = cleanDataForSave(dirtyData);
-
-      try {
-        await saveNotebook(notebookData._id, cleanData);
-        setFirstSaveDone(true);
-        showNotification('Changes auto-saved');
-      } catch (error) {
-        console.error('Auto-save error:', error);
-        showNotification('Auto-save failed', 'error');
+    // Save notebook content, title, editorMode, and autosave for anyone with edit access
+    const dirtyData = {
+      title,
+      content: prepareContentForBackend(content),
+      editorMode,
+      language,
+      autoSave,
+      ...settingsData,
+    };
+    console.log('[NotebookEditor] Saving notebook with language:', language);
+    const cleanData = cleanDataForSave(dirtyData);
+    try {
+      const response = await saveNotebook(notebookData._id, cleanData);
+      if (response && response.notebook) {
+        console.log('[NotebookEditor] Notebook saved, response language:', response.notebook.language);
       }
+      setFirstSaveDone(true);
+      showNotification('Your notebook has been saved', 'success');
+    } catch (error) {
+      showNotification(error.message || 'Failed to save notebook', 'error');
     }
   };
 
-  const handleEditorSwitch = () => {
-    Swal.fire({
-      title: 'Switch Editor Type?',
-      text: "Switching editor may affect formatting. Continue?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, switch',
-      cancelButtonText: 'Cancel'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setEditorMode(prev => (prev === 'quill' ? 'monaco' : 'quill'));
-      }
-    });
+  // Unified handler for editor mode change (used by both EnhancedEditor and the button)
+  // Utility to convert HTML to plain text, preserving newlines
+  const htmlToPlainText = (html) => {
+    if (!html) return '';
+    let text = html;
+    text = text.replace(/<br\s*\/?>/gi, '\n');
+    text = text.replace(/<p[^>]*>/gi, '');
+    text = text.replace(/<\/p>/gi, '\n');
+    text = text.replace(/<[^>]+>/g, '');
+    text = text.replace(/\n{2,}/g, '\n');
+    return text.trim();
+  };
+
+  const handleEditorModeChange = (newMode) => {
+    if (newMode === (editorMode === 'quill' ? 'rich' : 'code')) return; // No change
+    if (editorMode === 'quill' && newMode === 'code') {
+      // Convert HTML to plain text for code mode
+      setContent(htmlToPlainText(content));
+      setEditorMode('monaco');
+      setLanguage('javascript');
+      showNotification('Switched to code editor', 'success');
+    } else if (editorMode === 'monaco' && newMode === 'rich') {
+      // Convert plain text (with newlines) to HTML for Quill
+      const plain = content || '';
+      // Replace newlines with <br> and wrap in <p>
+      const html = '<p>' + plain.replace(/\n/g, '<br>') + '</p>';
+      setContent(html);
+      setEditorMode('quill');
+      showNotification('Switched to rich text editor', 'success');
+    }
   };
 
   // Enhanced content change handlers with typing indicators
@@ -636,17 +685,22 @@ const NotebookEditor = () => {
     console.log('Password verified successfully', { data, guestName });
     setRequiresPassword(false);
     setIsAccessPromptOpen(false);
+    showNotification('Access granted successfully!', 'success');
 
     if (guestName && !isAuthenticated) {
       try {
         const guestData = await registerGuest(guestName, urlIdentifier);
         setGuestInfo(guestData.guestUser);
         setIsGuestRegistered(true);
+        
+        // Connect socket for guest user
+        socketClient.connect(null, guestData.guestUser);
+        
         initializeNotebook(guestData);
+        showNotification(`Welcome, ${guestName}! You can now edit this notebook.`, 'success');
       } catch (error) {
         console.error('Error registering guest:', error);
-        setSnackbarMessage(error.message || 'Error registering as guest');
-        setSnackbarOpen(true);
+        showNotification(error.message || 'Error registering as guest', 'error');
       }
     } else {
       initializeNotebook(data);
@@ -662,6 +716,10 @@ const NotebookEditor = () => {
         const guestData = await registerGuest(guestName, urlIdentifier);
         setGuestInfo(guestData.guestUser);
         setIsGuestRegistered(true);
+        
+        // Connect socket for guest user
+        socketClient.connect(null, guestData.guestUser);
+        
         if (guestData.requiresPassword) {
           setAccessPromptData({ ...guestData, guestName, requiresGuestName: false, requiresPassword: true });
           setRequiresPassword(true);
@@ -670,6 +728,7 @@ const NotebookEditor = () => {
         } else {
           setIsAccessPromptOpen(false);
           initializeNotebook(guestData);
+          showNotification(`Welcome! You can now collaborate on this notebook.`, 'success');
         }
       } else if (password) {
         // Verify password (and guestName if present)
@@ -699,10 +758,12 @@ const NotebookEditor = () => {
         }
         setIsAccessPromptOpen(false);
         initializeNotebook(data);
+        showNotification('Access granted! Welcome to the notebook.', 'success');
       }
     } catch (error) {
       console.error('Access prompt error:', error);
       setSnackbarMessage(error.message || 'Access denied');
+      setSnackbarSeverity('error');
       setSnackbarOpen(true);
     }
   };
@@ -846,7 +907,28 @@ const NotebookEditor = () => {
               </Alert>
             )}
 
-          
+            {/* Contextual Help Banner for New Users */}
+            {!firstSaveDone && accessLevel !== 'read' && (
+              <Alert
+                severity="info"
+                sx={{
+                  mb: 2,
+                  borderRadius: 2,
+                  bgcolor: 'rgba(33, 150, 243, 0.1)',
+                  borderLeft: `4px solid ${theme.palette.info.main}`,
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                  🚀 Welcome! Here's how to get started:
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.5 }}>
+                  • Choose <strong>Rich Text</strong> for notes and documents, <strong>Code Mode</strong> for programming<br/>
+                  • Enable <strong>Auto-Save</strong> to never lose work • Use <strong>Ctrl+S</strong> to save manually<br/>
+                  • Click <strong>Settings</strong> to share with others, set passwords, or change permissions
+                </Typography>
+              </Alert>
+            )}
+
             <Box sx={{
               display: 'flex',
               alignItems: 'center',
@@ -881,27 +963,41 @@ const NotebookEditor = () => {
                   </Button>
                 </Tooltip>
 
-                <Tooltip title={`Switch to ${editorMode === 'quill' ? 'Code' : 'Rich Text'} Editor`}>
-                  <Button
+                {/* Editor Mode Toggle (animated, matches EnhancedEditor) */}
+                <Box
+                  sx={{
+                    ...getAnimationStyles(fadeIn, 'normal'),
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <EnhancedEditor.ToggleButtonGroup
+                    value={editorMode === 'quill' ? 'rich' : 'code'}
+                    exclusive
+                    onChange={(e, newMode) => {
+                      if (newMode) handleEditorModeChange(newMode);
+                    }}
                     size="small"
-                    variant="outlined"
-                    onClick={handleEditorSwitch}
                     disabled={accessLevel === 'read'}
-                    startIcon={editorMode === 'quill' ? <CodeIcon /> : <EditIcon />}
                     sx={{
-                      borderRadius: 2,
-                      textTransform: 'none',
-                      borderColor: 'rgba(0,0,0,0.15)',
-                      px: 2,
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                        backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                      '& .MuiToggleButton-root': {
+                        px: 2,
+                        py: 0.5,
+                        fontSize: '0.75rem',
+                        fontWeight: 500,
                       }
                     }}
                   >
-                    {editorMode === 'quill' ? 'Code Editor' : 'Rich Text'}
-                  </Button>
-                </Tooltip>
+                    <EnhancedEditor.ToggleButton value="rich" aria-label="rich text editor">
+                      <EditIcon fontSize="small" sx={{ mr: 0.5 }} />
+                      Rich
+                    </EnhancedEditor.ToggleButton>
+                    <EnhancedEditor.ToggleButton value="code" aria-label="code editor">
+                      <CodeIcon fontSize="small" sx={{ mr: 0.5 }} />
+                      Code
+                    </EnhancedEditor.ToggleButton>
+                  </EnhancedEditor.ToggleButtonGroup>
+                </Box>
 
                 {accessLevel !== 'read' && (
                   <Tooltip title={autoSave ? 'Disable Autosave' : 'Enable Autosave'}>
@@ -913,21 +1009,20 @@ const NotebookEditor = () => {
                         setAutoSave(newAutoSave);
                         
                         // Save the autosave setting immediately if notebook exists
-                        if (firstSaveDone && notebookData._id) {
-                          try {
-                            const dirtyData = {
-                              title,
-                              content,
-                              editorMode,
-                              autoSave: newAutoSave,
-                            };
-                            const cleanData = cleanDataForSave(dirtyData);
-                            await saveNotebook(notebookData._id, cleanData);
-                            showNotification(`Autosave ${newAutoSave ? 'enabled' : 'disabled'}`);
-                          } catch (error) {
-                            console.error('Failed to save autosave setting:', error);
-                            setAutoSave(!newAutoSave); // Revert on error
-                            showNotification('Failed to save autosave setting');
+                        if (firstSaveDone && notebookData._id) {                      try {
+                        const dirtyData = {
+                          title,
+                          content,
+                          editorMode,
+                          autoSave: newAutoSave,
+                        };
+                        const cleanData = cleanDataForSave(dirtyData);
+                        await saveNotebook(notebookData._id, cleanData);
+                        showNotification(`Autosave ${newAutoSave ? 'enabled' : 'disabled'}`, 'success');
+                      } catch (error) {
+                        console.error('Failed to save autosave setting:', error);
+                        setAutoSave(!newAutoSave); // Revert on error
+                        showNotification('Failed to save autosave setting', 'error');
                           }
                         }
                       }}
@@ -970,15 +1065,26 @@ const NotebookEditor = () => {
               p: 2,
             }}
           >
+            {/* Helpful tips for code mode */}
+            {editorMode === 'monaco' && (
+              <Box sx={{ mb: 1 }}>
+                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                  💡 Tip: Use Alt+Shift+F to format code • Ctrl+Z/Ctrl+Y for undo/redo • Select language for syntax highlighting
+                </Typography>
+              </Box>
+            )}
+            
             <EnhancedEditor
               content={content}
               onChange={handleContentChange}
               onSave={handleSave}
               editorMode={editorMode === 'quill' ? 'rich' : 'code'}
-              language="javascript"
+              language={language}
               autoSave={autoSave}
               placeholder="Start writing your notebook..."
               readOnly={accessLevel === 'read'}
+              onLanguageChange={setLanguage}
+              onModeChange={handleEditorModeChange}
             />
           </Box>
 
@@ -1015,7 +1121,7 @@ const NotebookEditor = () => {
 
               <Button
                 variant="contained"
-                onClick={handleSave}
+                onClick={() => handleSave()}
                 startIcon={<SaveIcon />}
                 disabled={autoSave && content === lastSavedContent.current}
                 sx={{
@@ -1208,6 +1314,7 @@ const NotebookEditor = () => {
             <UserPresence
               notebookId={notebookData._id}
               currentUser={currentUser}
+              activeUsers={activeUsers}
             />
           </Box>
         </Fade>
@@ -1292,15 +1399,15 @@ const NotebookEditor = () => {
       {/* Notification Snackbar */}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={() => setSnackbarOpen(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert
           onClose={() => setSnackbarOpen(false)}
-          severity="success"
+          severity={snackbarSeverity}
           variant="filled"
-          sx={{ width: '100%', borderRadius: 2 }}
+          sx={{ width: '100%' }}
         >
           {snackbarMessage}
         </Alert>
