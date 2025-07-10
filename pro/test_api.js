@@ -1,0 +1,1 @@
+console.log('Testing API call'); fetch('http://localhost:5000/api/notebooks/my-my-note-0098').then(r => r.json()).then(d => console.log('API Response:', d)).catch(e => console.error('API Error:', e));

@@ -232,9 +232,10 @@ function Layout(props) {
   };
 
   const handleLogout = () => {
-    // Add logout logic here
+    // Clear authentication token
+    localStorage.removeItem('token');
     handleMenuClose();
-    navigate('/SignInSignUp');
+    navigate('/auth?mode=login');
   };
 
   const handleSearchSubmit = (e) => {

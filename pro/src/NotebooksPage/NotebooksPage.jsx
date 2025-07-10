@@ -1,44 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Grid, 
-  Card, 
-  CardContent, 
-  Button, 
-  CircularProgress,
+import React, { useEffect, useState, useCallback } from 'react';
+import {
+  Box,
+  Typography,
+  Grid,
+  Button,
   TextField,
   InputAdornment,
-  Avatar,
   Menu,
   MenuItem,
   Tabs,
   Tab,
-  Fade,
-  Divider,
   useTheme,
   useMediaQuery,
-  IconButton
+  IconButton,
+  Container,
+  Alert,
+  Snackbar,
+  Pagination
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { format, formatDistanceToNow } from 'date-fns';
-import { 
-  Edit, 
-  Timer, 
-  CalendarMonth, 
-  Search, 
-  Add, 
+import {
+  Search,
+  Add,
   BookOutlined,
   SortOutlined,
-  FilterListOutlined,
-  MoreVert,
-  DeleteOutline,
-  ContentCopy,
-  Share,
-  Favorite,
-  FavoriteBorder
+  ViewModule,
+  ViewList,
+  Refresh,
+  ArrowDropDown,
+  AutoAwesome,
+  Create
 } from '@mui/icons-material';
+import { motion, AnimatePresence } from 'framer-motion';
+import { NotebookCard, NotebookListItem } from '../Components/NotebookCard';
+import { ModernActionButton } from '../Components/ModernUI';
+import { NotebookCardSkeleton } from '../Components/LoadingStates';
+import { InlineErrorFallback } from '../Components/ErrorBoundary';
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -46,13 +44,15 @@ const NotebooksPage = () => {
   const [notebooks, setNotebooks] = useState([]);
   const [filteredNotebooks, setFilteredNotebooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [tabValue, setTabValue] = useState(0);
   const [sortAnchorEl, setSortAnchorEl] = useState(null);
-  const [currentMenuNotebook, setCurrentMenuNotebook] = useState(null);
-  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const [favorites, setFavorites] = useState([]);
-  
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [createMenuAnchor, setCreateMenuAnchor] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -68,102 +68,186 @@ const NotebooksPage = () => {
   
   const [currentSort, setCurrentSort] = useState(sortOptions[0]);
 
-  // Function to strip HTML tags and decode entities
-  const stripHtml = (html) => {
-    const temp = document.createElement('div');
-    temp.innerHTML = html;
-    return temp.textContent || temp.innerText;
-  };
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalNotebooks, setTotalNotebooks] = useState(0);
+  const [itemsPerPage] = useState(10);
+
+
+
+  const fetchNotebooks = useCallback(async (currentFavorites = [], page = 1, searchTerm = '', sortBy = 'updatedAt', sortOrder = 'desc') => {
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        navigate('/auth?mode=login');
+        return;
+      }
+
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: itemsPerPage.toString(),
+        sortBy,
+        sortOrder
+      });
+
+      if (searchTerm.trim()) {
+        params.append('search', searchTerm.trim());
+      }
+
+      const response = await axios.get(`${API_BASE_URL}/api/notebooks/my-notebooks?${params.toString()}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const notebooksData = response.data.notebooks || [];
+      const paginationData = response.data.pagination || {};
+
+      const notebooksWithFavorites = notebooksData.map(notebook => ({
+        ...notebook,
+        isFavorited: currentFavorites.includes(notebook._id)
+      }));
+
+      setNotebooks(notebooksWithFavorites);
+      setCurrentPage(paginationData.page || 1);
+      setTotalPages(paginationData.pages || 1);
+      setTotalNotebooks(paginationData.total || 0);
+      setFilteredNotebooks(notebooksWithFavorites);
+    } catch (error) {
+      console.error('Error fetching notebooks:', error);
+
+      let errorMessage = 'Failed to load notebooks';
+      let snackbarMessage = 'Failed to load notebooks. Please try again.';
+
+      if (error.response) {
+        const status = error.response.status;
+        const serverMessage = error.response.data?.message;
+
+        switch (status) {
+          case 401:
+            errorMessage = 'Authentication expired. Please sign in again.';
+            snackbarMessage = 'Session expired. Redirecting to login...';
+            setTimeout(() => navigate('/auth?mode=login'), 2000);
+            break;
+          case 403:
+            errorMessage = 'Access denied. You don\'t have permission to view notebooks.';
+            snackbarMessage = 'Access denied. Please contact support.';
+            break;
+          case 404:
+            errorMessage = 'Notebooks service not found.';
+            snackbarMessage = 'Service temporarily unavailable. Please try again later.';
+            break;
+          case 429:
+            errorMessage = 'Too many requests. Please wait a moment.';
+            snackbarMessage = 'Too many requests. Please wait before trying again.';
+            break;
+          case 500:
+            errorMessage = 'Server error occurred while loading notebooks.';
+            snackbarMessage = 'Server error. Please try again in a few minutes.';
+            break;
+          default:
+            errorMessage = serverMessage || `Error ${status}: Failed to load notebooks`;
+            snackbarMessage = serverMessage || 'An unexpected error occurred. Please try again.';
+        }
+      } else if (error.request) {
+        errorMessage = 'Network error. Please check your connection.';
+        snackbarMessage = 'Network error. Please check your internet connection.';
+      }
+
+      setError(errorMessage);
+      setSnackbar({
+        open: true,
+        message: snackbarMessage,
+        severity: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, itemsPerPage]);
 
   useEffect(() => {
-    const fetchNotebooks = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_BASE_URL}/api/notebooks`, {
-          headers: {
-            "Authorization": token,
-          },
-        });
-        setNotebooks(response.data);
-        setFilteredNotebooks(response.data);
-        setLoading(false);
-        
-        // Load favorites from localStorage
-        const savedFavorites = localStorage.getItem('favorite-notebooks');
-        if (savedFavorites) {
-          setFavorites(JSON.parse(savedFavorites));
-        }
-      } catch (error) {
-        console.error('Error fetching notebooks:', error);
-        setLoading(false);
-      }
-    };
-    fetchNotebooks();
-  }, []);
-  
-  // Apply search filtering
-  useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setFilteredNotebooks(notebooks);
-    } else {
-      const query = searchQuery.toLowerCase();
-      const filtered = notebooks.filter(notebook => 
-        notebook.title?.toLowerCase().includes(query) || 
-        stripHtml(notebook.content)?.toLowerCase().includes(query)
-      );
-      setFilteredNotebooks(filtered);
+    // Check authentication first
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/auth?mode=login');
+      return;
     }
-  }, [searchQuery, notebooks]);
+
+    // Validate token
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Date.now() / 1000;
+
+      if (payload.exp <= currentTime) {
+        // Token is expired
+        localStorage.removeItem('token');
+        navigate('/auth?mode=login');
+        return;
+      }
+    } catch (error) {
+      // Invalid token format
+      localStorage.removeItem('token');
+      navigate('/auth?mode=login');
+      return;
+    }
+
+    // Load favorites from localStorage and fetch notebooks only once
+    const savedFavorites = localStorage.getItem('favorite-notebooks');
+    const currentFavorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+    setFavorites(currentFavorites);
+
+    // Fetch notebooks with current favorites
+    fetchNotebooks(currentFavorites, currentPage, searchQuery, getSortField(currentSort.id), getSortOrder(currentSort.id));
+  }, [fetchNotebooks, navigate, currentPage, searchQuery, currentSort]);
+
+  // Helper functions to convert sort option to API parameters
+  const getSortField = (sortId) => {
+    if (sortId.includes('title')) return 'title';
+    if (sortId.includes('created')) return 'createdAt';
+    return 'updatedAt';
+  };
+
+  const getSortOrder = (sortId) => {
+    return sortId.includes('asc') ? 'asc' : 'desc';
+  };
   
-  // Apply tab filtering
+  // Apply tab filtering (favorites only, since backend handles search and sorting)
   useEffect(() => {
     let filtered = [...notebooks];
-    
-    // Apply search first
-    if (searchQuery.trim() !== '') {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(notebook => 
-        notebook.title?.toLowerCase().includes(query) || 
-        stripHtml(notebook.content)?.toLowerCase().includes(query)
-      );
-    }
-    
-    // Then apply tab filter
+
+    // Apply favorites tab filter
     if (tabValue === 1) { // Favorites tab
       filtered = filtered.filter(notebook => favorites.includes(notebook._id));
     }
-    
-    // Then apply sorting
-    filtered = applySorting(filtered, currentSort.id);
-    
+
     setFilteredNotebooks(filtered);
-  }, [tabValue, notebooks, searchQuery, favorites, currentSort]);
-  
-  const applySorting = (notebooksToSort, sortId) => {
-    const sorted = [...notebooksToSort];
-    
-    switch(sortId) {
-      case 'updated-desc':
-        return sorted.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      case 'updated-asc':
-        return sorted.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
-      case 'created-desc':
-        return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      case 'created-asc':
-        return sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      case 'title-asc':
-        return sorted.sort((a, b) => (a.title || 'Untitled').localeCompare(b.title || 'Untitled'));
-      case 'title-desc':
-        return sorted.sort((a, b) => (b.title || 'Untitled').localeCompare(a.title || 'Untitled'));
-      default:
-        return sorted;
-    }
+  }, [tabValue, notebooks, favorites]);
+
+  // Pagination handlers
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
   };
 
-  const handleNotebookClick = (urlIdentifier) => {
-    navigate('/Notebook/' + urlIdentifier);
+  // Search handler with debouncing
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchQuery(value);
+    setCurrentPage(1); // Reset to first page when searching
   };
-  
+
+  // Sort handler
+  const handleSortSelect = (sortOption) => {
+    setCurrentSort(sortOption);
+    setCurrentPage(1); // Reset to first page when sorting
+    handleSortClose();
+  };
+
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -175,196 +259,370 @@ const NotebooksPage = () => {
   const handleSortClose = () => {
     setSortAnchorEl(null);
   };
-  
-  const handleSortSelect = (sortOption) => {
-    setCurrentSort(sortOption);
-    handleSortClose();
+
+  // Modern notebook action handlers
+  const handleNotebookOpen = (notebook) => {
+    navigate('/Notebook/' + notebook.urlIdentifier);
   };
-  
-  const handleMenuOpen = (event, notebook) => {
-    event.stopPropagation();
-    setCurrentMenuNotebook(notebook);
-    setMenuAnchorEl(event.currentTarget);
+
+  const handleEnhancedEdit = (notebook) => {
+    navigate(`/Notebook/${notebook.urlIdentifier}/enhanced`);
   };
-  
-  const handleMenuClose = () => {
-    setMenuAnchorEl(null);
-  };
-  
-  const toggleFavorite = (event, notebookId) => {
-    event.stopPropagation();
-    
-    let newFavorites;
-    if (favorites.includes(notebookId)) {
-      newFavorites = favorites.filter(id => id !== notebookId);
+
+  const handleToggleFavorite = (notebookId, isFavorited) => {
+    let updatedFavorites;
+    if (isFavorited) {
+      updatedFavorites = [...favorites, notebookId];
     } else {
-      newFavorites = [...favorites, notebookId];
+      updatedFavorites = favorites.filter(id => id !== notebookId);
     }
-    
-    setFavorites(newFavorites);
-    localStorage.setItem('favorite-notebooks', JSON.stringify(newFavorites));
+
+    setFavorites(updatedFavorites);
+    localStorage.setItem('favorite-notebooks', JSON.stringify(updatedFavorites));
+
+    // Update notebooks state
+    setNotebooks(prev => prev.map(notebook =>
+      notebook._id === notebookId
+        ? { ...notebook, isFavorited }
+        : notebook
+    ));
+
+    setSnackbar({
+      open: true,
+      message: isFavorited ? 'Added to favorites' : 'Removed from favorites',
+      severity: 'success'
+    });
+  };
+
+  const handleShareNotebook = (notebook) => {
+    const shareUrl = `${window.location.origin}/Notebook/${notebook.urlIdentifier}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setSnackbar({
+        open: true,
+        message: 'Share link copied to clipboard!',
+        severity: 'success'
+      });
+    }).catch(() => {
+      setSnackbar({
+        open: true,
+        message: 'Failed to copy link',
+        severity: 'error'
+      });
+    });
+  };
+
+  const handleDeleteNotebook = async (notebookId) => {
+    if (!window.confirm('Are you sure you want to delete this notebook? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API_BASE_URL}/api/notebooks/${notebookId}`, {
+        headers: { "Authorization": token }
+      });
+
+      setNotebooks(prev => prev.filter(notebook => notebook._id !== notebookId));
+      setSnackbar({
+        open: true,
+        message: 'Notebook deleted successfully',
+        severity: 'success'
+      });
+    } catch (error) {
+      console.error('Error deleting notebook:', error);
+
+      let message = 'Failed to delete notebook';
+
+      if (error.response) {
+        const status = error.response.status;
+        const serverMessage = error.response.data?.message;
+
+        switch (status) {
+          case 401:
+            message = 'Authentication expired. Please sign in again.';
+            setTimeout(() => navigate('/auth?mode=login'), 2000);
+            break;
+          case 403:
+            message = 'You don\'t have permission to delete this notebook.';
+            break;
+          case 404:
+            message = 'Notebook not found. It may have already been deleted.';
+            // Refresh the list to remove the notebook from UI
+            fetchNotebooks();
+            break;
+          case 409:
+            message = 'Cannot delete notebook. It may be shared with others.';
+            break;
+          default:
+            message = serverMessage || `Error ${status}: Failed to delete notebook`;
+        }
+      } else if (error.request) {
+        message = 'Network error. Please check your connection and try again.';
+      }
+
+      setSnackbar({
+        open: true,
+        message,
+        severity: 'error'
+      });
+    }
+  };
+
+  const handleCreateNotebook = () => {
+    navigate('/Notebook/new');
+  };
+
+  const handleCreateEnhancedNotebook = () => {
+    navigate('/Notebook/create');
+  };
+
+  const handleRefresh = () => {
+    const savedFavorites = localStorage.getItem('favorite-notebooks');
+    const currentFavorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+    fetchNotebooks(currentFavorites, currentPage, searchQuery, getSortField(currentSort.id), getSortOrder(currentSort.id));
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
   };
   
-  const getRandomColor = (text) => {
-    const colors = [
-      '#FF5252', '#FF4081', '#E040FB', '#7C4DFF', 
-      '#536DFE', '#448AFF', '#40C4FF', '#18FFFF',
-      '#64FFDA', '#69F0AE', '#B2FF59', '#EEFF41', 
-      '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40'
-    ];
-    
-    const hash = text.split('').reduce((acc, char) => char.charCodeAt(0) + acc, 0);
-    return colors[hash % colors.length];
-  };
+
+
+  // Error fallback component
+  if (error && !loading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <InlineErrorFallback
+          error={error}
+          onRetry={handleRefresh}
+        />
+      </Container>
+    );
+  }
 
   return (
-    <Box sx={{ padding: { xs: 2, sm: 3 }, backgroundColor: '#f9fafc', minHeight: '100vh' }}>
-      <Box sx={{ 
-        background: 'linear-gradient(135deg, #6B46C1 0%, #9F7AEA 100%)',
-        borderRadius: 3,
-        padding: { xs: 3, sm: 4 },
-        mb: 4,
-        color: 'white',
-        boxShadow: '0 8px 32px rgba(107, 70, 193, 0.2)'
-      }}>
-        <Typography 
-          variant="h4" 
-          sx={{ 
-            fontWeight: 700,
-            mb: 1
-          }}
-        >
-          Your Notebooks
-        </Typography>
-        <Typography variant="body1" sx={{ opacity: 0.9, mb: 3, maxWidth: '600px' }}>
-          Capture your thoughts, ideas, and research in one place. Create, organize, and access your notebooks anytime.
-        </Typography>
-        
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: { xs: 'column', sm: 'row' }, 
-          gap: 2,
-          alignItems: { xs: 'stretch', sm: 'center' }
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Header Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <Box sx={{
+          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+          borderRadius: 3,
+          p: { xs: 3, sm: 4 },
+          mb: 4,
+          color: 'white',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Search your notebooks..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+          {/* Background decoration */}
+          <Box
             sx={{
-              maxWidth: '500px',
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
-              borderRadius: 2,
-              '& .MuiOutlinedInput-root': {
-                color: 'white',
-                '& fieldset': {
-                  borderColor: 'transparent',
-                },
-                '&:hover fieldset': {
-                  borderColor: 'transparent',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: 'transparent',
-                },
-              },
-              '& .MuiInputBase-input::placeholder': {
-                color: 'rgba(255, 255, 255, 0.7)',
-                opacity: 1,
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search sx={{ color: 'white' }} />
-                </InputAdornment>
-              ),
+              position: 'absolute',
+              top: -50,
+              right: -50,
+              width: 200,
+              height: 200,
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.1)',
+              pointerEvents: 'none'
             }}
           />
-          
-          <Button 
-            variant="contained"
-            onClick={() => navigate('/Notebook/new')}
-            startIcon={<Add />}
-            sx={{
-              borderRadius: 2,
-              textTransform: 'none',
-              background: 'white',
-              color: '#6B46C1',
-              fontWeight: 600,
-              padding: '10px 20px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              '&:hover': {
-                background: 'rgba(255, 255, 255, 0.9)',
-              }
-            }}
-          >
-            Create New Notebook
-          </Button>
-        </Box>
-      </Box>
 
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          mb: 2
+          <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+            Your Notebooks
+          </Typography>
+          <Typography variant="h6" sx={{ opacity: 0.9, mb: 3, maxWidth: '600px' }}>
+            Capture your thoughts, ideas, and research in one place. Create, organize, and access your notebooks anytime.
+          </Typography>
+
+          <Box sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 2,
+            alignItems: { xs: 'stretch', sm: 'center' }
+          }}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="Search your notebooks..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              sx={{
+                maxWidth: '500px',
+                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                borderRadius: 2,
+                '& .MuiOutlinedInput-root': {
+                  color: 'white',
+                  '& fieldset': { borderColor: 'transparent' },
+                  '&:hover fieldset': { borderColor: 'transparent' },
+                  '&.Mui-focused fieldset': { borderColor: 'transparent' },
+                },
+                '& .MuiInputBase-input::placeholder': {
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  opacity: 1,
+                },
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search sx={{ color: 'white' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Box sx={{ position: 'relative' }}>
+              <ModernActionButton
+                variant="contained"
+                onClick={(e) => setCreateMenuAnchor(e.currentTarget)}
+                endIcon={<ArrowDropDown />}
+                startIcon={<Add />}
+                sx={{
+                  background: 'white',
+                  color: theme.palette.primary.main,
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.9)',
+                  }
+                }}
+              >
+                {isMobile ? 'New' : 'Create Notebook'}
+              </ModernActionButton>
+              
+              <Menu
+                anchorEl={createMenuAnchor}
+                open={Boolean(createMenuAnchor)}
+                onClose={() => setCreateMenuAnchor(null)}
+                PaperProps={{
+                  sx: {
+                    borderRadius: 2,
+                    mt: 1,
+                    '& .MuiMenuItem-root': {
+                      borderRadius: 1,
+                      mx: 1,
+                      my: 0.5,
+                    }
+                  }
+                }}
+              >
+                <MenuItem onClick={() => {
+                  handleCreateNotebook();
+                  setCreateMenuAnchor(null);
+                }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Create fontSize="small" />
+                    <Box>
+                      <Typography variant="body2" fontWeight="medium">Quick Create</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Basic notebook creation
+                      </Typography>
+                    </Box>
+                  </Box>
+                </MenuItem>
+                <MenuItem onClick={() => {
+                  handleCreateEnhancedNotebook();
+                  setCreateMenuAnchor(null);
+                }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <AutoAwesome fontSize="small" color="primary" />
+                    <Box>
+                      <Typography variant="body2" fontWeight="medium" color="primary">
+                        Enhanced Creator
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Advanced creation with templates
+                      </Typography>
+                    </Box>
+                  </Box>
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Box>
+        </Box>
+      </motion.div>
+
+      {/* Controls Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: { xs: 'flex-start', sm: 'center' },
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: 2,
+          mb: 3
         }}>
-          <Tabs 
-            value={tabValue} 
+          <Tabs
+            value={tabValue}
             onChange={handleTabChange}
             sx={{
               '& .MuiTabs-indicator': {
-                backgroundColor: '#6B46C1',
+                backgroundColor: theme.palette.primary.main,
               },
             }}
           >
-            <Tab 
-              label="All Notebooks" 
-              sx={{ 
-                textTransform: 'none', 
+            <Tab
+              label={`All Notebooks (${notebooks.length})`}
+              sx={{
+                textTransform: 'none',
                 fontWeight: 600,
-                '&.Mui-selected': { color: '#6B46C1' }
-              }} 
+                '&.Mui-selected': { color: theme.palette.primary.main }
+              }}
             />
-            <Tab 
-              label="Favorites" 
-              sx={{ 
-                textTransform: 'none', 
+            <Tab
+              label={`Favorites (${favorites.length})`}
+              sx={{
+                textTransform: 'none',
                 fontWeight: 600,
-                '&.Mui-selected': { color: '#6B46C1' }
-              }} 
+                '&.Mui-selected': { color: theme.palette.primary.main }
+              }}
             />
           </Tabs>
-          
-          <Box>
+
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <IconButton
+              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+              sx={{ color: 'text.secondary' }}
+            >
+              {viewMode === 'grid' ? <ViewList /> : <ViewModule />}
+            </IconButton>
+
+            <IconButton
+              onClick={handleRefresh}
+              disabled={loading}
+              sx={{ color: 'text.secondary' }}
+            >
+              <Refresh />
+            </IconButton>
+
             <Button
               startIcon={<SortOutlined />}
               onClick={handleSortClick}
-              sx={{ 
+              variant="outlined"
+              size="small"
+              sx={{
                 textTransform: 'none',
-                color: 'text.secondary',
+                borderRadius: 2,
               }}
             >
               {!isMobile && currentSort.label}
             </Button>
+
             <Menu
               anchorEl={sortAnchorEl}
               open={Boolean(sortAnchorEl)}
               onClose={handleSortClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
               {sortOptions.map((option) => (
-                <MenuItem 
-                  key={option.id} 
+                <MenuItem
+                  key={option.id}
                   onClick={() => handleSortSelect(option)}
                   selected={currentSort.id === option.id}
                 >
@@ -374,183 +632,164 @@ const NotebooksPage = () => {
             </Menu>
           </Box>
         </Box>
-        
-        <Divider />
-      </Box>
+      </motion.div>
 
+      {/* Content Section */}
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px' }}>
-          <CircularProgress sx={{ color: '#6B46C1' }} />
-        </Box>
+        <NotebookCardSkeleton count={6} />
       ) : filteredNotebooks.length === 0 ? (
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          minHeight: '300px',
-          padding: 4,
-          textAlign: 'center'
-        }}>
-          <BookOutlined sx={{ fontSize: 80, color: '#E2E8F0', mb: 2 }} />
-          <Typography variant="h6" color="text.secondary">
-            {searchQuery.trim() !== '' ? 'No notebooks match your search' : tabValue === 1 ? 'No favorite notebooks yet' : 'No notebooks found'}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 3, maxWidth: '400px' }}>
-            {searchQuery.trim() !== '' ? 
-              'Try using different keywords or browse all your notebooks' : 
-              tabValue === 1 ? 
-                'Click the heart icon on any notebook to add it to your favorites' : 
-                'Start creating notebooks to capture your ideas and notes'
-            }
-          </Typography>
-          
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            onClick={() => navigate('/Notebook/new')}
-            sx={{
-              borderRadius: 2,
-              textTransform: 'none',
-              background: 'linear-gradient(135deg, #6B46C1 0%, #9F7AEA 100%)',
-              fontWeight: 600,
-              padding: '10px 20px',
-              boxShadow: '0 4px 12px rgba(107, 70, 193, 0.2)',
-            }}
-          >
-            Create Your First Notebook
-          </Button>
-        </Box>
-      ) : (
-        <Grid container spacing={3}>
-          {filteredNotebooks.map((notebook) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={notebook._id}>
-              <Card
-                onClick={() => handleNotebookClick(notebook.urlIdentifier)}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '300px',
+            p: 4,
+            textAlign: 'center'
+          }}>
+            <BookOutlined sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+            <Typography variant="h5" color="text.secondary" sx={{ mb: 1 }}>
+              {searchQuery.trim() !== '' ? 'No notebooks match your search' :
+               tabValue === 1 ? 'No favorite notebooks yet' : 'No notebooks found'}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: '400px' }}>
+              {searchQuery.trim() !== '' ?
+                'Try using different keywords or browse all your notebooks' :
+                tabValue === 1 ?
+                  'Click the heart icon on any notebook to add it to your favorites' :
+                  'Start creating notebooks to capture your ideas and notes'
+              }
+            </Typography>
+
+            {searchQuery.trim() === '' && tabValue !== 1 && (
+              <ModernActionButton
+                variant="contained"
+                startIcon={<Add />}
+                onClick={handleCreateNotebook}
                 sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  background: 'white',
-                  borderRadius: 3,
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
-                  transition: 'all 0.2s ease',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  overflow: 'visible',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: '0 12px 24px rgba(0, 0, 0, 0.08)',
-                  },
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                 }}
               >
-                <Box 
-                  sx={{ 
-                    height: 8, 
-                    background: getRandomColor(notebook._id),
-                    borderTopLeftRadius: 12,
-                    borderTopRightRadius: 12,
-                  }} 
-                />
-                
-                <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 3 }}>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    mb: 2
-                  }}>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        fontWeight: 600,
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        flex: 1
-                      }}
-                    >
-                      {notebook.title || 'Untitled Notebook'}
-                    </Typography>
-                    
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <IconButton 
-                        size="small" 
-                        onClick={(e) => toggleFavorite(e, notebook._id)}
-                        sx={{ color: favorites.includes(notebook._id) ? '#F56565' : 'text.secondary' }}
-                      >
-                        {favorites.includes(notebook._id) ? <Favorite /> : <FavoriteBorder />}
-                      </IconButton>
-                      
-                      <IconButton 
-                        size="small" 
-                        onClick={(e) => handleMenuOpen(e, notebook)}
-                      >
-                        <MoreVert fontSize="small" />
-                      </IconButton>
-                    </Box>
-                  </Box>
-
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary" 
-                    sx={{ 
-                      mb: 2,
-                      flex: 1,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical'
+                Create Your First Notebook
+              </ModernActionButton>
+            )}
+          </Box>
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <Grid container spacing={3}>
+            <AnimatePresence>
+              {filteredNotebooks.map((notebook, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={notebook._id}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{
+                      duration: 0.4,
+                      delay: index * 0.1,
+                      type: 'spring',
+                      stiffness: 100
                     }}
                   >
-                    {stripHtml(notebook.content) || 'No content available'}
-                  </Typography>
-
-                  <Box sx={{ mt: 'auto', display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <CalendarMonth fontSize="small" sx={{ color: 'rgba(0, 0, 0, 0.4)' }} />
-                      <Typography variant="caption" color="text.secondary">
-                        Created: {format(new Date(notebook.createdAt), 'MMM d, yyyy')}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Timer fontSize="small" sx={{ color: 'rgba(0, 0, 0, 0.4)' }} />
-                      <Typography variant="caption" color="text.secondary">
-                        Updated: {formatDistanceToNow(new Date(notebook.updatedAt), { addSuffix: true })}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                    {viewMode === 'grid' ? (
+                      <NotebookCard
+                        notebook={notebook}
+                        onClick={handleNotebookOpen}
+                        onEdit={handleNotebookOpen}
+                        onEnhancedEdit={handleEnhancedEdit}
+                        onToggleFavorite={handleToggleFavorite}
+                        onShare={handleShareNotebook}
+                        onDelete={handleDeleteNotebook}
+                      />
+                    ) : (
+                      <NotebookListItem
+                        notebook={notebook}
+                        onClick={handleNotebookOpen}
+                        onEdit={handleNotebookOpen}
+                        onEnhancedEdit={handleEnhancedEdit}
+                        onToggleFavorite={handleToggleFavorite}
+                        onShare={handleShareNotebook}
+                        onDelete={handleDeleteNotebook}
+                      />
+                    )}
+                  </motion.div>
+                </Grid>
+              ))}
+            </AnimatePresence>
+          </Grid>
+        </motion.div>
       )}
-      
-      <Menu
-        anchorEl={menuAnchorEl}
-        open={Boolean(menuAnchorEl)}
-        onClose={handleMenuClose}
+
+      {/* Pagination */}
+      {!loading && filteredNotebooks.length > 0 && totalPages > 1 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            mt: 4,
+            mb: 2,
+            gap: 2
+          }}>
+            <Typography variant="body2" color="text.secondary">
+              Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalNotebooks)} of {totalNotebooks} notebooks
+            </Typography>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              size={isMobile ? "small" : "medium"}
+              showFirstButton
+              showLastButton
+              sx={{
+                '& .MuiPaginationItem-root': {
+                  borderRadius: 2,
+                },
+                '& .MuiPaginationItem-page.Mui-selected': {
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                  color: 'white',
+                  '&:hover': {
+                    background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
+                  }
+                }
+              }}
+            />
+          </Box>
+        </motion.div>
+      )}
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <MenuItem onClick={handleMenuClose}>
-          <Edit fontSize="small" sx={{ mr: 1 }} /> Edit
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
-          <ContentCopy fontSize="small" sx={{ mr: 1 }} /> Duplicate
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
-          <Share fontSize="small" sx={{ mr: 1 }} /> Share
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleMenuClose} sx={{ color: 'error.main' }}>
-          <DeleteOutline fontSize="small" sx={{ mr: 1 }} /> Delete
-        </MenuItem>
-      </Menu>
-    </Box>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </Container>
   );
 };
 

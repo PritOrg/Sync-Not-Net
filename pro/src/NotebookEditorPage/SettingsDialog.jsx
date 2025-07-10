@@ -1,315 +1,491 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, TextField, Checkbox, Autocomplete, Button, Typography, Box, Select, MenuItem, Chip, Divider, DialogContent, DialogTitle } from '@mui/material';
-import { Lock, Tag, User, Share2, Link, Save } from 'lucide-react';
+import { 
+  Dialog, 
+  TextField, 
+  Button, 
+  Typography, 
+  Box,
+  DialogContent, 
+  DialogTitle,
+  IconButton,
+  InputAdornment,
+  Paper,
+  Snackbar,
+  Alert,
+  Stack,
+  Chip
+} from '@mui/material';
+import { 
+  Close as CloseIcon,
+  Public as PublicIcon,
+  Lock as LockIcon,
+  People as PeopleIcon,
+  Save as SaveIcon,
+  Link as LinkIcon,
+  Settings as SettingsIcon
+} from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
-const SettingsDialog = ({ open, onClose, notebookData, searchCollaborators, saveURL, onSave, urlIdentifier }) => {
-  const [password, setPassword] = useState(notebookData.password || '');
-  const [isPasswordEnabled, setIsPasswordEnabled] = useState(!!notebookData.password);
-  const [collaborators, setCollaborators] = useState([]);
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
+const SettingsDialog = ({ open, onClose, notebookData, onSave, urlIdentifier, onOpenPasswordDialog, onOpenPermissionsDialog, onOpenCollaboratorsDialog, disabled }) => {
+  const navigate = useNavigate();
+  const [customUrl, setCustomUrl] = useState(urlIdentifier || '');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [tags, setTags] = useState(notebookData.tags || []);
-  const [permissions, setPermissions] = useState(notebookData.permissions || 'everyone');
-  const [customURL, setCustomURL] = useState(urlIdentifier || notebookData.urlIdentifier);
-  const [inputValue, setInputValue] = useState('');
-  const [collaboratorOptions, setCollaboratorOptions] = useState([]);
-  const [tagInput, setTagInput] = useState('');
+  const [newTag, setNewTag] = useState('');
 
   useEffect(() => {
-    if (notebookData.collaborators) {
-      setCollaborators(notebookData.collaborators);
-      setCollaboratorOptions(notebookData.collaborators); // Populate initial options
+    if (open && notebookData) {
+      setCustomUrl(urlIdentifier || '');
+      setTags(notebookData.tags || []);
     }
-    if (notebookData.tags) {
-      setTags(notebookData.tags); // Ensure tags are set from notebookData
+  }, [open, notebookData, urlIdentifier]);
+
+  const handleSave = async (specificSettings = {}, skipClose = false, settingsType = null) => {
+    if (settingsType) {
+      // If we're just opening a specialized settings dialog
+      onSave({}, true, settingsType);
+      return;
     }
-  }, [notebookData]);
-
-  const handleCollaboratorSearch = async (query) => {
-    if (query.length > 2) {
-      const results = await searchCollaborators(query);
-      setCollaboratorOptions(results); // Merge with existing options
-    }
-  };
-
-  const handleCollaboratorChange = (event, newValue) => {
-    setCollaborators(newValue);
-  };
-
-  const handleSaveUrl = async () => {
-    await saveURL(notebookData._id, customURL);
-    onClose();
-  }
-
-  const handleSave = async () => {
-    const settingsData = {
-      collaborators,
-      tags,
-      permissions,
-      urlIdentifier: customURL,
-    };
-
-    // Only add the password if it has changed
-    if (isPasswordEnabled && password !== notebookData.password) {
-      settingsData.password = password;
-    }
-
-    await onSave(settingsData);
-    onClose();
-  };
-  const handleAddTag = (event) => {
-    if (event.key === 'Enter' && tagInput.trim() !== '') {
-      setTags((prevTags) => [...prevTags, tagInput.trim()]);
-      setTagInput(''); // Clear input field after adding tag
+    
+    setSaving(true);
+    setError('');
+    
+    try {
+      // Handle URL update only through this main dialog
+      const urlSettings = { urlIdentifier: customUrl };
+      await onSave(urlSettings, skipClose);
+      
+      setSuccess('Custom URL updated successfully!');
+      setTimeout(() => {
+        if (!skipClose) {
+          onClose();
+        }
+        setSuccess('');
+      }, 1500);
+    } catch (error) {
+      setError(error.message || 'Failed to save settings');
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleDeleteTag = (tagToDelete) => () => {
-    setTags((prevTags) => prevTags.filter((tag) => tag !== tagToDelete));
+  const handleUrlSave = async () => {
+    try {
+      await handleSave({ urlIdentifier: customUrl });
+      navigate(`/notebook/${customUrl}`); // Navigate to the new URL
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handlePasswordSave = async (password) => {
+    try {
+      setSaving(true);
+      const token = localStorage.getItem('token');
+      await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/password`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ password })
+      });
+      setSuccess('Password updated successfully!');
+    } catch (error) {
+      setError('Failed to update password.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handlePermissionsSave = async (permissions) => {
+    try {
+      setSaving(true);
+      const token = localStorage.getItem('token');
+      await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/permissions`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ permissions })
+      });
+      setSuccess('Permissions updated successfully!');
+    } catch (error) {
+      setError('Failed to update permissions.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCollaboratorsSave = async (collaborators) => {
+    try {
+      setSaving(true);
+      const token = localStorage.getItem('token');
+      await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/collaborators`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ collaborators })
+      });
+      setSuccess('Collaborators updated successfully!');
+    } catch (error) {
+      setError('Failed to update collaborators.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAddTag = () => {
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags([...tags, newTag.trim()]);
+      setNewTag('');
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleTagsSave = async () => {
+    try {
+      setSaving(true);
+      const token = localStorage.getItem('token');
+      await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/tags`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ tags })
+      });
+      setSuccess('Tags updated successfully!');
+    } catch (error) {
+      setError('Failed to update tags.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullWidth
-      maxWidth="sm"
-      PaperProps={{
-        sx: {
-          borderRadius: 2,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-        }
-      }}
-    >
-      <DialogTitle sx={{
-        textAlign: 'center',
-        borderBottom: '1px solid rgba(0,0,0,0.08)',
-        pb: 2,
-        background: 'linear-gradient(to right, #f7f9fc, #edf1f7)'
-      }}>
-        <Typography variant="h5" fontWeight="600">Notebook Settings</Typography>
-      </DialogTitle>
-
-      <DialogContent sx={{ p: 4 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Security Section */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" fontWeight="600" sx={{ mb: 2 }}>
-              Security
+    <>
+      <Dialog 
+        open={open} 
+        onClose={onClose} 
+        maxWidth="md" 
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            maxHeight: '90vh',
+            bgcolor: '#fefefe'
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          p: 3, 
+          pb: 2, 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          borderBottom: '1px solid #f0f0f0'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <SettingsIcon sx={{ color: '#4a5568' }} />
+            <Typography variant="h5" sx={{ fontWeight: 700, color: '#2d3748' }}>
+              Notebook Settings
             </Typography>
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              background: '#f8f9fa',
-              borderRadius: 1,
-              p: 1
-            }}>
-              <Checkbox
-                checked={isPasswordEnabled}
-                onChange={() => setIsPasswordEnabled(prev => !prev)}
-                sx={{ '&.Mui-checked': { color: '#2196f3' } }}
-              />
-              <Typography variant="body1">
-                {notebookData.password ? 'Change Password' : 'Set Password'}
-              </Typography>
-              <Lock style={{ marginLeft: 8, color: '#2196f3' }} size={18} />
-            </Box>
+          </Box>
+          <IconButton onClick={onClose} sx={{ color: '#718096' }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
 
-            {isPasswordEnabled && (
-              <TextField
-                label="Password"
-                type="text"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                sx={{
-                  mt: 2,
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 1.5
+        <DialogContent sx={{ p: 3 }}>
+          <Stack spacing={4}>
+            {/* Custom URL Section */}
+            <Paper elevation={0} sx={{ p: 3, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0', opacity: disabled ? 0.5 : 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <LinkIcon sx={{ mr: 1, color: '#667eea' }} />
+                <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3748' }}>
+                  Custom URL
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                <TextField
+                  fullWidth
+                  value={customUrl}
+                  onChange={(e) => setCustomUrl(e.target.value)}
+                  placeholder="my-notebook-url"
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: 'white',
+                      borderRadius: 2
+                    }
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Typography variant="body2" color="text.secondary">
+                          /notebook/
+                        </Typography>
+                      </InputAdornment>
+                    )
+                  }}
+                  disabled={disabled}
+                />
+                <Button 
+                  onClick={handleUrlSave}
+                  variant="contained"
+                  size="medium"
+                  disabled={saving || disabled}
+                  sx={{ 
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    bgcolor: '#667eea',
+                    '&:hover': { bgcolor: '#5a67d8' }
+                  }}
+                >
+                  Update URL
+                </Button>
+                {disabled && (
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                    Only the notebook owner can change the custom URL.
+                  </Typography>
+                )}
+              </Box>
+            </Paper>
+
+            {/* Settings Cards */}
+            <Typography variant="h6" sx={{ fontWeight: 600, mt: 2, color: '#2d3748' }}>
+              Settings Management
+            </Typography>
+            
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+              {/* Password Settings Card */}
+              <Paper 
+                elevation={0} 
+                sx={{ 
+                  p: 3, 
+                  bgcolor: '#f0fff4', 
+                  borderRadius: 2, 
+                  border: '1px solid #9ae6b4',
+                  cursor: disabled ? 'not-allowed' : 'pointer',
+                  opacity: disabled ? 0.5 : 1,
+                  pointerEvents: disabled ? 'none' : 'auto',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                    transform: 'translateY(-2px)',
+                    borderColor: '#68d391'
                   }
                 }}
-              />
-            )}
-          </Box>
+                onClick={() => !disabled && onOpenPasswordDialog && onOpenPasswordDialog()}
+              >
+                {disabled && (
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                    Only the notebook owner can change password protection.
+                  </Typography>
+                )}
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <LockIcon sx={{ mr: 1, color: '#38a169' }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3748' }}>
+                    Password Protection
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  Add or remove password protection for your notebook.
+                  {notebookData.password && " Currently password protected."}
+                </Typography>
+              </Paper>
 
-          <Divider sx={{ my: 2 }} />
-
-          {/* Tags Section */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" fontWeight="600" sx={{ mb: 2 }}>
-              Tags
-            </Typography>
-            <Box sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 1,
-              mb: 2,
-              minHeight: 40,
-              p: 1,
-              border: '1px solid rgba(0,0,0,0.1)',
-              borderRadius: 1,
-              background: '#fff'
-            }}>
-              {tags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  onDelete={handleDeleteTag(tag)}
-                  sx={{
-                    borderRadius: 1,
-                    background: '#e3f2fd',
-                    '&:hover': { background: '#bbdefb' }
-                  }}
-                />
-              ))}
-            </Box>
-            <TextField
-              label="Add tags"
-              value={tagInput}
-              onChange={e => setTagInput(e.target.value)}
-              onKeyPress={handleAddTag}
-              fullWidth
-              variant="outlined"
-              placeholder="Press Enter to add"
-              InputProps={{
-                endAdornment: <Tag style={{ color: '#757575' }} size={18} />
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 1.5
-                }
-              }}
-            />
-          </Box>
-
-          <Divider sx={{ my: 2 }} />
-
-          {/* Permissions Section */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" fontWeight="600" sx={{ mb: 2 }}>
-              Access Control
-            </Typography>
-            <Select
-              value={permissions}
-              onChange={(e) => setPermissions(e.target.value)}
-              fullWidth
-              sx={{
-                borderRadius: 1.5,
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(0,0,0,0.1)'
-                }
-              }}
-            >
-              <MenuItem value="everyone">Everyone</MenuItem>
-              <MenuItem value="creator-only">Creator Only</MenuItem>
-            </Select>
-          </Box>
-
-          {/* Collaborators Section */}
-          <Autocomplete
-            multiple
-            options={collaboratorOptions}
-            getOptionLabel={(option) => option.name || option.email || ''}
-            value={collaborators}
-            onChange={handleCollaboratorChange}
-            inputValue={inputValue}
-            onInputChange={(event, value) => {
-              setInputValue(value);
-              handleCollaboratorSearch(value);
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Collaborators"
-                variant="outlined"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 1.5
+              {/* Permissions Settings Card */}
+              <Paper 
+                elevation={0} 
+                sx={{ 
+                  p: 3, 
+                  bgcolor: '#eff6ff', 
+                  borderRadius: 2, 
+                  border: '1px solid #bfdbfe',
+                  cursor: disabled ? 'not-allowed' : 'pointer',
+                  opacity: disabled ? 0.5 : 1,
+                  pointerEvents: disabled ? 'none' : 'auto',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                    transform: 'translateY(-2px)',
+                    borderColor: '#93c5fd'
                   }
                 }}
-              />
-            )}
-            renderOption={(props, option) => (
-              <li {...props}>
-                <User style={{ marginRight: 8, color: '#2196f3' }} size={18} />
-                {option.name}
-              </li>
-            )}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip
-                  {...getTagProps({ index })}
-                  label={option.name}
-                  sx={{
-                    borderRadius: 1,
-                    background: '#e3f2fd',
-                    '&:hover': { background: '#bbdefb' }
-                  }}
-                />
-              ))
-            }
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            sx={{ width: '100%', mb: 2 }}
-          />
+                onClick={() => !disabled && onOpenPermissionsDialog && onOpenPermissionsDialog()}
+              >
+                {disabled && (
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                    Only the notebook owner can change privacy and access settings.
+                  </Typography>
+                )}
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <PublicIcon sx={{ mr: 1, color: '#3b82f6' }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3748' }}>
+                    Privacy & Access
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  Control who can access and edit your notebook.
+                  Currently: {notebookData.permissions === 'everyone' ? 'Public' : 
+                             notebookData.permissions === 'collaborators' ? 'Collaborators Only' : 'Private'}
+                </Typography>
+              </Paper>
 
-          {/* Custom URL Section */}
-          <TextField
-            label="Custom URL"
-            value={customURL}
-            onChange={e => setCustomURL(e.target.value)}
-            fullWidth
-            variant="outlined"
-            InputProps={{
-              endAdornment: <Link style={{ color: '#757575' }} size={18} />
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 1.5
-              }
-            }}
-          />
+              {/* Collaborators Settings Card */}
+              <Paper 
+                elevation={0} 
+                sx={{ 
+                  p: 3, 
+                  bgcolor: '#fff5f5', 
+                  borderRadius: 2, 
+                  border: '1px solid #fed7d7',
+                  cursor: disabled ? 'not-allowed' : 'pointer',
+                  opacity: disabled ? 0.5 : 1,
+                  pointerEvents: disabled ? 'none' : 'auto',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                    transform: 'translateY(-2px)',
+                    borderColor: '#feb2b2'
+                  }
+                }}
+                onClick={() => !disabled && onOpenCollaboratorsDialog && onOpenCollaboratorsDialog()}
+              >
+                {disabled && (
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                    Only the notebook owner can manage collaborators.
+                  </Typography>
+                )}
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <PeopleIcon sx={{ mr: 1, color: '#e53e3e' }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3748' }}>
+                    Collaborators
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  Manage who can collaborate on this notebook.
+                  {notebookData.collaborators?.length > 0 
+                    ? ` Currently ${notebookData.collaborators.length} collaborator${notebookData.collaborators.length !== 1 ? 's' : ''}.` 
+                    : ' No collaborators yet.'}
+                </Typography>
+              </Paper>
+            </Box>
+
+            {/* Tags Management Section */}
+            <Paper elevation={0} sx={{ p: 3, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0', opacity: disabled ? 0.5 : 1 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3748' }}>
+                  Tags Management
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                  <TextField
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    placeholder="Add a tag"
+                    variant="outlined"
+                    size="small"
+                    sx={{ flex: 1, '& .MuiOutlinedInput-root': { bgcolor: 'white', borderRadius: 2 } }}
+                  />
+                  <Button
+                    onClick={handleAddTag}
+                    variant="contained"
+                    size="small"
+                    disabled={disabled}
+                    sx={{ borderRadius: 2, bgcolor: '#667eea', '&:hover': { bgcolor: '#5a67d8' } }}
+                  >
+                    Add
+                  </Button>
+                </Box>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {tags.map((tag, index) => (
+                    <Chip
+                      key={index}
+                      label={tag}
+                      onDelete={disabled ? undefined : () => handleRemoveTag(tag)}
+                      variant="outlined"
+                      sx={{ borderRadius: 2 }}
+                    />
+                  ))}
+                </Box>
+                <Button
+                  onClick={handleTagsSave}
+                  variant="contained"
+                  size="medium"
+                  disabled={saving || disabled}
+                  sx={{ mt: 2, borderRadius: 2, textTransform: 'none', bgcolor: '#667eea', '&:hover': { bgcolor: '#5a67d8' } }}
+                >
+                  Save Tags
+                </Button>
+                {disabled && (
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                    Only the notebook owner can manage tags.
+                  </Typography>
+                )}
+              </Box>
+            </Paper>
+          </Stack>
 
           {/* Action Buttons */}
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            gap: 2,
-            mt: 3,
-            pt: 2,
-            borderTop: '1px solid rgba(0,0,0,0.08)'
-          }}>
-            <Button
-              variant="outlined"
-              onClick={handleSaveUrl}
-              startIcon={<Save size={18} />}
-              sx={{
-                borderRadius: 1.5,
-                textTransform: 'none',
-                flex: 1
-              }}
-            >
-              Save URL
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleSave}
-              startIcon={<Save size={18} />}
-              sx={{
-                borderRadius: 1.5,
-                textTransform: 'none',
-                flex: 1,
-                background: 'linear-gradient(45deg, #2196f3, #1976d2)',
-                '&:hover': {
-                  background: 'linear-gradient(45deg, #1976d2, #1565c0)'
-                }
-              }}
-            >
-              Save Changes
-            </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 4, pt: 3, borderTop: '1px solid #f0f0f0' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button 
+                onClick={onClose}
+                variant="outlined"
+                sx={{ 
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  borderColor: '#e2e8f0',
+                  color: '#4a5568'
+                }}
+              >
+                Close
+              </Button>
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  ml: 2, 
+                  color: 'text.disabled',
+                  fontSize: '0.65rem',
+                  cursor: 'default',
+                  '&:hover': {
+                    color: theme => theme.palette.primary.main
+                  }
+                }}
+              >
+                July 2025 Build
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success/Error Snackbars */}
+      <Snackbar open={!!success} autoHideDuration={3000} onClose={() => setSuccess('')}>
+        <Alert severity="success" onClose={() => setSuccess('')} sx={{ borderRadius: 2 }}>
+          {success}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError('')}>
+        <Alert severity="error" onClose={() => setError('')} sx={{ borderRadius: 2 }}>
+          {error}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
