@@ -1,0 +1,1844 @@
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:32:28'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:32:29'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:32:31'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:32:35'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:32:43'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:33:00'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:50:55'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:50:56'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:50:58'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:51:02'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:51:10'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:51:27'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:59:50'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:59:51'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:59:53'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 11:59:58'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 12:00:06'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 12:00:22'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 12:14:02'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 12:14:03'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 12:14:05'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 12:14:09'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 12:14:17'
+}
+{
+  service: 'sync-not-net-api',
+  name: 'JsonWebTokenError',
+  message: 'Socket authentication error: invalid signature',
+  level: 'error',
+  stack: 'JsonWebTokenError: invalid signature\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:171:19\n' +
+    '    at getSecret (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:97:14)\n' +
+    '    at module.exports [as verify] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\jsonwebtoken\\verify.js:101:10)\n' +
+    '    at Array.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:110:25)\n' +
+    '    at run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:130:19)\n' +
+    '    at Namespace.run (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:141:9)\n' +
+    '    at Namespace._add (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\socket.io\\dist\\namespace.js:218:14)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-03 12:14:33'
+}
+{
+  service: 'sync-not-net-api',
+  errno: undefined,
+  code: 'ECONNREFUSED',
+  syscall: 'querySrv',
+  hostname: '_mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net',
+  level: 'error',
+  message: 'MongoDB connection error: querySrv ECONNREFUSED _mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net',
+  stack: 'Error: querySrv ECONNREFUSED _mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net\n' +
+    '    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:293:17)',
+  timestamp: '2025-07-09 21:54:38'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-09 22:40:16'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-09 22:43:05'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-09 22:43:47'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-09 22:48:33'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"dummyNotebookId"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'dummyNotebookId',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'string',
+  level: 'error',
+  message: 'Error updating public notebook: Cast to ObjectId failed for value "dummyNotebookId" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "dummyNotebookId" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:100:22',
+  timestamp: '2025-07-09 22:51:43'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-09 22:52:33'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-09 22:53:32'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-10 00:58:23'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-10 01:00:44'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: "Error updating public notebook: Cannot read properties of undefined (reading 'emit')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'emit')\n" +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:131:8\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-07-10 01:07:54'
+}
+{
+  service: 'sync-not-net-api',
+  statusCode: 500,
+  status: 'error',
+  message: "ERROR: Cannot read properties of undefined (reading 'id')",
+  level: 'error',
+  timestamp: '2025-07-10 01:25:26'
+}
+{
+  service: 'sync-not-net-api',
+  statusCode: 500,
+  status: 'error',
+  message: "ERROR: Cannot read properties of undefined (reading 'id')",
+  level: 'error',
+  timestamp: '2025-07-10 01:25:33'
+}
+{
+  service: 'sync-not-net-api',
+  statusCode: 500,
+  status: 'error',
+  message: "ERROR: Cannot read properties of undefined (reading 'id')",
+  level: 'error',
+  timestamp: '2025-07-10 01:27:00'
+}
+{
+  service: 'sync-not-net-api',
+  expose: true,
+  statusCode: 400,
+  status: 400,
+  body: '{\\',
+  type: 'entity.parse.failed',
+  message: "ERROR: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+  level: 'error',
+  timestamp: '2025-07-10 02:00:45'
+}
+{
+  service: 'sync-not-net-api',
+  expose: true,
+  statusCode: 400,
+  status: 400,
+  body: '{\\"guestName\\": \\"Test Guest User\\"}',
+  type: 'entity.parse.failed',
+  message: "ERROR: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+  level: 'error',
+  timestamp: '2025-07-10 02:00:54'
+}
+{
+  service: 'sync-not-net-api',
+  message: "MongoDB connection error: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/",
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 55448139,
+        lastWriteDate: 0,
+        error: null,
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 55448139,
+        lastWriteDate: 0,
+        error: null,
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 55448139,
+        lastWriteDate: 0,
+        error: null,
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      }
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-8cmen7-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  cause: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 55448139,
+        lastWriteDate: 0,
+        error: null,
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 55448139,
+        lastWriteDate: 0,
+        error: null,
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 55448139,
+        lastWriteDate: 0,
+        error: null,
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      }
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-8cmen7-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  level: 'error',
+  stack: "MongooseServerSelectionError: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/\n" +
+    '    at _handleConnectionErrors (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\connection.js:1165:11)\n' +
+    '    at NativeConnection.openUri (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\connection.js:1096:11)',
+  timestamp: '2025-07-10 12:43:01'
+}
+{
+  service: 'sync-not-net-api',
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 59695325,
+        lastWriteDate: 0,
+        error: MongoNetworkTimeoutError: connection <monitor> to [64:ff9b::225d:b14e]:27017 timed out
+            at Timeout._onTimeout (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongodb\lib\cmap\connection.js:125:26)
+            at listOnTimeout (node:internal/timers:594:17)
+            at process.processTimers (node:internal/timers:529:7) {
+          errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+          beforeHandshake: false,
+          [cause]: undefined
+        },
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 59696617,
+        lastWriteDate: 0,
+        error: MongoNetworkTimeoutError: connection <monitor> to [64:ff9b::222f:a8f1]:27017 timed out
+            at Timeout._onTimeout (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongodb\lib\cmap\connection.js:125:26)
+            at listOnTimeout (node:internal/timers:594:17)
+            at process.processTimers (node:internal/timers:529:7) {
+          errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+          beforeHandshake: false,
+          [cause]: undefined
+        },
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 59694825,
+        lastWriteDate: 0,
+        error: MongoNetworkTimeoutError: connection <monitor> to [64:ff9b::225d:94a4]:27017 timed out
+            at Timeout._onTimeout (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongodb\lib\cmap\connection.js:125:26)
+            at listOnTimeout (node:internal/timers:594:17)
+            at process.processTimers (node:internal/timers:529:7) {
+          errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+          beforeHandshake: false,
+          [cause]: undefined
+        },
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      }
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-8cmen7-shard-0',
+    maxElectionId: new ObjectId('7fffffff0000000000000011'),
+    maxSetVersion: 1,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  level: 'error',
+  message: 'Error updating notebook: connection <monitor> to [64:ff9b::225d:b14e]:27017 timed out',
+  stack: 'MongoServerSelectionError: connection <monitor> to [64:ff9b::225d:b14e]:27017 timed out\n' +
+    '    at Topology.selectServer (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongodb\\lib\\sdam\\topology.js:326:38)\n' +
+    '    at async tryOperation (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongodb\\lib\\operations\\execute_operation.js:192:22)\n' +
+    '    at async executeOperation (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongodb\\lib\\operations\\execute_operation.js:75:16)\n' +
+    '    at async FindCursor._initialize (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongodb\\lib\\cursor\\find_cursor.js:61:26)\n' +
+    '    at async FindCursor.cursorInit (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongodb\\lib\\cursor\\abstract_cursor.js:633:27)\n' +
+    '    at async FindCursor.fetchBatch (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongodb\\lib\\cursor\\abstract_cursor.js:667:13)\n' +
+    '    at async FindCursor.next (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongodb\\lib\\cursor\\abstract_cursor.js:347:17)\n' +
+    '    at async Collection.findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongodb\\lib\\collection.js:277:21)\n' +
+    '    at async model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2687:15)\n' +
+    '    at async model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:63)',
+  cause: MongoNetworkTimeoutError: connection <monitor> to [64:ff9b::225d:b14e]:27017 timed out
+      at Timeout._onTimeout (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongodb\lib\cmap\connection.js:125:26)
+      at listOnTimeout (node:internal/timers:594:17)
+      at process.processTimers (node:internal/timers:529:7) {
+    errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+    beforeHandshake: false,
+    [cause]: undefined
+  },
+  timestamp: '2025-07-10 13:53:47'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    content: ValidatorError: Path `content` is required.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: 'Path `content` is required.',
+        type: 'required',
+        path: 'content',
+        fullPath: undefined,
+        value: ''
+      },
+      kind: 'required',
+      path: 'content',
+      value: '',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating notebook: Notebook validation failed: content: Path `content` is required.',
+  stack: 'ValidationError: Notebook validation failed: content: Path `content` is required.\n' +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2025-07-10 17:52:25'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    content: ValidatorError: Path `content` is required.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: 'Path `content` is required.',
+        type: 'required',
+        path: 'content',
+        fullPath: undefined,
+        value: ''
+      },
+      kind: 'required',
+      path: 'content',
+      value: '',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating notebook: Notebook validation failed: content: Path `content` is required.',
+  stack: 'ValidationError: Notebook validation failed: content: Path `content` is required.\n' +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2025-07-10 17:52:59'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    content: ValidatorError: Path `content` is required.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: 'Path `content` is required.',
+        type: 'required',
+        path: 'content',
+        fullPath: undefined,
+        value: ''
+      },
+      kind: 'required',
+      path: 'content',
+      value: '',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating notebook: Notebook validation failed: content: Path `content` is required.',
+  stack: 'ValidationError: Notebook validation failed: content: Path `content` is required.\n' +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2025-07-10 17:56:25'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    content: ValidatorError: Path `content` is required.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: 'Path `content` is required.',
+        type: 'required',
+        path: 'content',
+        fullPath: undefined,
+        value: ''
+      },
+      kind: 'required',
+      path: 'content',
+      value: '',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating notebook: Notebook validation failed: content: Path `content` is required.',
+  stack: 'ValidationError: Notebook validation failed: content: Path `content` is required.\n' +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2025-07-10 17:56:32'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    content: ValidatorError: Path `content` is required.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: 'Path `content` is required.',
+        type: 'required',
+        path: 'content',
+        fullPath: undefined,
+        value: ''
+      },
+      kind: 'required',
+      path: 'content',
+      value: '',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating notebook: Notebook validation failed: content: Path `content` is required.',
+  stack: 'ValidationError: Notebook validation failed: content: Path `content` is required.\n' +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2025-07-10 17:56:50'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    content: ValidatorError: Path `content` is required.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: 'Path `content` is required.',
+        type: 'required',
+        path: 'content',
+        fullPath: undefined,
+        value: ''
+      },
+      kind: 'required',
+      path: 'content',
+      value: '',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating notebook: Notebook validation failed: content: Path `content` is required.',
+  stack: 'ValidationError: Notebook validation failed: content: Path `content` is required.\n' +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2025-07-10 17:57:30'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686eae541aebc0e6d20d5627' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686eae541aebc0e6d20d5627' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:25:38'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:28:56'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:33:14'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:35:56'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:37:29'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:37:29'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:38:04'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:38:05'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:41:35'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:48:17'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:48:17'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:53:52'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686eae541aebc0e6d20d5627' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686eae541aebc0e6d20d5627' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:54:01'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686eae541aebc0e6d20d5627' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686eae541aebc0e6d20d5627' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:55:04'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:59:16'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 18:59:27'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686eae541aebc0e6d20d5627' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686eae541aebc0e6d20d5627' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 19:05:37'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686eae541aebc0e6d20d5627' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686eae541aebc0e6d20d5627' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 19:07:38'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 19:09:26'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686eae541aebc0e6d20d5627' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686eae541aebc0e6d20d5627' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686eae541aebc0e6d20d5627' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 19:09:26'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: `"{ notebookId: '686e99e1214549e06a966634' }"`,
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: { notebookId: '686e99e1214549e06a966634' },
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:319:34)
+      at Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80),
+  valueType: 'Object',
+  level: 'error',
+  message: `Error joining notebook: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"`,
+  stack: `CastError: Cast to ObjectId failed for value "{ notebookId: '686e99e1214549e06a966634' }" (type Object) at path "_id" for model "Notebook"\n` +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:319:34)\n' +
+    '    at Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async Socket.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\index.js:183:24)',
+  timestamp: '2025-07-10 19:29:53'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    permissions: ValidatorError: `collaborators` is not a valid enum value for path `permissions`.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: '`collaborators` is not a valid enum value for path `permissions`.',
+        type: 'enum',
+        enumValues: [ 'everyone', 'creator-only' ],
+        path: 'permissions',
+        fullPath: undefined,
+        value: 'collaborators'
+      },
+      kind: 'enum',
+      path: 'permissions',
+      value: 'collaborators',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  statusCode: 500,
+  status: 'error',
+  message: 'ERROR: Notebook validation failed: permissions: `collaborators` is not a valid enum value for path `permissions`.',
+  level: 'error',
+  timestamp: '2025-07-11 00:33:16'
+}
