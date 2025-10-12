@@ -4,7 +4,8 @@ const notebookModel = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
   creatorID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },  // Reference to User
-  permissions: { type: String, enum: ['everyone', 'creator-only', 'collaborators'], default: 'everyone' },
+  // permissions: 'everyone' (public), 'private' (creator only), 'collaborators' (owner + collaborators)
+  permissions: { type: String, enum: ['everyone', 'private', 'collaborators'], default: 'everyone' },
   collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],  // List of editors
   password: { type: String }, // Optional password protection
   version: { type: Number, default: 1 },
@@ -16,6 +17,16 @@ const notebookModel = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
-  
+
+// Add indexes for frequently queried fields
+notebookModel.index({ urlIdentifier: 1 }, { unique: true });
+notebookModel.index({ creatorID: 1 });
+notebookModel.index({ updatedAt: -1 });
+notebookModel.index({ tags: 1 });
+notebookModel.index({ collaborators: 1 });
+notebookModel.index({ permissions: 1 });
+
+// Compound index for permissions-based queries
+notebookModel.index({ permissions: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Notebook', notebookModel);

@@ -1,21 +1,32 @@
 const logger = require('../utils/logger');
+const Sentry = require('@sentry/node');
 
 // Custom error class
 class AppError extends Error {
-  constructor(message, statusCode, isOperational = true) {
+  constructor(message, statusCode, isOperational = true, extra = {}) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
+    this.extra = extra;
 
     Error.captureStackTrace(this, this.constructor);
   }
 }
 
+// Generate unique request ID
+const generateRequestId = () => {
+  return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+};
+
 // Handle MongoDB cast errors
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
-  return new AppError(message, 400);
+  return new AppError(message, 400, true, {
+    errorType: 'CastError',
+    field: err.path,
+    value: err.value
+  });
 };
 
 // Handle MongoDB duplicate field errors
@@ -23,7 +34,25 @@ const handleDuplicateFieldsDB = (err) => {
   const field = Object.keys(err.keyValue)[0];
   const value = err.keyValue[field];
   const message = `${field} '${value}' already exists. Please use another value.`;
-  return new AppError(message, 400);
+  return new AppError(message, 400, true, {
+    errorType: 'DuplicateField',
+    field,
+    value
+  });
+};
+
+// Handle JWT errors
+const handleJWTError = (err) => {
+  return new AppError('Invalid token. Please log in again.', 401, true, {
+    errorType: 'JWTError'
+  });
+};
+
+// Handle JWT expired error
+const handleJWTExpiredError = (err) => {
+  return new AppError('Your token has expired. Please log in again.', 401, true, {
+    errorType: 'TokenExpiredError'
+  });
 };
 
 // Handle MongoDB validation errors
@@ -32,13 +61,6 @@ const handleValidationErrorDB = (err) => {
   const message = `Invalid input data. ${errors.join('. ')}`;
   return new AppError(message, 400);
 };
-
-// Handle JWT errors
-const handleJWTError = () =>
-  new AppError('Invalid token. Please log in again!', 401);
-
-const handleJWTExpiredError = () =>
-  new AppError('Your token has expired! Please log in again.', 401);
 
 // Send error response in development
 const sendErrorDev = (err, res) => {

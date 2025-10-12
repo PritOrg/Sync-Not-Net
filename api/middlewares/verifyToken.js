@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-change-in-production';
-
 const verifyToken = async (req, res, next) => {
   try {
     // Get token from header
@@ -19,7 +17,7 @@ const verifyToken = async (req, res, next) => {
     }
 
     // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Check if user still exists
     const user = await User.findById(decoded.id).select('-password');
@@ -68,14 +66,12 @@ const optionalAuth = async (req, res, next) => {
     const token = authHeader && authHeader.startsWith('Bearer ')
       ? authHeader.slice(7)
       : authHeader;
-
     if (!token) {
       return next();
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id).select('-password');
-
     if (user) {
       req.userId = decoded.id;
       req.user = {

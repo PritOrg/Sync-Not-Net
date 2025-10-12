@@ -43,7 +43,6 @@ router.get('/profile', verifyToken, catchAsync(async (req, res) => {
 }));
 
 // JWT configuration from environment
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-change-in-production';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 
 // Register User with enhanced validation and security
@@ -94,31 +93,59 @@ router.post('/login', validateUserLogin, catchAsync(async (req, res) => {
   // Find the user by email
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
+    logger.warn(`Login attempt with non-existent email: ${email}`);
     return res.status(401).json({
       error: 'Authentication failed',
       message: 'Invalid email or password'
     });
   }
 
-  // Compare the provided password with the hashed password in the DB
-  const isMatch = await bcrypt.compare(password, user.password);
+  // Check if account is locked
+  if (user.isLocked()) {
+    const remainingTime = Math.ceil((user.lockoutUntil - new Date()) / 1000 / 60);
+    return res.status(423).json({
+      error: 'Account locked',
+      message: `Account is temporarily locked. Please try again in ${remainingTime} minutes.`
+    });
+  }
+
+  // Compare the provided password with the hashed password
+  const isMatch = await user.comparePassword(password);
   if (!isMatch) {
+    await user.handleFailedLogin();
     logger.warn(`Failed login attempt for email: ${email}`);
+    
+    // If account just got locked, send specific message
+    if (user.isLocked()) {
+      const lockoutMinutes = Math.ceil((user.lockoutUntil - new Date()) / 1000 / 60);
+      return res.status(423).json({
+        error: 'Account locked',
+        message: `Too many failed attempts. Account locked for ${lockoutMinutes} minutes.`
+      });
+    }
+
     return res.status(401).json({
       error: 'Authentication failed',
       message: 'Invalid email or password'
     });
   }
 
-  // Generate JWT token
+  // Reset failed login attempts on successful login
+  await user.resetFailedLogins();
+
+  // Generate JWT token with additional claims
   const token = jwt.sign(
     {
       id: user._id,
       email: user.email,
-      role: user.role
+      role: user.role,
+      iat: Math.floor(Date.now() / 1000)
     },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
+    process.env.JWT_SECRET,
+    { 
+      expiresIn: JWT_EXPIRES_IN,
+      audience: process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : 'localhost'
+    }
   );
 
   logger.info(`User logged in: ${email}`);

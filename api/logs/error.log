@@ -1842,3 +1842,14 @@
   level: 'error',
   timestamp: '2025-07-11 00:33:16'
 }
+{
+  service: 'sync-not-net-api',
+  expose: true,
+  statusCode: 400,
+  status: 400,
+  body: '{\n  "name":"meet"\n  "email":"meet@gamil.com"\n  "password":"humeet123"\n}',
+  type: 'entity.parse.failed',
+  message: "ERROR: Expected ',' or '}' after property value in JSON at position 20 (line 3 column 3)",
+  level: 'error',
+  timestamp: '2025-07-17 19:50:07'
+}

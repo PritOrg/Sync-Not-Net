@@ -1,10 +1,27 @@
+require('dotenv').config();
+const validateEnv = require('./utils/validateEnv');
+const Sentry = require('@sentry/node');
+
+// Validate environment variables before starting
+validateEnv();
+
+// Initialize Sentry if DSN is provided
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV,
+    tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0
+  });
+}
+
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
-require('dotenv').config();
+const { createAdapter } = require('@socket.io/redis-adapter');
+const Redis = require('ioredis');
 
 // Import middleware
 const { verifyToken } = require('./middlewares/verifyToken');
@@ -22,15 +39,43 @@ const notebookRoutes = require('./routes/notebookRoutes');
 const app = express();
 const server = http.createServer(app);
 
-// Socket.io configuration with enhanced security
-const io = socketIo(server, {
+// Socket.io configuration
+const ioConfig = {
   cors: {
     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     methods: ['GET', 'POST'],
     credentials: true
   },
   transports: ['websocket', 'polling']
-});
+};
+
+// Initialize Redis for Socket.IO in production
+if (process.env.NODE_ENV === 'production' && process.env.REDIS_URL) {
+  try {
+    const pubClient = new Redis(process.env.REDIS_URL);
+    const subClient = pubClient.duplicate();
+
+    // Add error handlers
+    pubClient.on('error', (err) => {
+      logger.error('Redis Pub Client Error:', err);
+    });
+    
+    subClient.on('error', (err) => {
+      logger.error('Redis Sub Client Error:', err);
+    });
+
+    ioConfig.adapter = createAdapter(pubClient, subClient);
+    logger.info('Redis adapter configured for Socket.IO');
+  } catch (error) {
+    logger.error('Failed to initialize Redis:', error);
+  }
+} else {
+  logger.info('Running without Redis in development mode');
+}
+
+// Initialize Socket.IO with config
+const io = socketIo(server, ioConfig);
+
 
 // Trust proxy for rate limiting behind reverse proxy
 app.set('trust proxy', 1);
@@ -55,8 +100,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Rate limiting
 app.use('/api/', generalLimiter);
-app.use('/api/users/login', authLimiter);
-app.use('/api/users/register', authLimiter);
+// Enable stricter rate limiting for auth endpoints in production
+if (process.env.NODE_ENV === 'production') {
+  app.use('/api/users/login', authLimiter);
+  app.use('/api/users/register', authLimiter);
+}
 
 // MongoDB connection with enhanced options
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/sync-not-net', {
@@ -117,10 +165,21 @@ const User = require('./models/userModel');
 const activeUsers = new Map(); // socketId -> { userId, notebookId, userInfo }
 const notebookUsers = new Map(); // notebookId -> Set of socketIds
 const typingUsers = new Map(); // notebookId -> Set of userIds
+// Track connections per IP to avoid socket DoS
+const ipConnections = new Map(); // ip -> count
+const MAX_CONNECTIONS_PER_IP = parseInt(process.env.SOCKET_MAX_CONNECTIONS_PER_IP || '10', 10);
 
 // Socket authentication middleware
 io.use(async (socket, next) => {
   try {
+    // Simple per-IP connection limit
+    const ip = socket.handshake.address || socket.conn.remoteAddress || 'unknown';
+    const current = ipConnections.get(ip) || 0;
+    if (current >= MAX_CONNECTIONS_PER_IP) {
+      return next(new Error('Too many connections from this IP'));
+    }
+    ipConnections.set(ip, current + 1);
+
     const token = socket.handshake.auth.token || socket.handshake.headers.authorization;
     const guestInfo = socket.handshake.auth.guestInfo;
     
@@ -196,7 +255,7 @@ io.on('connection', (socket) => {
       const isAuthenticated = socket.userInfo.role !== 'guest' && socket.userInfo.role !== 'anonymous';
       const hasAccess = isAuthenticated ? (
         notebook.creatorID.toString() === socket.userId ||
-        notebook.collaborators.includes(socket.userId) ||
+        (Array.isArray(notebook.collaborators) && notebook.collaborators.some(c => c.toString() === socket.userId)) ||
         notebook.permissions === 'everyone'
       ) : (
         notebook.permissions === 'everyone' && !notebook.password
@@ -396,6 +455,14 @@ io.on('connection', (socket) => {
   // Enhanced disconnect handling
   socket.on('disconnect', (reason) => {
     const userSession = activeUsers.get(socket.id);
+    // Decrement IP connection count
+    try {
+      const ip = socket.handshake.address || (socket.conn && socket.conn.remoteAddress) || 'unknown';
+      const curr = ipConnections.get(ip) || 0;
+      if (curr <= 1) ipConnections.delete(ip); else ipConnections.set(ip, curr - 1);
+    } catch (e) {
+      // ignore
+    }
     if (userSession) {
       const { notebookId, userInfo } = userSession;
 

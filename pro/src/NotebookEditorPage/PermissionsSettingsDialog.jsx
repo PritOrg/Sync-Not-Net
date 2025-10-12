@@ -124,7 +124,7 @@ const PermissionsSettingsDialog = ({ open, onClose, notebookId, initialSettings 
                   <Typography>Collaborators only</Typography>
                 </Box>
               </MenuItem>
-              <MenuItem value="creator-only">
+              <MenuItem value="private">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <LockIcon sx={{ fontSize: 20 }} />
                   <Typography>Private - Only me</Typography>

@@ -107,6 +107,8 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
   }
 
   const isAuthenticated = !!req.user;
+  console.log('user id:', req.user, isAuthenticated);
+  console.log('notebook creator id:', notebook.creatorID._id.toString());
   const isCreator = isAuthenticated && notebook.creatorID._id.toString() === req.user.id.toString();
   const isCollaborator = isAuthenticated && notebook.collaborators.some(collab => collab._id.toString() === req.user.id.toString());
   const hasPassword = notebook.password !== null && notebook.password !== undefined;

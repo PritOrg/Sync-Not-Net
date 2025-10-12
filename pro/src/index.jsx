@@ -20,7 +20,7 @@ root.render(
     <ThemeProvider>
       <Router>
         <Routes>
-          <Route element={<ModernLayout />}>
+          <Route >
             <Route index element={<ModernLandingPage />} />
             <Route path='/Notebook/new' element={<NotebookEditor />} />
             <Route path='/Notebook/:urlIdentifier' element={<NotebookEditor />} />

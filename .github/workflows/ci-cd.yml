@@ -1,0 +1,98 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          
+      - name: Install API dependencies
+        run: |
+          cd api
+          npm ci
+          
+      - name: Run API tests
+        run: |
+          cd api
+          npm test
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          REDIS_URL: redis://localhost:6379
+          NODE_ENV: test
+          
+      - name: Install Frontend dependencies
+        run: |
+          cd pro
+          npm ci
+          
+      - name: Build Frontend
+        run: |
+          cd pro
+          npm run build
+        env:
+          CI: true
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        
+      - name: Build and push Docker images
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build and push API image
+          docker build -t $ECR_REGISTRY/sync-not-net-api:$IMAGE_TAG ./api
+          docker push $ECR_REGISTRY/sync-not-net-api:$IMAGE_TAG
+          
+          # Build and push Frontend image
+          docker build -t $ECR_REGISTRY/sync-not-net-frontend:$IMAGE_TAG ./pro
+          docker push $ECR_REGISTRY/sync-not-net-frontend:$IMAGE_TAG
+          
+      - name: Update ECS service
+        run: |
+          aws ecs update-service --cluster sync-not-net --service api --force-new-deployment
+          aws ecs update-service --cluster sync-not-net --service frontend --force-new-deployment

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useParams, useNavigate, useBeforeUnload } from 'react-router-dom';
 import {
   Button,
   TextField,
@@ -13,9 +13,23 @@ import {
   Divider,
   Fade,
   CircularProgress,
+  LinearProgress,
   Backdrop,
-  useTheme
+  useTheme,
+  Portal,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from '@mui/material';
+import KeyboardShortcutsDialog from '../Components/KeyboardShortcutsDialog';
+import ErrorBoundary, { withErrorBoundary, InlineErrorFallback } from '../Components/ErrorBoundary';
+import {
+  EditorSkeleton,
+  LoadingOverlay,
+  PulseLoader
+} from '../Components/LoadingStates';
 import {
   Save as SaveIcon,
   Settings as SettingsIcon,
@@ -27,12 +41,16 @@ import {
   CloudOff as CloudOffIcon,
   Warning as WarningIcon,
   Visibility as VisibilityIcon,
-  ArrowBack as ArrowBackIcon
+  ArrowBack as ArrowBackIcon,
+  Keyboard as KeyboardIcon,
+  Lock
 } from '@mui/icons-material';
 import EnhancedEditor from '../Components/EnhancedEditor';
 import { fadeIn, getAnimationStyles } from '../utils/animations';
+import { KeyboardShortcuts, isKeyboardShortcut } from '../utils/keyboardShortcuts';
+import AutoSaveIndicator from '../Components/AutoSaveIndicator';
 import SettingsDialog from './SettingsDialog';
-import UnifiedAccessPrompt from './UnifiedAccessPrompt';
+import EnhancedPasswordPrompt from './EnhancedPasswordPrompt';
 import PasswordSettingsDialog from './PasswordSettingsDialog';
 import PermissionsSettingsDialog from './PermissionsSettingsDialog';
 import CollaboratorsSettingsDialog from './CollaboratorsSettingsDialog';
@@ -45,47 +63,88 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const SAVE_THROTTLE = 5000;
 const TYPING_DELAY = 100;
 
-// Register a guest user for public collaboration
-const registerGuest = async (guestName, urlId) => {
-  if (!guestName || !urlId) throw new Error('Missing guest name or notebook identifier');
-  const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlId}/register-guest`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ guestName })
-  });
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || 'Failed to register guest');
-  }
-  return await response.json();
-};
-
 const NotebookEditor = () => {
+  // Register guest user helper function
+  const registerGuest = useCallback(async (guestName, urlId) => {
+    if (!guestName || !urlId) throw new Error('Missing guest name or notebook identifier');
+    const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlId}/register-guest`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guestName })
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to register guest');
+    }
+    return await response.json();
+  }, []);
+  // Router and theme hooks
   const { urlIdentifier: urlIdentifier_from_url } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
 
-  console.log('NotebookEditor component loaded with urlIdentifier:', urlIdentifier_from_url);
+  // Function to show notifications
+  const showNotification = useCallback((message, severity = 'info') => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  }, []);
 
-  // State
+  // Helper function to generate random URL identifier
+  const generateRandomIdentifier = useCallback(() => {
+    return Math.random().toString(36).substring(2, 10);
+  }, []);
+
+  // Loading states
+  const [isLoading, setIsLoading] = useState(true);
+  const [editorInitializing, setEditorInitializing] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState('Loading notebook...');
+
+  // Content and editor state
   const [urlIdentifier, setUrlIdentifier] = useState(urlIdentifier_from_url);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [editorMode, setEditorMode] = useState('quill');
   const [language, setLanguage] = useState('javascript');
+  const [notebookData, setNotebookData] = useState({});
+
+  // UI state
   const [autoSave, setAutoSave] = useState(false);
+  const [firstSaveDone, setFirstSaveDone] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Dialog states
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAccessPromptOpen, setIsAccessPromptOpen] = useState(false);
+  const [isKeyboardShortcutsOpen, setIsKeyboardShortcutsOpen] = useState(false);
   const [isPasswordSettingsOpen, setIsPasswordSettingsOpen] = useState(false);
   const [isPermissionsSettingsOpen, setIsPermissionsSettingsOpen] = useState(false);
   const [isCollaboratorsSettingsOpen, setIsCollaboratorsSettingsOpen] = useState(false);
-  const [notebookData, setNotebookData] = useState({});
-  const [firstSaveDone, setFirstSaveDone] = useState(false);
+
+  // Notification state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+
+  // Access control state
   const [accessPromptData, setAccessPromptData] = useState({});
   const [guestInfo, setGuestInfo] = useState(null);
-  const [isGuestRegistered, setIsGuestRegistered] = useState(false);
+  const [isGuestRegistered, setIsGuestRegistered] = useState(() => {
+    // Check if we have a guest name saved in localStorage
+    const savedGuestName = localStorage.getItem('guestName');
+    return !!savedGuestName; // Convert to boolean
+  });
   const [userRole, setUserRole] = useState('viewer');
+  const [accessLevel, setAccessLevel] = useState('read'); // 'read', 'write', 'owner'
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [requiresPassword, setRequiresPassword] = useState(false);
+  const [requiresGuestName, setRequiresGuestName] = useState(false);
+  const [accessError, setAccessError] = useState({
+    isError: false,
+    message: '',
+    isAccessError: false
+  });
 
   // Real-time collaboration state
   const [activeUsers, setActiveUsers] = useState([]);
@@ -93,150 +152,27 @@ const NotebookEditor = () => {
   const [connectionError, setConnectionError] = useState(null);
   const [conflictData, setConflictData] = useState(null);
   const [lastSavedVersion, setLastSavedVersion] = useState(0);
-  const [isSaving, setIsSaving] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [typingTimeout, setTypingTimeout] = useState(null);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
   const [lastSavedTime, setLastSavedTime] = useState(null);
-  const [accessLevel, setAccessLevel] = useState('read'); // 'read', 'write', 'owner'
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
-  const [requiresPassword, setRequiresPassword] = useState(false);
-  const [requiresGuestName, setRequiresGuestName] = useState(false);
 
-  // Refs for timers
+  // Refs for timers and content tracking
   const saveTimer = useRef(null);
   const typingTimer = useRef(null);
   const lastSavedContent = useRef(content);
 
+  // Register warning for unsaved changes
+  useBeforeUnload(
+    useCallback((event) => {
+      if (hasUnsavedChanges) {
+        event.preventDefault();
+        return event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    }, [hasUnsavedChanges])
+  );
+
   // Function to generate a random URL identifier
-  const generateRandomIdentifier = () => {
-    return Math.random().toString(36).substring(2, 10);
-  };
-
-  // Initialize socket connection and authentication
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    
-    // Only get user info and connect socket if authenticated
-    if (token) {
-      // Get current user info
-      const userInfo = JSON.parse(localStorage.getItem('user') || '{}');
-      setCurrentUser(userInfo);
-
-      // Connect socket
-      socketClient.connect(token);
-    }
-
-    // Setup event listeners
-    const handleConnectionStatusChanged = (status) => {
-      setIsConnected(status.connected);
-      if (!status.connected) {
-        setConnectionError(status.reason || 'Connection lost');
-      } else {
-        setConnectionError(null);
-      }
-    };
-
-    const handleNotebookUpdated = (data) => {
-      // Defensive: ensure data and updatedBy are defined and have id
-      if (!data || !data.updatedBy || typeof data.updatedBy.id === 'undefined') {
-        // Fallback: just update if not from this user (or if cannot determine)
-        if (!currentUser || !currentUser.id || !data.updatedBy || data.updatedBy?.id !== currentUser.id) {
-          if (typeof data.content !== 'undefined') {
-            const processedContent = processContentFromBackend(data.content);
-            setContent(processedContent);
-          }
-          if (typeof data.title !== 'undefined') setTitle(data.title);
-          if (typeof data.version !== 'undefined') setLastSavedVersion(data.version);
-          showNotification('Notebook updated');
-        }
-        return;
-      }        if (data.updatedBy.id !== currentUser?.id) {
-          // Update from another user
-          if (typeof data.content !== 'undefined') {
-            const processedContent = processContentFromBackend(data.content);
-            setContent(processedContent);
-          }
-          if (typeof data.title !== 'undefined') setTitle(data.title);
-          if (typeof data.version !== 'undefined') setLastSavedVersion(data.version);
-          showNotification('Notebook updated by ' + (data.updatedBy.name || 'another user'), 'info');
-      }
-    };
-
-    const handleUpdateConfirmed = (data) => {
-      setLastSavedVersion(data.version);
-      setIsSaving(false);
-      setLastSavedTime(new Date());
-      showNotification('Changes saved successfully', 'success');
-    };
-
-    const handleConflictDetected = (data) => {
-      setConflictData(data);
-      setIsSaving(false);
-      showNotification('Conflict detected! Please resolve conflicts.', 'warning');
-    };
-
-    const handleSocketError = (error) => {
-      console.error('Socket error:', error);
-      setConnectionError(error.message || 'Socket error occurred');
-      showNotification('Connection error: ' + (error.message || 'Unknown error'), 'error');
-    };
-
-    const handleJoinedNotebook = (data) => {
-      console.log('Joined notebook room:', data);
-      if (data.currentUsers) {
-        setActiveUsers(data.currentUsers);
-      }
-    };
-
-    const handleUserJoined = (data) => {
-      console.log('User joined:', data);
-      if (data.user) {
-        setActiveUsers(prev => [...prev, data.user]);
-        showNotification(`${data.user.name} joined the notebook`, 'info');
-      }
-    };
-
-    const handleUserLeft = (data) => {
-      console.log('User left:', data);
-      if (data.user) {
-        setActiveUsers(prev => prev.filter(u => u.id !== data.user.id));
-        showNotification(`${data.user.name} left the notebook`, 'info');
-      }
-    };
-
-    // Register event listeners
-    socketClient.on('connectionStatusChanged', handleConnectionStatusChanged);
-    socketClient.on('notebookUpdated', handleNotebookUpdated);
-    socketClient.on('updateConfirmed', handleUpdateConfirmed);
-    socketClient.on('conflictDetected', handleConflictDetected);
-    socketClient.on('socketError', handleSocketError);
-    socketClient.on('joinedNotebook', handleJoinedNotebook);
-    socketClient.on('userJoined', handleUserJoined);
-    socketClient.on('userLeft', handleUserLeft);
-
-    return () => {
-      // Cleanup event listeners
-      socketClient.off('connectionStatusChanged', handleConnectionStatusChanged);
-      socketClient.off('notebookUpdated', handleNotebookUpdated);
-      socketClient.off('updateConfirmed', handleUpdateConfirmed);
-      socketClient.off('conflictDetected', handleConflictDetected);
-      socketClient.off('socketError', handleSocketError);
-      socketClient.off('joinedNotebook', handleJoinedNotebook);
-      socketClient.off('userJoined', handleUserJoined);
-      socketClient.off('userLeft', handleUserLeft);
-    };
-  }, [navigate, currentUser?.id]);
-
-  // Join notebook room when notebook data is available
-  useEffect(() => {
-    if (notebookData._id && isConnected) {
-      socketClient.joinNotebook(notebookData._id);
-    }
-  }, [notebookData._id, isConnected]);
-
-  // Helper functions for saving
+  // Helper function to clean data before saving
   const cleanDataForSave = useCallback((data) => {
     // Only allow owner to send restricted fields
     const restrictedFields = ['permissions', 'collaborators', 'password', 'urlIdentifier', 'creatorID', 'version', 'createdAt', 'updatedAt'];
@@ -282,11 +218,158 @@ const NotebookEditor = () => {
       return savedData;
     } catch (error) {
       console.error('Save error:', error);
-      throw error; // Re-throw to be handled by caller
+      throw error;
     } finally {
       setIsSaving(false);
     }
   }, []);
+
+  // Initialize socket connection and authentication
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    // Only get user info and connect socket if authenticated
+    if (token) {
+      // Get current user info
+      const userInfo = JSON.parse(localStorage.getItem('user') || '{}');
+      setCurrentUser(userInfo);
+
+      // Connect socket
+      socketClient.connect(token);
+    }
+
+    // Setup event listeners
+    const handleConnectionStatusChanged = (status) => {
+      setIsConnected(status.connected);
+      if (!status.connected) {
+        setConnectionError(status.reason || 'Connection lost');
+      } else {
+        setConnectionError(null);
+      }
+    };
+
+    const handleNotebookUpdated = (data) => {
+      // Defensive: ensure data and updatedBy are defined and have id
+      if (!data || !data.updatedBy || typeof data.updatedBy.id === 'undefined') {
+        // Fallback: just update if not from this user (or if cannot determine)
+        if (!currentUser || !currentUser.id || !data.updatedBy || data.updatedBy?.id !== currentUser.id) {
+          if (typeof data.content !== 'undefined') {
+            const processedContent = processContentFromBackend(data.content);
+            setContent(processedContent);
+          }
+          if (typeof data.title !== 'undefined') setTitle(data.title);
+          if (typeof data.version !== 'undefined') setLastSavedVersion(data.version);
+          showNotification('Notebook updated');
+        }
+        return;
+      } if (data.updatedBy.id !== currentUser?.id) {
+        // Update from another user
+        if (typeof data.content !== 'undefined') {
+          const processedContent = processContentFromBackend(data.content);
+          setContent(processedContent);
+        }
+        if (typeof data.title !== 'undefined') setTitle(data.title);
+        if (typeof data.version !== 'undefined') setLastSavedVersion(data.version);
+        showNotification('Notebook updated by ' + (data.updatedBy.name || 'another user'), 'info');
+      }
+    };
+
+    const handleUpdateConfirmed = (data) => {
+      setLastSavedVersion(data.version);
+      setIsSaving(false);
+      setLastSavedTime(new Date());
+      showNotification('Changes saved successfully', 'success');
+    };
+
+    const handleConflictDetected = (data) => {
+      setConflictData(data);
+      setIsSaving(false);
+      showNotification('Conflict detected! Please resolve conflicts.', 'warning');
+    };
+
+    const handleSocketError = (error) => {
+      console.error('Socket error:', error);
+      setConnectionError(error.message || 'Socket error occurred');
+      showNotification('Connection error: ' + (error.message || 'Unknown error'), 'error');
+    };
+    
+    const handleConnectionError = (data) => {
+      console.error('Connection error:', data);
+      if (data.error && data.error.message) {
+        // Check for access restriction errors
+        const errorMsg = data.error.message.toLowerCase();
+        if (errorMsg.includes('only accessible by collaborators') || 
+            errorMsg.includes('access denied') || 
+            errorMsg.includes('not authorized') ||
+            errorMsg.includes('permission denied')) {
+          setAccessError({
+            isError: true,
+            message: data.error.message,
+            isAccessError: true
+          });
+          setIsLoading(false);
+        } else {
+          setConnectionError(data.error.message);
+        }
+      }
+    };
+
+    const handleJoinedNotebook = (data) => {
+      console.log('Joined notebook room:', data);
+      if (data.currentUsers) {
+        setActiveUsers(data.currentUsers);
+      }
+    };
+
+    const handleUserJoined = (data) => {
+      console.log('User joined:', data);
+      if (data.user) {
+        setActiveUsers(prev => [...prev, data.user]);
+        showNotification(`${data.user.name} joined the notebook`, 'info');
+      }
+    };
+
+    const handleUserLeft = (data) => {
+      console.log('User left:', data);
+      if (data.user) {
+        setActiveUsers(prev => prev.filter(u => u.id !== data.user.id));
+        showNotification(`${data.user.name} left the notebook`, 'info');
+      }
+    };
+
+    // Register event listeners
+    socketClient.on('connectionStatusChanged', handleConnectionStatusChanged);
+    socketClient.on('notebookUpdated', handleNotebookUpdated);
+    socketClient.on('updateConfirmed', handleUpdateConfirmed);
+    socketClient.on('conflictDetected', handleConflictDetected);
+    socketClient.on('socketError', handleSocketError);
+    socketClient.on('connectionError', handleConnectionError);
+    socketClient.on('joinedNotebook', handleJoinedNotebook);
+    socketClient.on('userJoined', handleUserJoined);
+    socketClient.on('userLeft', handleUserLeft);
+
+    return () => {
+      // Cleanup event listeners
+      socketClient.off('connectionStatusChanged', handleConnectionStatusChanged);
+      socketClient.off('notebookUpdated', handleNotebookUpdated);
+      socketClient.off('updateConfirmed', handleUpdateConfirmed);
+      socketClient.off('conflictDetected', handleConflictDetected);
+      socketClient.off('socketError', handleSocketError);
+      socketClient.off('connectionError', handleConnectionError);
+      socketClient.off('joinedNotebook', handleJoinedNotebook);
+      socketClient.off('userJoined', handleUserJoined);
+      socketClient.off('userLeft', handleUserLeft);
+    };
+  }, [navigate, currentUser?.id]);
+
+  // Join notebook room when notebook data is available
+  useEffect(() => {
+    if (notebookData._id && isConnected) {
+      socketClient.joinNotebook(notebookData._id);
+    }
+  }, [notebookData._id, isConnected]);
+
+  // Auto-save effect with improved error handling and retry mechanism
 
   // Auto-save function with improved error handling
   const autoSaveNotebook = useCallback(async () => {
@@ -304,7 +387,7 @@ const NotebookEditor = () => {
       await saveNotebook(notebookData._id, cleanData);
       lastSavedContent.current = content;
       setLastSavedTime(new Date());
-      
+
       // Only show success notification if not in auto-save mode
       if (!autoSave) {
         showNotification('Changes saved successfully', 'success');
@@ -312,13 +395,13 @@ const NotebookEditor = () => {
     } catch (error) {
       console.error('Save error:', error);
       showNotification(error.message || 'Failed to save changes. Please check your connection.', 'error');
-      
+
       // Update connection status if it's a connection error
       if (!isConnected || error.message.includes('connection')) {
         setConnectionError(error.message);
         setIsConnected(false);
       }
-      
+
       throw error; // Re-throw for handling by the auto-save effect
     }
   }, [firstSaveDone, notebookData._id, title, content, editorMode, autoSave, cleanDataForSave, saveNotebook, isConnected]);
@@ -329,7 +412,7 @@ const NotebookEditor = () => {
 
     let saveRetryCount = 0;
     const MAX_RETRIES = 3;
-    
+
     const trySave = async () => {
       try {
         if (content !== lastSavedContent.current) {
@@ -339,7 +422,7 @@ const NotebookEditor = () => {
       } catch (error) {
         console.error('Auto-save attempt failed:', error);
         saveRetryCount++;
-        
+
         if (saveRetryCount < MAX_RETRIES) {
           // Retry after exponential backoff
           setTimeout(trySave, Math.min(1000 * Math.pow(2, saveRetryCount), 10000));
@@ -355,15 +438,39 @@ const NotebookEditor = () => {
   }, [title, content, autoSave, firstSaveDone, isConnected, lastSavedVersion, autoSaveNotebook]);
 
   // Helper: Initialize notebook state from data
-  const initializeNotebook = (data, preserveLocalSettings = false) => {
-    console.log('Initializing notebook with data:', data);
+  const initializeNotebook = async (data, preserveLocalSettings = false) => {
+    // Initialize notebook with the provided data
+    setLoadingMessage('Initializing editor...');
+    setEditorInitializing(true);
+
+    // Set notebook data
     setNotebookData(data);
-    setTitle(data.title || '');
     
+    // Check if notebook still requires access prompt
+    const needsGuestName = !!data.requiresGuestName && !isAuthenticated && !isGuestRegistered;
+    const needsPassword = !!data.requiresPassword && !data.hasAccess;
+    
+    if (needsGuestName || data.requiresPassword) {
+      // Check access requirements during initialization
+      
+      // Update state for access requirements
+      setRequiresGuestName(needsGuestName);
+      setRequiresPassword(needsPassword);
+      
+      // Check if we need to show the access prompt
+      if (needsGuestName || needsPassword) {
+        setIsAccessPromptOpen(true);
+        setAccessPromptData(data);
+        return; // Don't proceed with initialization yet
+      }
+    }
+    
+    setTitle(data.title || '');
+
     // Process content from backend (extract from XML if needed)
     const processedContent = processContentFromBackend(data.content || '');
     setContent(processedContent);
-    
+
     setEditorMode(data.editorMode || 'quill');
     setLanguage(data.language || 'javascript');
     // Only update autoSave if we're not preserving local settings
@@ -387,6 +494,9 @@ const NotebookEditor = () => {
       console.log('Joining notebook room:', data._id);
       socketClient.socket.emit('joinNotebook', data._id);
     }
+
+    // Editor is now initialized
+    setEditorInitializing(false);
   };
 
   // Enhanced fetchNotebookData with better error handling and access control
@@ -395,15 +505,24 @@ const NotebookEditor = () => {
       throw new Error('No notebook identifier provided');
     }
 
+    // Reset states before fetching
+    setIsLoading(true);
+    setLoadingMessage('Loading notebook...');
+    setAccessError({
+      isError: false,
+      message: '',
+      isAccessError: false
+    });
+
     try {
       const token = localStorage.getItem('token');
-      const headers = token ? { 
+      const headers = token ? {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       } : {
         'Content-Type': 'application/json'
       };
-      
+
       const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlIdentifier}`, {
         headers
       });
@@ -415,23 +534,43 @@ const NotebookEditor = () => {
         throw new Error(data.message || 'Failed to fetch notebook');
       }
 
-      setNotebookData(data);
-      
+      // We'll set notebookData only when we know what path to take
 
-      // Handle guest name and password requirements in correct order
-      if ((data.requiresGuestName && !isAuthenticated) || data.requiresPassword) {
-        setRequiresGuestName(!!data.requiresGuestName && !isAuthenticated);
-        setRequiresPassword(!!data.requiresPassword);
-        setIsAccessPromptOpen(true);
+      // Handle guest name and password requirements in clear order
+      const needsGuestName = data.requiresGuestName && !isAuthenticated && !isGuestRegistered;
+      const needsPassword = !!data.requiresPassword;
+      
+      if (needsGuestName || needsPassword) {
+        console.log('Access restrictions detected:', { 
+          requiresGuestName: data.requiresGuestName, 
+          requiresPassword: data.requiresPassword,
+          isAuthenticated,
+          needsGuestName,
+          needsPassword
+        });
+        
+        // Store notebook data and access requirements
+        setNotebookData(data);
+        setRequiresGuestName(needsGuestName);
+        setRequiresPassword(needsPassword);
         setAccessPromptData(data);
+        
+        // Show password prompt
+        // Opening access prompt with appropriate settings
+        setIsAccessPromptOpen(true);
+        setIsLoading(false); // Stop loading when showing access prompt
+        setEditorInitializing(false); // Make sure to disable editor initializing state as well
+        
         return;
       }
 
       // Initialize notebook if we have access
       if (data.hasAccess || data.content) {
         console.log('Initializing notebook with full access');
-        initializeNotebook(data);
+        await initializeNotebook(data);
+        setIsLoading(false);
       } else {
+        console.log('No notebook data returned - prompt should be shown or error occurred');
         throw new Error('No access to notebook content');
       }
     } catch (error) {
@@ -440,15 +579,54 @@ const NotebookEditor = () => {
       setSnackbarMessage(error.message || 'Error loading notebook');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
+      setIsLoading(false);
+      setEditorInitializing(false); // Also set this to false to prevent skeleton loader
 
+      // Track access-related errors to show appropriate UI
+      const isAccessError = 
+        error.message.includes('access') || 
+        error.message.includes('Access denied') || 
+        error.message.includes('only accessible by') ||
+        error.message.includes('collaborators');
+        
       // Handle specific error cases
       if (error.message.includes('No access') || error.message.includes('password')) {
         setRequiresPassword(true);
         setIsAccessPromptOpen(true);
       }
+      
+      // Set access error state for UI handling
+      setAccessError({
+        isError: true,
+        message: error.message,
+        isAccessError: isAccessError
+      });
     }
   }, [urlIdentifier, isAuthenticated]);
 
+
+  // Warn about unsaved changes before leaving
+  useBeforeUnload(
+    useCallback(
+      (event) => {
+        if (hasUnsavedChanges) {
+          event.preventDefault();
+          event.returnValue = '';
+        }
+      },
+      [hasUnsavedChanges]
+    )
+  );
+
+  // Check for saved guest name on mount
+  useEffect(() => {
+    const savedGuestName = localStorage.getItem('guestName');
+    if (savedGuestName && !isAuthenticated) {
+      console.log('Found saved guest name:', savedGuestName);
+      setIsGuestRegistered(true);
+      setGuestInfo({ guestName: savedGuestName });
+    }
+  }, [isAuthenticated]);
 
   // Load notebook on initial render
   useEffect(() => {
@@ -460,7 +638,7 @@ const NotebookEditor = () => {
           // navigate('/auth?mode=login');
           return;
         }
-        
+
         const newIdentifier = generateRandomIdentifier();
         setUrlIdentifier(newIdentifier);
         navigate(`/Notebook/${newIdentifier}`, { replace: true });
@@ -482,48 +660,23 @@ const NotebookEditor = () => {
       // Load existing notebook
       if (urlIdentifier_from_url && urlIdentifier_from_url !== 'new') {
         console.log('Loading notebook with identifier:', urlIdentifier_from_url);
-        const data = await fetchNotebookData(urlIdentifier_from_url);
-
-        if (data) {
-          console.log('Notebook data received:', data);
-          
-          // Check if password is required even for authenticated access
-          if (data.requiresPassword && !data.hasAccess) {
-            console.log('Password required - showing access prompt');
-            setAccessPromptData(data);
+        try {
+          await fetchNotebookData();
+        } catch (error) {
+          console.error('Error in loadNotebook:', error);
+          // Handle password requirement as fallback
+          if (error.message.includes('password') || error.message.includes('access')) {
+            console.log('Access error detected - showing password prompt');
+            setRequiresPassword(true);
             setIsAccessPromptOpen(true);
-          } else if (data.requiresGuestName) {
-            console.log('Guest name required - prompt should already be shown');
-            // Guest name prompt is already handled in fetchNotebookData
-          } else {
-            console.log('Initializing notebook...');
-            initializeNotebook(data);
+            setIsLoading(false);
           }
-        } else {
-          // fetchNotebookData handles prompts internally, so if no data is returned,
-          // it means either a prompt was shown or there was an error
-          console.log('No notebook data returned - prompt should be shown or error occurred');
         }
       }
     };
 
     loadNotebook();
   }, [urlIdentifier_from_url, fetchNotebookData]);
-
-  // Helper functions for better UX
-  const showNotification = (message, severity = 'info') => {
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
-  };
-
-
-
-
-
-
-
-
 
   const handleSave = async (settingsData = {}, isManualSave = true) => {
     // Save notebook content, title, editorMode, and autosave for anyone with edit access
@@ -548,6 +701,62 @@ const NotebookEditor = () => {
       showNotification(error.message || 'Failed to save notebook', 'error');
     }
   };
+
+  // Keyboard shortcut handlers
+  useEffect(() => {
+    const shortcuts = {
+      SAVE: () => {
+        handleSave();
+        showNotification('Saving notebook...');
+      },
+      TOGGLE_AUTOSAVE: () => {
+        setAutoSave(prev => !prev);
+        showNotification(`Auto-save ${!autoSave ? 'enabled' : 'disabled'}`);
+      },
+      TOGGLE_EDITOR: () => {
+        setEditorMode(prev => prev === 'quill' ? 'code' : 'quill');
+        showNotification(`Switched to ${editorMode === 'quill' ? 'code' : 'rich text'} editor`);
+      },
+      SHOW_SHORTCUTS: () => {
+        setIsKeyboardShortcutsOpen(true);
+      },
+      OPEN_SETTINGS: () => {
+        setIsSettingsOpen(true);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      // Handle Escape key
+      if (event.key === 'Escape') {
+        if (isKeyboardShortcutsOpen) {
+          setIsKeyboardShortcutsOpen(false);
+          return;
+        }
+        if (isSettingsOpen) {
+          setIsSettingsOpen(false);
+          return;
+        }
+      }
+
+      // Don't handle shortcuts in input fields or when typing in editor
+      if (['input', 'textarea'].includes(event.target.tagName.toLowerCase()) ||
+        event.target.isContentEditable) {
+        return;
+      }
+
+      // Handle registered shortcuts
+      Object.entries(KeyboardShortcuts).forEach(([shortcut, config]) => {
+        if (isKeyboardShortcut(event, config) && shortcuts[shortcut]) {
+          event.preventDefault();
+          shortcuts[shortcut]();
+        }
+      });
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [autoSave, editorMode, handleSave, isKeyboardShortcutsOpen, isSettingsOpen]);
+
 
   // Unified handler for editor mode change (used by both EnhancedEditor and the button)
   // Utility to convert HTML to plain text, preserving newlines
@@ -584,6 +793,7 @@ const NotebookEditor = () => {
   // Enhanced content change handlers with typing indicators
   const handleContentChange = useCallback((newContent) => {
     setContent(newContent);
+    setHasUnsavedChanges(true);
 
     // Send typing indicator
     if (isConnected && notebookData._id) {
@@ -605,6 +815,7 @@ const NotebookEditor = () => {
 
   const handleTitleChange = useCallback((newTitle) => {
     setTitle(newTitle);
+    setHasUnsavedChanges(true);
 
     // Send typing indicator for title changes too
     if (isConnected && notebookData._id) {
@@ -680,740 +891,760 @@ const NotebookEditor = () => {
 
   // Use the enhanced fetchNotebookData function defined above
 
-  // Handle password verification success
-  const handlePasswordSuccess = async (data, { guestName } = {}) => {
-    console.log('Password verified successfully', { data, guestName });
-    setRequiresPassword(false);
-    setIsAccessPromptOpen(false);
-    showNotification('Access granted successfully!', 'success');
-
-    if (guestName && !isAuthenticated) {
-      try {
-        const guestData = await registerGuest(guestName, urlIdentifier);
-        setGuestInfo(guestData.guestUser);
-        setIsGuestRegistered(true);
-        
-        // Connect socket for guest user
-        socketClient.connect(null, guestData.guestUser);
-        
-        initializeNotebook(guestData);
-        showNotification(`Welcome, ${guestName}! You can now edit this notebook.`, 'success');
-      } catch (error) {
-        console.error('Error registering guest:', error);
-        showNotification(error.message || 'Error registering as guest', 'error');
-      }
-    } else {
-      initializeNotebook(data);
-    }
-  };
-
-  // Handle unified access prompt submission
-  const handleAccessPromptSubmit = async ({ guestName, password }) => {
-    try {
-      // If both guestName and password are required, or just one
-      if (guestName && !password) {
-        // Register guest, may require password next
-        const guestData = await registerGuest(guestName, urlIdentifier);
-        setGuestInfo(guestData.guestUser);
-        setIsGuestRegistered(true);
-        
-        // Connect socket for guest user
-        socketClient.connect(null, guestData.guestUser);
-        
-        if (guestData.requiresPassword) {
-          setAccessPromptData({ ...guestData, guestName, requiresGuestName: false, requiresPassword: true });
-          setRequiresPassword(true);
-          setRequiresGuestName(false);
-          // Stay in prompt, now only ask for password
-        } else {
-          setIsAccessPromptOpen(false);
-          initializeNotebook(guestData);
-          showNotification(`Welcome! You can now collaborate on this notebook.`, 'success');
-        }
-      } else if (password) {
-        // Verify password (and guestName if present)
-        const token = localStorage.getItem('token');
-        const headers = { 'Content-Type': 'application/json' };
-        if (token) headers['Authorization'] = `Bearer ${token}`;
-        const body = { password };
-        if (guestName) body.guestName = guestName;
-        let guestId;
-        try {
-          const guestInfo = JSON.parse(localStorage.getItem('guestInfo'));
-          if (guestInfo && guestInfo.id) guestId = guestInfo.id;
-        } catch {}
-        if (guestId) body.guestId = guestId;
-        const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlIdentifier}/verify-password`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(body)
+  // These handlers have been removed as they're no longer needed
+  // The functionality is now directly implemented in the EnhancedPasswordPrompt component
+  // and the onSuccess callback prop
+  
+  // Failsafe mechanism to force password prompt if automated detection fails
+  useEffect(() => {
+    if (notebookData) {
+      // Check for any access requirements that need the prompt
+      const needsGuestName = notebookData.requiresGuestName && !isAuthenticated;
+      const needsPassword = !!notebookData.requiresPassword;
+      
+      if ((needsGuestName || needsPassword) && !isAccessPromptOpen) {
+        console.log('Failsafe: Access prompt required but not shown, forcing prompt', {
+          requiresGuestName: notebookData.requiresGuestName,
+          requiresPassword: notebookData.requiresPassword,
+          isAuthenticated,
+          needsGuestName,
+          needsPassword
         });
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Incorrect password. Please try again.');
-        }
-        const data = await response.json();
-        if (data.guestUser) {
-          localStorage.setItem('guestInfo', JSON.stringify(data.guestUser));
-        }
-        setIsAccessPromptOpen(false);
-        initializeNotebook(data);
-        showNotification('Access granted! Welcome to the notebook.', 'success');
+        
+        setRequiresGuestName(needsGuestName);
+        setRequiresPassword(needsPassword);
+        setIsAccessPromptOpen(true);
       }
-    } catch (error) {
-      console.error('Access prompt error:', error);
-      setSnackbarMessage(error.message || 'Access denied');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
     }
-  };
+  }, [notebookData, isAccessPromptOpen, isAuthenticated]);
 
   // UI Rendering
-  return (
-    <Box sx={{
-      height: '100vh',
-      display: 'flex',
-      overflow: 'hidden',
-      bgcolor: '#f7f9fc'
-    }}>
+  const renderMainContent = () => {
+    if (isLoading) {
+      return <LoadingOverlay open={true} message={loadingMessage} />;
+    }
 
-      {/* Unified Access Prompt */}
-      {isAccessPromptOpen && (
-        <UnifiedAccessPrompt
+    if (editorInitializing) {
+      return (
+        <Box sx={{ width: '100%', height: '100%' }}>
+          <EditorSkeleton />
+        </Box>
+      );
+    }
+
+    // Add keyboard shortcut button
+    const handleShowKeyboardShortcuts = (event) => {
+      event.preventDefault();
+      setIsKeyboardShortcutsOpen(true);
+    };
+
+    // Render main notebook editor content
+    
+    return (
+      <Box sx={{
+        height: '100vh',
+        display: 'flex',
+        overflow: 'hidden',
+        bgcolor: '#f7f9fc'
+      }}>
+        {/* Enhanced Password Prompt */}
+        <EnhancedPasswordPrompt
           open={isAccessPromptOpen}
-          onClose={() => setIsAccessPromptOpen(false)}
-          onSubmit={handleAccessPromptSubmit}
+          onSuccess={(data, guestData) => {
+            // Handle successful authentication
+            console.log('%c Access prompt success!', 'background: #4caf50; color: white; padding: 2px 5px; border-radius: 3px', {
+              data, 
+              guestData, 
+              urlIdentifier
+            });
+            
+            setIsAccessPromptOpen(false);
+            setIsLoading(false);
+            
+            if (guestData) {
+              // If guest info was provided
+              console.log('Guest access granted:', guestData);
+              setGuestInfo(guestData);
+              setIsGuestRegistered(true);
+              
+              // Ensure localStorage is updated
+              if (guestData.guestName) {
+                localStorage.setItem('guestName', guestData.guestName);
+              }
+            }
+            
+            // Initialize notebook with data
+            initializeNotebook(data);
+            showNotification('Access granted! Welcome to the notebook.', 'success');
+          }}
+          onClose={() => {
+            console.log('EnhancedPasswordPrompt closed');
+            setIsAccessPromptOpen(false);
+            // Return to previous page if user cancels
+            if (notebookData && !notebookData.hasAccess) {
+              navigate(-1);
+            }
+          }}
+          urlIdentifier={urlIdentifier}
           notebookTitle={accessPromptData.notebook?.title || title || 'Untitled Notebook'}
           creatorName={accessPromptData.notebook?.creator?.name || 'Unknown'}
           requiresGuestName={requiresGuestName}
           requiresPassword={requiresPassword}
-          isLoading={false}
-          error={null}
-          initialStep={requiresGuestName ? 'guestName' : 'password'}
+          isAuthenticated={isAuthenticated}
         />
-      )}
 
-      {/* Main Editor Area */}
-      <Box sx={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden'
-      }}>
-        <Paper
-          elevation={2}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            borderRadius: { xs: 0, sm: 2 },
-            overflow: 'hidden',
-            boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
-          }}
-        >
-          {/* Header Section */}
-          <Box
+        {/* Main Editor Area */}
+        <Box sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}>
+          <Paper
+            elevation={2}
             sx={{
-              padding: { xs: 2, sm: 3 },
-              borderBottom: '1px solid rgba(0,0,0,0.09)',
-              background: 'linear-gradient(to right, #ffffff, #f5f8ff)',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              borderRadius: { xs: 0, sm: 2 },
+              overflow: 'hidden',
+              boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
             }}
           >
-            <TextField
-              value={title}
-              onChange={e => handleTitleChange(e.target.value)}
-              variant="standard"
-              placeholder="Untitled Notebook"
-              fullWidth
-              InputProps={{
-                sx: {
-                  fontSize: { xs: '1.4rem', sm: '1.7rem' },
-                  fontWeight: 600,
-                  fontFamily: '"Inter", -apple-system, sans-serif',
-                  '&::before': { display: 'none' },
-                  '&::after': { display: 'none' },
-                }
+            {/* Header Section */}
+            <Box
+              sx={{
+                padding: { xs: 2, sm: 3 },
+                borderBottom: '1px solid rgba(0,0,0,0.09)',
+                background: 'linear-gradient(to right, #ffffff, #f5f8ff)',
               }}
-            />
-
-            {/* Status indicators */}
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              mt: 1,
-              flexWrap: 'wrap'
-            }}>
-              {/* Connection status */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                {isConnected ? (
-                  <CloudSyncIcon sx={{ fontSize: '0.9rem', color: 'success.main' }} />
-                ) : (
-                  <CloudOffIcon sx={{ fontSize: '0.9rem', color: 'error.main' }} />
-                )}
-                <Typography variant="caption" color={isConnected ? 'success.main' : 'error.main'}>
-                  {isConnected ? 'Connected' : 'Offline'}
-                </Typography>
-              </Box>
-
-              {/* Saving status */}
-              {isSaving && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <CircularProgress size={12} />
-                  <Typography variant="caption" color="primary">
-                    Saving...
-                  </Typography>
-                </Box>
-              )}
-
-              {/* Last saved time */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                <ClockIcon fontSize="small" sx={{ fontSize: '0.8rem' }} />
-                <Typography variant="caption">
-                  {lastSavedTime ? `Last saved: ${formatTimestamp(lastSavedTime)}` : 'Not saved yet'}
-                </Typography>
-              </Box>
-
-              {/* Conflict warning */}
-              {conflictData && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <WarningIcon sx={{ fontSize: '0.9rem', color: 'warning.main' }} />
-                  <Typography variant="caption" color="warning.main">
-                    Conflict detected
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-
-            <Divider sx={{ my: 2, opacity: 0.6 }} />
-
-            {/* Read-only Access Banner */}
-            {accessLevel === 'read' && (
-              <Alert
-                severity="info"
-                sx={{
-                  mb: 2,
-                  borderRadius: 2,
-                  '& .MuiAlert-message': {
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1
+            >
+              <TextField
+                value={title}
+                onChange={e => handleTitleChange(e.target.value)}
+                variant="standard"
+                placeholder="Untitled Notebook"
+                fullWidth
+                InputProps={{
+                  sx: {
+                    fontSize: { xs: '1.4rem', sm: '1.7rem' },
+                    fontWeight: 600,
+                    fontFamily: '"Inter", -apple-system, sans-serif',
+                    '&::before': { display: 'none' },
+                    '&::after': { display: 'none' },
                   }
                 }}
-              >
-                <VisibilityIcon fontSize="small" />
-                You are viewing this notebook in read-only mode.
-                {!localStorage.getItem('token') && ' Sign in to request edit access.'}
-              </Alert>
-            )}
+              />
 
-            {/* Contextual Help Banner for New Users */}
-            {!firstSaveDone && accessLevel !== 'read' && (
-              <Alert
-                severity="info"
-                sx={{
-                  mb: 2,
-                  borderRadius: 2,
-                  bgcolor: 'rgba(33, 150, 243, 0.1)',
-                  borderLeft: `4px solid ${theme.palette.info.main}`,
-                }}
-              >
-                <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
-                  🚀 Welcome! Here's how to get started:
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.5 }}>
-                  • Choose <strong>Rich Text</strong> for notes and documents, <strong>Code Mode</strong> for programming<br/>
-                  • Enable <strong>Auto-Save</strong> to never lose work • Use <strong>Ctrl+S</strong> to save manually<br/>
-                  • Click <strong>Settings</strong> to share with others, set passwords, or change permissions
-                </Typography>
-              </Alert>
-            )}
-
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              flexWrap: { xs: 'wrap', sm: 'nowrap' },
-              justifyContent: 'space-between'
-            }}>
-              {/* Left controls */}
+              {/* Status indicators */}
               <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 1.5
+                gap: 2,
+                mt: 1,
+                flexWrap: 'wrap'
               }}>
-                <Tooltip title="Back to Notebooks">
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    onClick={() => navigate('/notebooks')}
-                    startIcon={<ArrowBackIcon />}
-                    sx={{
-                      borderRadius: 2,
-                      textTransform: 'none',
-                      borderColor: 'rgba(0,0,0,0.15)',
-                      px: 2,
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                        backgroundColor: 'rgba(25, 118, 210, 0.04)',
-                      }
-                    }}
-                  >
-                    Back
-                  </Button>
-                </Tooltip>
-
-                {/* Editor Mode Toggle (animated, matches EnhancedEditor) */}
-                <Box
-                  sx={{
-                    ...getAnimationStyles(fadeIn, 'normal'),
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <EnhancedEditor.ToggleButtonGroup
-                    value={editorMode === 'quill' ? 'rich' : 'code'}
-                    exclusive
-                    onChange={(e, newMode) => {
-                      if (newMode) handleEditorModeChange(newMode);
-                    }}
-                    size="small"
-                    disabled={accessLevel === 'read'}
-                    sx={{
-                      '& .MuiToggleButton-root': {
-                        px: 2,
-                        py: 0.5,
-                        fontSize: '0.75rem',
-                        fontWeight: 500,
-                      }
-                    }}
-                  >
-                    <EnhancedEditor.ToggleButton value="rich" aria-label="rich text editor">
-                      <EditIcon fontSize="small" sx={{ mr: 0.5 }} />
-                      Rich
-                    </EnhancedEditor.ToggleButton>
-                    <EnhancedEditor.ToggleButton value="code" aria-label="code editor">
-                      <CodeIcon fontSize="small" sx={{ mr: 0.5 }} />
-                      Code
-                    </EnhancedEditor.ToggleButton>
-                  </EnhancedEditor.ToggleButtonGroup>
+                {/* Connection status */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  {isConnected ? (
+                    <CloudSyncIcon sx={{ fontSize: '0.9rem', color: 'success.main' }} />
+                  ) : (
+                    <CloudOffIcon sx={{ fontSize: '0.9rem', color: 'error.main' }} />
+                  )}
+                  <Typography variant="caption" color={isConnected ? 'success.main' : 'error.main'}>
+                    {isConnected ? 'Connected' : 'Offline'}
+                  </Typography>
                 </Box>
 
-                {accessLevel !== 'read' && (
-                  <Tooltip title={autoSave ? 'Disable Autosave' : 'Enable Autosave'}>
-                    <Button
-                      size="small"
-                      variant={autoSave ? 'contained' : 'outlined'}
-                      onClick={async () => {
-                        const newAutoSave = !autoSave;
-                        setAutoSave(newAutoSave);
-                        
-                        // Save the autosave setting immediately if notebook exists
-                        if (firstSaveDone && notebookData._id) {                      try {
-                        const dirtyData = {
-                          title,
-                          content,
-                          editorMode,
-                          autoSave: newAutoSave,
-                        };
-                        const cleanData = cleanDataForSave(dirtyData);
-                        await saveNotebook(notebookData._id, cleanData);
-                        showNotification(`Autosave ${newAutoSave ? 'enabled' : 'disabled'}`, 'success');
-                      } catch (error) {
-                        console.error('Failed to save autosave setting:', error);
-                        setAutoSave(!newAutoSave); // Revert on error
-                        showNotification('Failed to save autosave setting', 'error');
-                          }
-                        }
-                      }}
-                      startIcon={<AutoSaveIcon />}
-                      color={autoSave ? 'success' : 'primary'}
-                      sx={{
-                        borderRadius: 2,
-                        textTransform: 'none',
-                        '&:hover': {
-                          backgroundColor: autoSave ? 'success.dark' : 'rgba(25, 118, 210, 0.04)',
-                        }
-                      }}
-                    >
-                      Autosave
-                    </Button>
-                  </Tooltip>
+                {/* Saving status */}
+                {isSaving && (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <CircularProgress size={12} />
+                    <Typography variant="caption" color="primary">
+                      Saving...
+                    </Typography>
+                  </Box>
+                )}
+
+                {/* Last saved time */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
+                  <ClockIcon fontSize="small" sx={{ fontSize: '0.8rem' }} />
+                  <Typography variant="caption">
+                    {lastSavedTime ? `Last saved: ${formatTimestamp(lastSavedTime)}` : 'Not saved yet'}
+                  </Typography>
+                </Box>
+
+                {/* Conflict warning */}
+                {conflictData && (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <WarningIcon sx={{ fontSize: '0.9rem', color: 'warning.main' }} />
+                    <Typography variant="caption" color="warning.main">
+                      Conflict detected
+                    </Typography>
+                  </Box>
                 )}
               </Box>
 
-              {/* Status chip - This needs to be inside the same parent Box */}
-              {autoSave && (
-                <Chip
-                  label="Auto-saving enabled"
-                  size="small"
-                  color="success"
-                  variant="outlined"
-                  sx={{ display: { xs: 'none', md: 'flex' } }}
-                />
+              <Divider sx={{ my: 2, opacity: 0.6 }} />
+
+              {/* Read-only Access Banner */}
+              {accessLevel === 'read' && (
+                <Alert
+                  severity="info"
+                  sx={{
+                    mb: 2,
+                    borderRadius: 2,
+                    '& .MuiAlert-message': {
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1
+                    }
+                  }}
+                >
+                  <VisibilityIcon fontSize="small" />
+                  You are viewing this notebook in read-only mode.
+                  {!localStorage.getItem('token') && ' Sign in to request edit access.'}
+                </Alert>
               )}
-            </Box>
-          </Box>
 
-          {/* Enhanced Editor Section */}
-          <Box
-            sx={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              p: 2,
-            }}
-          >
-            {/* Helpful tips for code mode */}
-            {editorMode === 'monaco' && (
-              <Box sx={{ mb: 1 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                  💡 Tip: Use Alt+Shift+F to format code • Ctrl+Z/Ctrl+Y for undo/redo • Select language for syntax highlighting
-                </Typography>
+              {/* Contextual Help Banner for New Users */}
+              {!firstSaveDone && accessLevel !== 'read' && (
+                <Alert
+                  severity="info"
+                  sx={{
+                    mb: 2,
+                    borderRadius: 2,
+                    bgcolor: 'rgba(33, 150, 243, 0.1)',
+                    borderLeft: `4px solid ${theme.palette.info.main}`,
+                  }}
+                >
+                  <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                    🚀 Welcome! Here's how to get started:
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.5 }}>
+                    • Choose <strong>Rich Text</strong> for notes and documents, <strong>Code Mode</strong> for programming<br />
+                    • Enable <strong>Auto-Save</strong> to never lose work • Use <strong>Ctrl+S</strong> to save manually<br />
+                    • Click <strong>Settings</strong> to share with others, set passwords, or change permissions
+                  </Typography>
+                </Alert>
+              )}
+
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                justifyContent: 'space-between'
+              }}>
+                {/* Left controls */}
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.5
+                }}>
+                  <Tooltip title="Back to Notebooks">
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => navigate('/notebooks')}
+                      startIcon={<ArrowBackIcon />}
+                      sx={{
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        borderColor: 'rgba(0,0,0,0.15)',
+                        px: 2,
+                        '&:hover': {
+                          borderColor: 'primary.main',
+                          backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                        }
+                      }}
+                    >
+                      Back
+                    </Button>
+                  </Tooltip>
+
+                  {/* Editor Mode Toggle (animated, matches EnhancedEditor) */}
+                  <Box
+                    sx={{
+                      ...getAnimationStyles(fadeIn, 'normal'),
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <EnhancedEditor.ToggleButtonGroup
+                      value={editorMode === 'quill' ? 'rich' : 'code'}
+                      exclusive
+                      onChange={(e, newMode) => {
+                        if (newMode) handleEditorModeChange(newMode);
+                      }}
+                      size="small"
+                      disabled={accessLevel === 'read'}
+                      sx={{
+                        '& .MuiToggleButton-root': {
+                          px: 2,
+                          py: 0.5,
+                          fontSize: '0.75rem',
+                          fontWeight: 500,
+                        }
+                      }}
+                    >
+                      <EnhancedEditor.ToggleButton value="rich" aria-label="rich text editor">
+                        <EditIcon fontSize="small" sx={{ mr: 0.5 }} />
+                        Rich
+                      </EnhancedEditor.ToggleButton>
+                      <EnhancedEditor.ToggleButton value="code" aria-label="code editor">
+                        <CodeIcon fontSize="small" sx={{ mr: 0.5 }} />
+                        Code
+                      </EnhancedEditor.ToggleButton>
+                    </EnhancedEditor.ToggleButtonGroup>
+                  </Box>
+
+                  {accessLevel !== 'read' && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Tooltip title={autoSave ? 'Disable Autosave' : 'Enable Autosave'}>
+                        <Button
+                          size="small"
+                          variant={autoSave ? 'contained' : 'outlined'}
+                          onClick={async () => {
+                            const newAutoSave = !autoSave;
+                            setAutoSave(newAutoSave);
+
+                            // Save the autosave setting immediately if notebook exists
+                            if (firstSaveDone && notebookData._id) {
+                              try {
+                                const dirtyData = {
+                                  title,
+                                  content,
+                                  editorMode,
+                                  autoSave: newAutoSave,
+                                };
+                                const cleanData = cleanDataForSave(dirtyData);
+                                await saveNotebook(notebookData._id, cleanData);
+                                showNotification(`Autosave ${newAutoSave ? 'enabled' : 'disabled'}`, 'success');
+                              } catch (error) {
+                                console.error('Failed to save autosave setting:', error);
+                                setAutoSave(!newAutoSave); // Revert on error
+                                showNotification('Failed to save autosave setting', 'error');
+                              }
+                            }
+                          }}
+                          startIcon={<AutoSaveIcon />}
+                          color={autoSave ? 'success' : 'primary'}
+                          sx={{
+                            borderRadius: 2,
+                            textTransform: 'none',
+                            '&:hover': {
+                              backgroundColor: autoSave ? 'success.dark' : 'rgba(25, 118, 210, 0.04)',
+                            }
+                          }}
+                        >
+                          Autosave
+                        </Button>
+                      </Tooltip>
+
+                      <Tooltip title="Keyboard Shortcuts (Ctrl+/)">
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          onClick={handleShowKeyboardShortcuts}
+                          startIcon={<KeyboardIcon />}
+                          sx={{
+                            borderRadius: 2,
+                            textTransform: 'none'
+                          }}
+                        >
+                          Shortcuts
+                        </Button>
+                      </Tooltip>
+                    </Box>
+                  )}
+                </Box>
+
+                {/* Status chip - This needs to be inside the same parent Box */}
+                {autoSave && (
+                  <Chip
+                    label="Auto-saving enabled"
+                    size="small"
+                    color="success"
+                    variant="outlined"
+                    sx={{ display: { xs: 'none', md: 'flex' } }}
+                  />
+                )}
               </Box>
-            )}
-            
-            <EnhancedEditor
-              content={content}
-              onChange={handleContentChange}
-              onSave={handleSave}
-              editorMode={editorMode === 'quill' ? 'rich' : 'code'}
-              language={language}
-              autoSave={autoSave}
-              placeholder="Start writing your notebook..."
-              readOnly={accessLevel === 'read'}
-              onLanguageChange={setLanguage}
-              onModeChange={handleEditorModeChange}
-            />
-          </Box>
-
-          {/* Footer Actions */}
-          <Box
-            sx={{
-              p: { xs: 2, sm: 3 },
-              borderTop: '1px solid rgba(0,0,0,0.09)',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              background: 'linear-gradient(to right, #ffffff, #f5f8ff)',
-            }}
-          >
-            <Typography variant="body2" color="text.secondary" sx={{
-              display: { xs: 'none', sm: 'block' }
-            }}>
-              {autoSave ? 'Changes auto-saved to the cloud' : 'Remember to save your changes'}
-            </Typography>
-
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <Button
-                variant="outlined"
-                onClick={() => setIsSettingsOpen(true)}
-                startIcon={<SettingsIcon />}
-                sx={{
-                  borderRadius: 2,
-                  textTransform: 'none',
-                  borderColor: 'rgba(0,0,0,0.15)',
-                }}
-              >
-                Settings
-              </Button>
-
-              <Button
-                variant="contained"
-                onClick={() => handleSave()}
-                startIcon={<SaveIcon />}
-                disabled={autoSave && content === lastSavedContent.current}
-                sx={{
-                  borderRadius: 2,
-                  textTransform: 'none',
-                  px: 3,
-                  background: 'linear-gradient(45deg, #2196f3, #1976d2)',
-                  boxShadow: '0 2px 8px rgba(25, 118, 210, 0.25)',
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #1976d2, #1565c0)',
-                    boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
-                  }
-                }}
-              >
-                Save Changes
-              </Button>
             </Box>
-          </Box>
-        </Paper>
-      </Box>
 
-      {/* Dialogs */}
-      <SettingsDialog
-        open={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        notebookData={notebookData}
-        saveURL={saveURL}
-        onSave={handleSave}
-        urlIdentifier={urlIdentifier}
-        searchCollaborators={searchCollaborators}
-        onOpenPasswordDialog={() => setIsPasswordSettingsOpen(true)}
-        onOpenPermissionsDialog={() => setIsPermissionsSettingsOpen(true)}
-        onOpenCollaboratorsDialog={() => setIsCollaboratorsSettingsOpen(true)}
-        disabled={userRole !== 'owner' && accessLevel !== 'owner'}
-      />
+            {/* Enhanced Editor Section */}
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                p: 2,
+              }}
+            >
+              {/* Helpful tips for code mode */}
+              {editorMode === 'monaco' && (
+                <Box sx={{ mb: 1 }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                    💡 Tip: Use Alt+Shift+F to format code • Ctrl+Z/Ctrl+Y for undo/redo • Select language for syntax highlighting
+                  </Typography>
+                </Box>
+              )}
 
-      {/* Remove legacy PasswordPrompt and GuestNamePrompt dialogs */}
+              <EnhancedEditor
+                content={content}
+                onChange={handleContentChange}
+                onSave={handleSave}
+                editorMode={editorMode === 'quill' ? 'rich' : 'code'}
+                language={language}
+                autoSave={autoSave}
+                placeholder="Start writing your notebook..."
+                readOnly={accessLevel === 'read'}
+                onLanguageChange={setLanguage}
+                onModeChange={handleEditorModeChange}
+              />
+            </Box>
 
-      {isPasswordSettingsOpen && (
-        <PasswordSettingsDialog
-          open={isPasswordSettingsOpen}
-          onClose={() => setIsPasswordSettingsOpen(false)}
-          notebookId={notebookData._id}
-          initialSettings={{ 
-            password: notebookData.password,
-            requiresPassword: !!notebookData.password 
-          }}
-          onSave={async (passwordSettings) => {
-            try {
-              const token = localStorage.getItem('token');
-              const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/password`, {
-                method: 'PUT',
-                headers: { 
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(passwordSettings)
-              });
-              
-              if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Server error: ${response.status}`);
-              }
-              
-              const responseData = await response.json();
-              console.log('Password update response:', responseData);
-              
-              // Update local notebook data
-              setNotebookData(prev => ({
-                ...prev,
-                password: passwordSettings.requiresPassword ? passwordSettings.password : null,
-                requiresPassword: !!passwordSettings.requiresPassword
-              }));
-              
-              setIsPasswordSettingsOpen(false);
-              showNotification('Password settings updated successfully!');
-              return responseData;
-            } catch (error) {
-              console.error('Failed to update password settings:', error);
-              showNotification(`Failed to update password settings: ${error.message}`);
-              throw error;
-            }
-          }}
-        />
-      )}
+            {/* Footer Actions */}
+            <Box
+              sx={{
+                p: { xs: 2, sm: 3 },
+                borderTop: '1px solid rgba(0,0,0,0.09)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                background: 'linear-gradient(to right, #ffffff, #f5f8ff)',
+              }}
+            >
+              <Typography variant="body2" color="text.secondary" sx={{
+                display: { xs: 'none', sm: 'block' }
+              }}>
+                {autoSave ? 'Changes auto-saved to the cloud' : 'Remember to save your changes'}
+              </Typography>
 
-      {isPermissionsSettingsOpen && (
-        <PermissionsSettingsDialog
-          open={isPermissionsSettingsOpen}
-          onClose={() => setIsPermissionsSettingsOpen(false)}
-          notebookId={notebookData._id}
-          initialSettings={{ 
-            permissions: notebookData.permissions || 'everyone'
-          }}
-          onSave={async (permissionsSettings) => {
-            try {
-              const token = localStorage.getItem('token');
-              const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/permissions`, {
-                method: 'PUT',
-                headers: { 
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(permissionsSettings)
-              });
-              
-              if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Server error: ${response.status}`);
-              }
-              
-              const responseData = await response.json();
-              console.log('Permissions update response:', responseData);
-              
-              // Update local notebook data
-              setNotebookData(prev => ({
-                ...prev,
-                permissions: permissionsSettings.permissions
-              }));
-              
-              setIsPermissionsSettingsOpen(false);
-              showNotification('Permission settings updated successfully!');
-              return responseData;
-            } catch (error) {
-              console.error('Failed to update permission settings:', error);
-              showNotification(`Failed to update permission settings: ${error.message}`);
-              throw error;
-            }
-          }}
-        />
-      )}
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setIsSettingsOpen(true)}
+                  startIcon={<SettingsIcon />}
+                  sx={{
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    borderColor: 'rgba(0,0,0,0.15)',
+                  }}
+                >
+                  Settings
+                </Button>
 
-      {isCollaboratorsSettingsOpen && (
-        <CollaboratorsSettingsDialog
-          open={isCollaboratorsSettingsOpen}
-          onClose={() => setIsCollaboratorsSettingsOpen(false)}
-          notebookId={notebookData._id}
-          initialSettings={{ 
-            collaborators: notebookData.collaborators || []
-          }}
+                <Button
+                  variant="contained"
+                  onClick={() => handleSave()}
+                  startIcon={<SaveIcon />}
+                  disabled={autoSave && content === lastSavedContent.current}
+                  sx={{
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    px: 3,
+                    background: 'linear-gradient(45deg, #2196f3, #1976d2)',
+                    boxShadow: '0 2px 8px rgba(25, 118, 210, 0.25)',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #1976d2, #1565c0)',
+                      boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
+                    }
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        </Box>
+
+        {/* Dialogs */}
+        <SettingsDialog
+          open={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          notebookData={notebookData}
+          saveURL={saveURL}
+          onSave={handleSave}
+          urlIdentifier={urlIdentifier}
           searchCollaborators={searchCollaborators}
-          onSave={async (collaboratorsSettings) => {
-            try {
-              const token = localStorage.getItem('token');
-              const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/collaborators`, {
-                method: 'PUT',
-                headers: { 
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(collaboratorsSettings)
-              });
-              
-              if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Server error: ${response.status}`);
-              }
-              
-              const responseData = await response.json();
-              console.log('Collaborators update response:', responseData);
-              
-              // Update local notebook data
-              setNotebookData(prev => ({
-                ...prev,
-                collaborators: responseData.collaborators || collaboratorsSettings.collaborators
-              }));
-              
-              setIsCollaboratorsSettingsOpen(false);
-              showNotification('Collaborator settings updated successfully!');
-              return responseData;
-            } catch (error) {
-              console.error('Failed to update collaborator settings:', error);
-              showNotification(`Failed to update collaborator settings: ${error.message}`);
-              throw error;
-            }
-          }}
+          onOpenPasswordDialog={() => setIsPasswordSettingsOpen(true)}
+          onOpenPermissionsDialog={() => setIsPermissionsSettingsOpen(true)}
+          onOpenCollaboratorsDialog={() => setIsCollaboratorsSettingsOpen(true)}
+          disabled={userRole !== 'owner' && accessLevel !== 'owner'}
         />
-      )}
 
-      {/* User Presence Sidebar */}
-      {notebookData._id && (
-        <Fade in={isConnected}>
-          <Box sx={{
-            position: 'fixed',
-            top: 20,
-            right: 20,
-            zIndex: 1000,
-            display: { xs: 'none', lg: 'block' }
-          }}>
-            <UserPresence
-              notebookId={notebookData._id}
-              currentUser={currentUser}
-              activeUsers={activeUsers}
-            />
-          </Box>
-        </Fade>
-      )}
+        {/* Remove legacy PasswordPrompt and GuestNamePrompt dialogs */}
 
-      {/* Connection Error Backdrop */}
-      <Backdrop
-        sx={{
-          color: '#fff',
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          flexDirection: 'column',
-          gap: 2
-        }}
-        open={!!connectionError && !isConnected}
-      >
-        <CloudOffIcon sx={{ fontSize: 48 }} />
-        <Typography variant="h6">Connection Lost</Typography>
-        <Typography variant="body2" textAlign="center">
-          {connectionError}
-        </Typography>
-        <Button
-          variant="contained"
-          onClick={() => window.location.reload()}
-          sx={{ mt: 2 }}
-        >
-          Reconnect
-        </Button>
-      </Backdrop>
+        {isPasswordSettingsOpen && (
+          <PasswordSettingsDialog
+            open={isPasswordSettingsOpen}
+            onClose={() => setIsPasswordSettingsOpen(false)}
+            notebookId={notebookData._id}
+            initialSettings={{
+              password: notebookData.password,
+              requiresPassword: !!notebookData.password
+            }}
+            onSave={async (passwordSettings) => {
+              try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/password`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  },
+                  body: JSON.stringify(passwordSettings)
+                });
 
-      {/* Conflict Resolution Dialog */}
-      {conflictData && (
+                if (!response.ok) {
+                  const errorData = await response.json().catch(() => ({}));
+                  throw new Error(errorData.message || `Server error: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+                console.log('Password update response:', responseData);
+
+                // Update local notebook data
+                setNotebookData(prev => ({
+                  ...prev,
+                  password: passwordSettings.requiresPassword ? passwordSettings.password : null,
+                  requiresPassword: !!passwordSettings.requiresPassword
+                }));
+
+                setIsPasswordSettingsOpen(false);
+                showNotification('Password settings updated successfully!');
+                return responseData;
+              } catch (error) {
+                console.error('Failed to update password settings:', error);
+                showNotification(`Failed to update password settings: ${error.message}`);
+                throw error;
+              }
+            }}
+          />
+        )}
+
+        {isPermissionsSettingsOpen && (
+          <PermissionsSettingsDialog
+            open={isPermissionsSettingsOpen}
+            onClose={() => setIsPermissionsSettingsOpen(false)}
+            notebookId={notebookData._id}
+            initialSettings={{
+              permissions: notebookData.permissions || 'everyone'
+            }}
+            onSave={async (permissionsSettings) => {
+              try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/permissions`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  },
+                  body: JSON.stringify(permissionsSettings)
+                });
+
+                if (!response.ok) {
+                  const errorData = await response.json().catch(() => ({}));
+                  throw new Error(errorData.message || `Server error: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+                console.log('Permissions update response:', responseData);
+
+                // Update local notebook data
+                setNotebookData(prev => ({
+                  ...prev,
+                  permissions: permissionsSettings.permissions
+                }));
+
+                setIsPermissionsSettingsOpen(false);
+                showNotification('Permission settings updated successfully!');
+                return responseData;
+              } catch (error) {
+                console.error('Failed to update permission settings:', error);
+                showNotification(`Failed to update permission settings: ${error.message}`);
+                throw error;
+              }
+            }}
+          />
+        )}
+
+        {isCollaboratorsSettingsOpen && (
+          <CollaboratorsSettingsDialog
+            open={isCollaboratorsSettingsOpen}
+            onClose={() => setIsCollaboratorsSettingsOpen(false)}
+            notebookId={notebookData._id}
+            initialSettings={{
+              collaborators: notebookData.collaborators || []
+            }}
+            searchCollaborators={searchCollaborators}
+            onSave={async (collaboratorsSettings) => {
+              try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/collaborators`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  },
+                  body: JSON.stringify(collaboratorsSettings)
+                });
+
+                if (!response.ok) {
+                  const errorData = await response.json().catch(() => ({}));
+                  throw new Error(errorData.message || `Server error: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+                console.log('Collaborators update response:', responseData);
+
+                // Update local notebook data
+                setNotebookData(prev => ({
+                  ...prev,
+                  collaborators: responseData.collaborators || collaboratorsSettings.collaborators
+                }));
+
+                setIsCollaboratorsSettingsOpen(false);
+                showNotification('Collaborator settings updated successfully!');
+                return responseData;
+              } catch (error) {
+                console.error('Failed to update collaborator settings:', error);
+                showNotification(`Failed to update collaborator settings: ${error.message}`);
+                throw error;
+              }
+            }}
+          />
+        )}
+
+        {/* User Presence Sidebar */}
+        {notebookData._id && (
+          <Fade in={isConnected}>
+            <Box sx={{
+              position: 'fixed',
+              top: 20,
+              right: 20,
+              zIndex: 1000,
+              display: { xs: 'none', lg: 'block' }
+            }}>
+              <UserPresence
+                notebookId={notebookData._id}
+                currentUser={currentUser}
+                activeUsers={activeUsers}
+              />
+            </Box>
+          </Fade>
+        )}
+
+        {/* Password dialog has been replaced with EnhancedPasswordPrompt */}
+        
+        {/* Connection Error Backdrop */}
         <Backdrop
           sx={{
             color: '#fff',
-            zIndex: (theme) => theme.zIndex.drawer + 2,
+            zIndex: (theme) => theme.zIndex.drawer + 1,
             flexDirection: 'column',
-            gap: 2,
-            p: 4
+            gap: 2
           }}
-          open={!!conflictData}
+          open={!!connectionError && !isConnected}
         >
-          <Paper sx={{ p: 4, maxWidth: 600, width: '100%' }}>
-            <Typography variant="h6" gutterBottom>
-              Conflict Detected
-            </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Another user has made changes to this notebook. Please choose how to resolve the conflict:
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setContent(conflictData.serverContent);
-                  setTitle(conflictData.serverTitle);
-                  setLastSavedVersion(conflictData.serverVersion);
-                  setConflictData(null);
-                }}
-              >
-                Use Server Version
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  // Keep local changes and force save
-                  setConflictData(null);
-                  const updateData = {
-                    notebookId: notebookData._id,
-                    content,
-                    title,
-                    version: conflictData.serverVersion
-                  };
-                  socketClient.updateNotebook(updateData);
-                }}
-              >
-                Keep My Changes
-              </Button>
-            </Box>
-          </Paper>
+          <CloudOffIcon sx={{ fontSize: 48 }} />
+          <Typography variant="h6">Connection Lost</Typography>
+          <Typography variant="body2" textAlign="center">
+            {connectionError}
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => window.location.reload()}
+            sx={{ mt: 2 }}
+          >
+            Reconnect
+          </Button>
         </Backdrop>
-      )}
 
-      {/* Notification Snackbar */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert
+        {/* Conflict Resolution Dialog */}
+        {conflictData && (
+          <Backdrop
+            sx={{
+              color: '#fff',
+              zIndex: (theme) => theme.zIndex.drawer + 2,
+              flexDirection: 'column',
+              gap: 2,
+              p: 4
+            }}
+            open={!!conflictData}
+          >
+            <Paper sx={{ p: 4, maxWidth: 600, width: '100%' }}>
+              <Typography variant="h6" gutterBottom>
+                Conflict Detected
+              </Typography>
+              <Typography variant="body2" color="text.secondary" paragraph>
+                Another user has made changes to this notebook. Please choose how to resolve the conflict:
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setContent(conflictData.serverContent);
+                    setTitle(conflictData.serverTitle);
+                    setLastSavedVersion(conflictData.serverVersion);
+                    setConflictData(null);
+                  }}
+                >
+                  Use Server Version
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    // Keep local changes and force save
+                    setConflictData(null);
+                    const updateData = {
+                      notebookId: notebookData._id,
+                      content,
+                      title,
+                      version: conflictData.serverVersion
+                    };
+                    socketClient.updateNotebook(updateData);
+                  }}
+                >
+                  Keep My Changes
+                </Button>
+              </Box>
+            </Paper>
+          </Backdrop>
+        )}
+
+        {/* Notification Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
           onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          variant="filled"
-          sx={{ width: '100%' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </Box>
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity={snackbarSeverity}
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Box>
+    );
+  };
+
+  return (
+    <ErrorBoundary>
+      {renderMainContent()}
+      <KeyboardShortcutsDialog 
+        open={isKeyboardShortcutsOpen}
+        onClose={() => setIsKeyboardShortcutsOpen(false)}
+      />
+    </ErrorBoundary>
   );
 };
 
-export default NotebookEditor;
+export default withErrorBoundary(NotebookEditor);
