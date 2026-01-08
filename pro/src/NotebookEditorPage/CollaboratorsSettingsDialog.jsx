@@ -28,12 +28,12 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Initialize state from props
+  // Initialize state when dialog opens
   useEffect(() => {
     if (open) {
       setCollaborators(initialSettings.collaborators || []);
     }
-  }, [open, initialSettings]);
+  }, [open]);
 
   const handleCollaboratorSearch = async (searchTerm) => {
     if (searchTerm.length > 2) {
@@ -67,7 +67,10 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
       }
 
       const settings = {
-        collaborators: collaborators.map(c => c._id || c.id || c)
+        collaborators: collaborators.map(c => ({
+          userId: c._id || c.id || c,
+          access: 'write' // Default to write access for now
+        }))
       };
 
       // Call the onSave function passed from parent

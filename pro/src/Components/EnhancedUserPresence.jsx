@@ -24,8 +24,8 @@ import {
   AdminPanelSettings as AdminIcon,
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
-import { usePresence } from '../contexts/PresenceContext';
 import { fadeIn, pulse, getAnimationStyles, getHoverTransform } from '../utils/animations';
+import { usePresence } from '../contexts/PresenceContext';
 
 const EnhancedUserPresence = ({ 
   notebookId, 

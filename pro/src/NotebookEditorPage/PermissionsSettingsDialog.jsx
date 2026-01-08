@@ -28,12 +28,12 @@ const PermissionsSettingsDialog = ({ open, onClose, notebookId, initialSettings 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Initialize state from props
+  // Initialize state when dialog opens
   useEffect(() => {
     if (open) {
       setPermissions(initialSettings.permissions || 'everyone');
     }
-  }, [open, initialSettings]);
+  }, [open]);
 
   const handlePermissionsChange = (event) => {
     setPermissions(event.target.value);

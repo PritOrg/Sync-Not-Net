@@ -214,10 +214,130 @@ const validateUserSearch = [
   handleValidationErrors
 ];
 
+const validateComment = [
+  body('content')
+    .trim()
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Comment content must be between 1 and 2000 characters'),
+  
+  body('parentId')
+    .optional()
+    .custom(isValidObjectId)
+    .withMessage('Invalid parent comment ID format'),
+  
+  body('guestAuthor')
+    .optional()
+    .custom((value, { req }) => {
+      // If user is not authenticated, guest author is required
+      if (!req.user && (!value || !value.name)) {
+        throw new Error('Guest name is required when not authenticated');
+      }
+      if (value) {
+        if (typeof value.name !== 'string' || value.name.trim().length < 1) {
+          throw new Error('Guest name is required');
+        }
+        if (value.name.trim().length > 50) {
+          throw new Error('Guest name cannot be longer than 50 characters');
+        }
+        if (value.email) {
+          if (!value.email.match(/^\S+@\S+\.\S+$/)) {
+            throw new Error('Invalid email format');
+          }
+          if (value.email.length > 100) {
+            throw new Error('Email cannot be longer than 100 characters');
+          }
+        }
+      }
+      return true;
+    }),
+  
+  handleValidationErrors
+];
+
 const validateObjectId = [
   param('id')
     .custom(isValidObjectId)
     .withMessage('Invalid ID format'),
+  
+  handleValidationErrors
+];
+
+// Tag validation rules
+const validateTagCreation = [
+  body('name')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Tag name must be between 1 and 50 characters')
+    .matches(/^[a-zA-Z0-9\s-_]+$/)
+    .withMessage('Tag name can only contain letters, numbers, spaces, hyphens, and underscores'),
+  
+  body('color')
+    .optional()
+    .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
+    .withMessage('Invalid hex color format'),
+  
+  body('isPublic')
+    .optional()
+    .isBoolean()
+    .withMessage('isPublic must be a boolean value'),
+  
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 200 })
+    .withMessage('Description cannot be longer than 200 characters'),
+  
+  handleValidationErrors
+];
+
+const validateTagUpdate = [
+  param('tagId')
+    .custom(isValidObjectId)
+    .withMessage('Invalid tag ID format'),
+  
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Tag name must be between 1 and 50 characters')
+    .matches(/^[a-zA-Z0-9\s-_]+$/)
+    .withMessage('Tag name can only contain letters, numbers, spaces, hyphens, and underscores'),
+  
+  body('color')
+    .optional()
+    .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
+    .withMessage('Invalid hex color format'),
+  
+  body('isPublic')
+    .optional()
+    .isBoolean()
+    .withMessage('isPublic must be a boolean value'),
+  
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 200 })
+    .withMessage('Description cannot be longer than 200 characters'),
+  
+  handleValidationErrors
+];
+
+const validateTagSearch = [
+  query('q')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Search query cannot be longer than 50 characters'),
+  
+  query('limit')
+    .optional()
+    .isInt({ min: 1, max: 100 })
+    .withMessage('Limit must be between 1 and 100'),
+  
+  query('page')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Page must be a positive integer'),
   
   handleValidationErrors
 ];
@@ -231,5 +351,9 @@ module.exports = {
   validateUrlUpdate,
   validateUserSearch,
   validateObjectId,
+  validateComment,
+  validateTagCreation,
+  validateTagUpdate,
+  validateTagSearch,
   handleValidationErrors
 };

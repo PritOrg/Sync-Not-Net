@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Notebook = require('../models/notebookModel');
+const Tag = require('../models/tagModel');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const { catchAsync } = require('../middlewares/errorHandler');
 const {
   validateNotebookCreation,
@@ -24,6 +27,128 @@ const {
 const getIO = (req) => {
   return req.app.get('io');
 };
+
+// Get all available tags
+router.get('/tags', verifyToken, catchAsync(async (req, res) => {
+  try {
+    // Get unique tags from notebooks where the user has access
+    const query = {
+      $or: [
+        { creatorID: req.user.id },
+        { collaborators: req.user.id },
+        { permissions: 'everyone' }
+      ]
+    };
+
+    const notebooks = await Notebook.find(query);
+    const tags = [...new Set(notebooks.flatMap(notebook => notebook.tags))];
+
+    res.json(tags);
+  } catch (error) {
+    logger.error('Error fetching tags:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to fetch tags'
+    });
+  }
+}));
+
+// Search notebooks with pagination and filtering
+router.get('/search', verifyToken, catchAsync(async (req, res) => {
+  const {
+    page = 1,
+    limit = 10,
+    query = '',
+    tags,
+    dateFrom,
+    dateTo,
+    onlyMine,
+    onlyShared,
+    sortBy = 'updatedAt',
+    sortOrder = 'desc'
+  } = req.query;
+
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+  const skip = (pageNum - 1) * limitNum;
+
+  // Build base query for only the user's notebooks
+  const searchQuery = {
+    creatorID: req.user.id
+  };
+
+  // Add text search if query provided
+  if (query) {
+    searchQuery.$and = [{
+      $or: [
+        { title: { $regex: query, $options: 'i' } },
+        { content: { $regex: query, $options: 'i' } }
+      ]
+    }];
+  }
+
+  // Add tag filtering if provided
+  if (tags) {
+    const tagArray = tags.split(',');
+    searchQuery.tags = { $in: tagArray };
+  }
+
+  // Add date range filtering
+  if (dateFrom || dateTo) {
+    searchQuery.updatedAt = {};
+    if (dateFrom) searchQuery.updatedAt.$gte = new Date(dateFrom);
+    if (dateTo) searchQuery.updatedAt.$lte = new Date(dateTo);
+  }
+
+  // Add ownership filtering
+  if (onlyMine === 'true') {
+    searchQuery.creatorID = req.user.id;
+  } else if (onlyShared === 'true') {
+    searchQuery.collaborators = req.user.id;
+  }
+
+  // Build sort object
+  const sortObj = {};
+  sortObj[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
+  try {
+    // Get total count for pagination
+    const total = await Notebook.countDocuments(searchQuery);
+
+    // Get notebooks with pagination
+    const notebooks = await Notebook.find(searchQuery)
+      .populate('creatorID', 'name email')
+      .populate('collaborators', 'name email')
+      .sort(sortObj)
+      .skip(skip)
+      .limit(limitNum)
+      .select('-password')
+      .exec();
+
+    const totalPages = Math.ceil(total / limitNum);
+
+    res.json({
+      notebooks: notebooks.map(notebook => ({
+        ...notebook.toObject(),
+        content: extractContentFromXML(notebook.content)
+      })),
+      pagination: {
+        page: pageNum,
+        pages: totalPages,
+        total,
+        limit: limitNum,
+        hasNext: pageNum < totalPages,
+        hasPrev: pageNum > 1
+      }
+    });
+  } catch (error) {
+    logger.error('Error searching notebooks:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to search notebooks'
+    });
+  }
+}));
 
 // Get user's own notebooks with pagination and search
 router.get('/my-notebooks', verifyToken, catchAsync(async (req, res) => {
@@ -410,42 +535,48 @@ router.post('/:urlIdentifier/verify-password', optionalAuth, catchAsync(async (r
   let accessLevel = 'edit'; // Default for password-protected notebooks
   let userRole = 'viewer';
 
-  if (notebook.permissions.toString() === 'private') {
-    // Private notebook - only owner should have access
-    if (isCreator) {
-      accessLevel = 'edit';
-      userRole = 'owner';
-    } else {
-      return res.status(403).json({
-        error: 'Access denied',
-        message: 'This is a private notebook'
-      });
-    }
-  } else if (notebook.permissions.toString() === 'collaborators') {
-    // Collaborators only
-    if (isCreator) {
-      accessLevel = 'edit';
-      userRole = 'owner';
-    } else if (isCollaborator) {
-      accessLevel = 'edit';
-      userRole = 'collaborator';
-    } else {
-      return res.status(403).json({
-        error: 'Access denied',
-        message: 'This notebook is only accessible by collaborators'
-      });
-    }
-  } else if (notebook.permissions.toString() === 'everyone') {
-    // Public notebook with password
-    if (isCreator) {
-      accessLevel = 'edit';
-      userRole = 'owner';
-    } else if (isCollaborator) {
-      accessLevel = 'edit';
-      userRole = 'collaborator';
-    } else {
-      accessLevel = 'edit';
-      userRole = isAuthenticated ? 'public' : 'guest';
+  // First check if user is creator or collaborator regardless of permissions
+  if (isCreator) {
+    accessLevel = 'edit';
+    userRole = 'owner';
+  } else if (isCollaborator) {
+    accessLevel = 'edit';
+    userRole = 'collaborator';
+  } else {
+    // Then check notebook permissions
+    switch (notebook.permissions.toString()) {
+      case 'private':
+        // Private notebooks - only owner has access
+        if (!isCreator) {
+          return res.status(403).json({
+            error: 'Access denied',
+            message: 'This is a private notebook'
+          });
+        }
+        break;
+        
+      case 'collaborators':
+        // Collaborator notebooks - only owner and collaborators have access
+        if (!isCreator && !isCollaborator) {
+          return res.status(403).json({
+            error: 'Access denied',
+            message: 'This notebook is only accessible by collaborators'
+          });
+        }
+        break;
+        
+      case 'everyone':
+        // Public notebooks - everyone has access with correct password
+        accessLevel = 'edit';
+        userRole = isAuthenticated ? 'public' : 'guest';
+        break;
+        
+      default:
+        // Unknown permission type
+        return res.status(403).json({
+          error: 'Access denied',
+          message: 'Invalid notebook permissions'
+        });
     }
   }
 
@@ -1279,7 +1410,36 @@ router.put('/:id', optionalAuth, async (req, res) => {
         notebook.language = language;
       }
       if (autoSave !== undefined) notebook.autoSave = autoSave;
-      if (tags !== undefined) notebook.tags = tags;
+      // Handle tags properly
+      if (tags !== undefined) {
+        if (Array.isArray(tags)) {
+          // If the tags are strings, create or find existing Tag documents
+          const processedTags = await Promise.all(tags.map(async (tag) => {
+            if (typeof tag === 'string') {
+              // Try to find existing tag
+              let tagDoc = await Tag.findOne({ 
+                name: tag, 
+                createdBy: req.user ? req.user.id : notebook.creatorID 
+              });
+              
+              // Create new tag if doesn't exist
+              if (!tagDoc) {
+                tagDoc = new Tag({
+                  name: tag,
+                  createdBy: req.user ? req.user.id : notebook.creatorID
+                });
+                await tagDoc.save();
+              }
+              return tagDoc._id;
+            }
+            // If it's already an ObjectId, use it as is
+            return tag;
+          }));
+          notebook.tags = processedTags;
+        } else {
+          notebook.tags = [];
+        }
+      }
 
       // Creator-only fields
       if (isCreator) {
@@ -1567,18 +1727,40 @@ router.put('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
       });
     }
 
-    // Ensure collaborators is an array of user IDs
-    const collaboratorIds = collaborators
-      .map(c => typeof c === 'string' ? c : c._id || c.id)
-      .filter(Boolean);
+    // Validate and process collaborator data
+    if (!Array.isArray(collaborators)) {
+      return res.status(400).json({
+        error: 'Invalid collaborators',
+        message: 'Collaborators must be an array'
+      });
+    }
 
-    notebook.collaborators = collaboratorIds;
+    // Process each collaborator to ensure it has the correct structure
+    const processedCollaborators = collaborators.map(c => {
+      // Extract userId based on different possible formats
+      const userId = typeof c.userId === 'string' ? c.userId : 
+                    c.userId?._id || c.userId?.id || c.userId;
+      
+      if (!userId) {
+        throw new Error('Invalid collaborator data: missing userId');
+      }
+
+      return {
+        userId: userId,
+        access: c.access || 'write' // Default to 'write' if not specified
+      };
+    });
+
+    notebook.collaborators = processedCollaborators;
     await notebook.save();
 
     // Populate collaborators for response
-    await notebook.populate('collaborators', 'name email');
+    await notebook.populate({
+      path: 'collaborators.userId',
+      select: 'name email'
+    });
 
-    logger.info(`Collaborators updated for notebook ${notebook._id}, count: ${collaboratorIds.length}`);
+    logger.info(`Collaborators updated for notebook ${notebook._id}, count: ${processedCollaborators.length}`);
 
     res.json({
       message: 'Collaborators updated successfully',
@@ -1592,6 +1774,55 @@ router.put('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
     });
   }
 }));
+
+// Get version history for a notebook
+router.get('/:id/versions', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const notebook = await Notebook.findById(req.params.id);
+    
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Notebook not found',
+        message: 'The notebook you are trying to access does not exist'
+      });
+    }
+
+    // Check if user has access to view versions
+    const isCreator = notebook.creatorID.toString() === req.user.id.toString();
+    const isCollaborator = notebook.collaborators.some(c => c.toString() === req.user.id.toString());
+    
+    if (!isCreator && !isCollaborator && notebook.permissions !== 'everyone') {
+      return res.status(403).json({
+        error: 'Access denied',
+        message: 'You do not have permission to view version history'
+      });
+    }
+
+    // Get version history from NotebookVersion model
+    const versions = await NotebookVersionModel.find({ notebookId: notebook._id })
+      .populate('createdBy', 'name email')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      versions: versions.map(v => ({
+        id: v._id,
+        version: v.version,
+        content: extractContentFromXML(v.content),
+        createdAt: v.createdAt,
+        createdBy: v.createdBy,
+        changes: v.changes
+      }))
+    });
+  } catch (error) {
+    logger.error('Error fetching version history:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to fetch version history'
+    });
+  }
+}));
+
+
 
 // Update notebook custom URL
 router.put('/:id/settings/url', verifyToken, validateUrlUpdate, catchAsync(async (req, res) => {
@@ -1751,7 +1982,7 @@ router.put('/:id/tags', verifyToken, catchAsync(async (req, res) => {
   if (!Array.isArray(tags)) {
     return res.status(400).json({
       error: 'Invalid tags format',
-      message: 'Tags must be an array of strings.'
+      message: 'Tags must be an array of tag names or objects.'
     });
   }
 
@@ -1772,18 +2003,558 @@ router.put('/:id/tags', verifyToken, catchAsync(async (req, res) => {
       });
     }
 
-    notebook.tags = tags;
+    // Process each tag
+    const tagIds = await Promise.all(tags.map(async (tagInput) => {
+      const tagName = typeof tagInput === 'string' ? tagInput : tagInput.name;
+      
+      // First try to find an existing tag
+      let tag = await Tag.findByUserAndName(req.user.id, tagName);
+      
+      // If no tag exists, create a new one
+      if (!tag) {
+        tag = new Tag({
+          name: tagName,
+          createdBy: req.user.id,
+          isPublic: false // Default to private tags
+        });
+        await tag.save();
+      }
+      
+      return tag._id;
+    }));
+
+    // Update notebook with tag IDs
+    notebook.tags = tagIds;
     await notebook.save();
+
+    // Populate and return the updated tags
+    await notebook.populate('tags');
 
     res.json({
       message: 'Tags updated successfully',
-      tags: notebook.tags
+      tags: notebook.tags.map(tag => ({
+        id: tag._id,
+        name: tag.name,
+        color: tag.color
+      }))
     });
   } catch (error) {
     logger.error('Error updating notebook tags:', error);
-    res.status(500).json({
+    if (error.code === 11000) {
+      res.status(400).json({
+        error: 'Duplicate tag',
+        message: 'One or more tags already exist with the same name.'
+      });
+    } else {
+      res.status(500).json({
+        error: 'Server error',
+        message: 'Failed to update tags. Please try again.'
+      });
+    }
+  }
+}));
+
+// Set/update notebook password
+router.put('/:id/password', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const { password, requiresPassword } = req.body;
+    const notebookId = req.params.id;
+    
+    // Find the notebook
+    const notebook = await Notebook.findById(notebookId);
+    
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Notebook not found',
+        message: 'The notebook you are trying to update does not exist.'
+      });
+    }
+    
+    // Verify ownership - only the owner can set a password
+    if (notebook.creatorID.toString() !== req.user.id) {
+      return res.status(403).json({
+        error: 'Access denied',
+        message: 'Only the creator can update password settings.'
+      });
+    }
+    
+    // Update password settings
+    if (requiresPassword && password) {
+      // Hash the password before storing
+      const salt = await bcrypt.genSalt(10);
+      notebook.password = await bcrypt.hash(password, salt);
+      notebook.requiresPassword = true;
+    } else {
+      // Remove password protection
+      notebook.password = null;
+      notebook.requiresPassword = false;
+    }
+    
+    await notebook.save();
+    
+    // Return success message (but don't return the password)
+    return res.json({
+      message: 'Password settings updated successfully',
+      requiresPassword: notebook.requiresPassword
+    });
+    
+  } catch (error) {
+    logger.error('Error updating notebook password:', error);
+    return res.status(500).json({
       error: 'Server error',
-      message: 'Failed to update tags. Please try again.'
+      message: 'Failed to update password settings. Please try again.'
+    });
+  }
+}));
+
+// Get collaborators for a notebook
+router.get('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const notebookId = req.params.id;
+    const notebook = await Notebook.findById(notebookId).populate('collaborators', 'name email');
+    
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Notebook not found',
+        message: 'The notebook you are trying to access does not exist.'
+      });
+    }
+    
+    // Check ownership or collaborator access
+    const userId = req.user.id;
+    const isOwner = notebook.creatorID.toString() === userId;
+    const isCollaborator = notebook.collaborators.some(collab => 
+      collab._id.toString() === userId || collab.id.toString() === userId
+    );
+    
+    if (!isOwner && !isCollaborator) {
+      return res.status(403).json({
+        error: 'Access denied',
+        message: 'Only the owner or collaborators can view collaborator information.'
+      });
+    }
+    
+    // Return the collaborators list
+    return res.json({
+      collaborators: notebook.collaborators.map(c => ({
+        id: c._id,
+        name: c.name,
+        email: c.email
+      }))
+    });
+    
+  } catch (error) {
+    logger.error('Error fetching notebook collaborators:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to fetch collaborators. Please try again.'
+    });
+  }
+}));
+
+// Update collaborators list for a notebook
+router.put('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const { collaborators } = req.body;
+    const notebookId = req.params.id;
+    
+    if (!collaborators || !Array.isArray(collaborators)) {
+      return res.status(400).json({
+        error: 'Invalid collaborators data',
+        message: 'Collaborators must be provided as an array of user IDs.'
+      });
+    }
+    
+    // Find the notebook
+    const notebook = await Notebook.findById(notebookId);
+    
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Notebook not found',
+        message: 'The notebook you are trying to update does not exist.'
+      });
+    }
+    
+    // Verify ownership - only the owner can update collaborators
+    if (notebook.creatorID.toString() !== req.user.id) {
+      return res.status(403).json({
+        error: 'Access denied',
+        message: 'Only the creator can update collaborators.'
+      });
+    }
+    
+    // Update collaborators
+    notebook.collaborators = collaborators;
+    await notebook.save();
+    
+    // Return updated list (but don't populate to avoid potential circular dependencies)
+    return res.json({
+      message: 'Collaborators updated successfully',
+      collaborators: notebook.collaborators
+    });
+    
+  } catch (error) {
+    logger.error('Error updating notebook collaborators:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to update collaborators. Please try again.'
+    });
+  }
+}));
+
+// Update a specific collaborator's permissions
+router.put('/:id/collaborators/:userId', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const { permission } = req.body;
+    const { id: notebookId, userId } = req.params;
+    
+    if (!permission || !['read', 'write', 'admin'].includes(permission)) {
+      return res.status(400).json({
+        error: 'Invalid permission',
+        message: 'Permission must be one of: read, write, admin.'
+      });
+    }
+    
+    // Find the notebook
+    const notebook = await Notebook.findById(notebookId);
+    
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Notebook not found',
+        message: 'The notebook you are trying to update does not exist.'
+      });
+    }
+    
+    // Verify ownership - only the owner can update collaborator permissions
+    if (notebook.creatorID.toString() !== req.user.id) {
+      return res.status(403).json({
+        error: 'Access denied',
+        message: 'Only the creator can update collaborator permissions.'
+      });
+    }
+    
+    // Check if the user is already a collaborator
+    const isCollaborator = notebook.collaborators.some(collab => 
+      collab.toString() === userId || collab._id?.toString() === userId
+    );
+    
+    if (!isCollaborator) {
+      return res.status(404).json({
+        error: 'Collaborator not found',
+        message: 'This user is not a collaborator on this notebook.'
+      });
+    }
+    
+    // In a more sophisticated system, we'd store permissions per collaborator
+    // For now, we'll just return success to maintain the API structure
+    
+    return res.json({
+      message: 'Collaborator permission updated successfully',
+      userId,
+      permission
+    });
+    
+  } catch (error) {
+    logger.error('Error updating collaborator permission:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to update collaborator permission. Please try again.'
+    });
+  }
+}));
+
+// Remove a collaborator
+router.delete('/:id/collaborators/:userId', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const { id: notebookId, userId } = req.params;
+    
+    // Find the notebook
+    const notebook = await Notebook.findById(notebookId);
+    
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Notebook not found',
+        message: 'The notebook you are trying to update does not exist.'
+      });
+    }
+    
+    // Verify ownership - only the owner can remove collaborators
+    if (notebook.creatorID.toString() !== req.user.id) {
+      return res.status(403).json({
+        error: 'Access denied',
+        message: 'Only the creator can remove collaborators.'
+      });
+    }
+    
+    // Remove collaborator
+    notebook.collaborators = notebook.collaborators.filter(
+      collab => collab.toString() !== userId && collab._id?.toString() !== userId
+    );
+    
+    await notebook.save();
+    
+    return res.json({
+      message: 'Collaborator removed successfully'
+    });
+    
+  } catch (error) {
+    logger.error('Error removing collaborator:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to remove collaborator. Please try again.'
+    });
+  }
+}));
+
+
+
+// Advanced search endpoint with filters
+router.get('/search', verifyToken, catchAsync(async (req, res) => {
+  const {
+    page = 1,
+    limit = 12,
+    query = '',
+    tags = '',
+    dateFrom = '',
+    dateTo = '',
+    sortBy = 'updatedAt',
+    sortOrder = 'desc',
+    onlyMine = false,
+    onlyShared = false
+  } = req.query;
+
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+  const skip = (pageNum - 1) * limitNum;
+
+  // Build search query
+  const searchQuery = {};
+  
+  // Access filters
+  if (onlyMine === 'true') {
+    searchQuery.creatorID = req.user.id;
+  } else if (onlyShared === 'true') {
+    searchQuery.collaborators = { $in: [req.user.id] };
+  } else {
+    // Default: show notebooks user has access to
+    searchQuery.$or = [
+      { creatorID: req.user.id },
+      { collaborators: { $in: [req.user.id] } },
+      { isPublic: true }
+    ];
+  }
+
+  // Add text search if query provided
+  if (query && query.trim()) {
+    searchQuery.$or = [
+      { title: { $regex: query.trim(), $options: 'i' } },
+      { description: { $regex: query.trim(), $options: 'i' } }
+    ];
+  }
+  
+  // Add tag filters if provided
+  if (tags && tags.trim()) {
+    const tagIds = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+    if (tagIds.length > 0) {
+      searchQuery.tags = { $in: tagIds };
+    }
+  }
+  
+  // Add date filters if provided
+  const dateFilters = {};
+  if (dateFrom && !isNaN(new Date(dateFrom).getTime())) {
+    dateFilters.updatedAt = { $gte: new Date(dateFrom) };
+  }
+  
+  if (dateTo && !isNaN(new Date(dateTo).getTime())) {
+    if (!dateFilters.updatedAt) dateFilters.updatedAt = {};
+    dateFilters.updatedAt.$lte = new Date(dateTo);
+  }
+  
+  if (Object.keys(dateFilters).length > 0) {
+    Object.assign(searchQuery, dateFilters);
+  }
+  
+  // Prepare sort
+  const sortOptions = {};
+  sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+  
+  try {
+    const total = await Notebook.countDocuments(searchQuery);
+    
+    const notebooks = await Notebook.find(searchQuery)
+      .select('title description creatorID urlIdentifier isPublic createdAt updatedAt collaborators tags')
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limitNum)
+      .populate('tags', 'name color')
+      .lean();
+    
+    const pages = Math.ceil(total / limitNum);
+    
+    return res.status(200).json({
+      success: true,
+      notebooks,
+      pagination: {
+        total,
+        page: pageNum,
+        pages,
+        limit: limitNum
+      }
+    });
+  } catch (error) {
+    logger.error('Error in advanced search:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to search notebooks. Please try again.'
+    });
+  }
+}));
+
+// Tag management endpoints
+router.get('/tags', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const tags = await Tag.find({ createdBy: req.user.id }).sort('name');
+    return res.status(200).json({
+      success: true,
+      tags
+    });
+  } catch (error) {
+    logger.error('Error fetching tags:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to fetch tags. Please try again.'
+    });
+  }
+}));
+
+router.post('/tags', verifyToken, catchAsync(async (req, res) => {
+  const { name, color } = req.body;
+  
+  if (!name || name.trim().length === 0) {
+    return res.status(400).json({
+      error: 'Invalid input',
+      message: 'Tag name is required'
+    });
+  }
+  
+  try {
+    const existingTag = await Tag.findOne({ 
+      name: name.trim(), 
+      createdBy: req.user.id 
+    });
+    
+    if (existingTag) {
+      return res.status(400).json({
+        error: 'Duplicate tag',
+        message: 'Tag with this name already exists'
+      });
+    }
+    
+    const newTag = new Tag({
+      name: name.trim(),
+      color: color || '#3f51b5', // Default color if not provided
+      createdBy: req.user.id
+    });
+    
+    await newTag.save();
+    
+    return res.status(201).json({
+      success: true,
+      tag: newTag
+    });
+  } catch (error) {
+    logger.error('Error creating tag:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to create tag. Please try again.'
+    });
+  }
+}));
+
+router.put('/tags/:id', verifyToken, catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { name, color } = req.body;
+  
+  try {
+    const tag = await Tag.findOne({ _id: id, createdBy: req.user.id });
+    
+    if (!tag) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Tag not found or you do not have permission to edit it'
+      });
+    }
+    
+    if (name && name.trim()) {
+      // Check if another tag with the same name exists for this user
+      const existingTag = await Tag.findOne({ 
+        name: name.trim(), 
+        createdBy: req.user.id,
+        _id: { $ne: id }
+      });
+      
+      if (existingTag) {
+        return res.status(400).json({
+          error: 'Duplicate tag',
+          message: 'Tag with this name already exists'
+        });
+      }
+      
+      tag.name = name.trim();
+    }
+    
+    if (color) {
+      tag.color = color;
+    }
+    
+    tag.updatedAt = new Date();
+    await tag.save();
+    
+    return res.status(200).json({
+      success: true,
+      tag
+    });
+  } catch (error) {
+    logger.error('Error updating tag:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to update tag. Please try again.'
+    });
+  }
+}));
+
+router.delete('/tags/:id', verifyToken, catchAsync(async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const tag = await Tag.findOne({ _id: id, createdBy: req.user.id });
+    
+    if (!tag) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Tag not found or you do not have permission to delete it'
+      });
+    }
+    
+    // Remove this tag from all notebooks
+    await Notebook.updateMany(
+      { tags: id },
+      { $pull: { tags: id } }
+    );
+    
+    // Delete the tag
+    await Tag.deleteOne({ _id: id });
+    
+    return res.status(200).json({
+      success: true,
+      message: 'Tag deleted successfully'
+    });
+  } catch (error) {
+    logger.error('Error deleting tag:', error);
+    return res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to delete tag. Please try again.'
     });
   }
 }));

@@ -6,10 +6,13 @@ const notebookModel = new mongoose.Schema({
   creatorID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },  // Reference to User
   // permissions: 'everyone' (public), 'private' (creator only), 'collaborators' (owner + collaborators)
   permissions: { type: String, enum: ['everyone', 'private', 'collaborators'], default: 'everyone' },
-  collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],  // List of editors
+  collaborators: [{ 
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    access: { type: String, enum: ['read', 'write'], default: 'read' } 
+  }],  // List of collaborators with access level
   password: { type: String }, // Optional password protection
   version: { type: Number, default: 1 },
-  tags: [String],
+  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }], // Reference to Tag model
   editorMode: { type: String, default: 'quill' }, // 'quill' or 'monaco'
   language: { type: String, default: 'javascript' }, // Only relevant if editorMode is 'monaco'
   urlIdentifier: { type: String, unique: true},

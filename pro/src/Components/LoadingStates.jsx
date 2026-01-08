@@ -110,7 +110,7 @@ export const LoadingSpinner = ({ size = 40, message = 'Loading...' }) => {
   );
 };
 
-// Full page loading overlay
+// Full page loading overlay with enhanced animation
 export const LoadingOverlay = ({ open, message = 'Loading...' }) => {
   return (
     <Backdrop
@@ -119,17 +119,71 @@ export const LoadingOverlay = ({ open, message = 'Loading...' }) => {
         zIndex: (theme) => theme.zIndex.drawer + 1,
         flexDirection: 'column',
         gap: 2,
-        backdropFilter: 'blur(4px)',
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        backdropFilter: 'blur(8px)',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
       }}
       open={open}
     >
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.3 }}
+        initial={{ scale: 0.8, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={{ 
+          duration: 0.5,
+          ease: [0.19, 1.0, 0.22, 1.0] // Custom easing for smoother animation
+        }}
       >
-        <LoadingSpinner size={60} message={message} />
+        <Box 
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 3,
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            py: 4,
+            px: 5,
+            borderRadius: 4,
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.4)',
+          }}
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+          >
+            <CircularProgress 
+              size={70} 
+              thickness={4} 
+              sx={{ 
+                color: (theme) => theme.palette.primary.main,
+                '& .MuiCircularProgress-circle': {
+                  strokeLinecap: 'round',
+                }
+              }} 
+            />
+          </motion.div>
+          <Typography 
+            variant="h6" 
+            color="text.primary" 
+            sx={{ 
+              fontWeight: 600,
+              textAlign: 'center',
+              position: 'relative',
+              display: 'inline-block',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: -8,
+                left: '10%',
+                width: '80%',
+                height: 3,
+                backgroundColor: (theme) => `${theme.palette.primary.main}40`,
+                borderRadius: 2
+              }
+            }}
+          >
+            {message}
+          </Typography>
+        </Box>
       </motion.div>
     </Backdrop>
   );

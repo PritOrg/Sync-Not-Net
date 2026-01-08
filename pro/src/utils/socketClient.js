@@ -5,20 +5,36 @@ class SocketClient {
     this.socket = null;
     this.isConnected = false;
     this.reconnectAttempts = 0;
-    this.maxReconnectAttempts = 5;
-    this.reconnectDelay = 1000;
+    this.maxReconnectAttempts = 3;  // Reduced from 5 to 3
+    this.reconnectDelay = 2000;     // Increased from 1000 to 2000
     this.currentNotebook = null;
     this.eventListeners = new Map();
     this.lastError = null;
+    this.connectionLock = false;     // Add connection lock to prevent multiple simultaneous connections
   }
 
   connect(token, guestInfo = null) {
+    // Return existing connection if active
     if (this.socket && this.isConnected) {
       return this.socket;
     }
 
+    // Prevent multiple simultaneous connection attempts
+    if (this.connectionLock) {
+      console.log('Connection attempt in progress, skipping...');
+      return null;
+    }
+
+    this.connectionLock = true;
     const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
     
+    // Clear any existing socket instance
+    if (this.socket) {
+      this.socket.removeAllListeners();
+      this.socket.close();
+      this.socket = null;
+    }
+
     const authConfig = {};
     if (token) {
       authConfig.token = token;
@@ -28,13 +44,17 @@ class SocketClient {
     
     this.socket = io(API_BASE_URL, {
       auth: authConfig,
-      transports: ['websocket', 'polling'],
-      timeout: 20000,
+      transports: ['websocket'],  // Only use websocket, remove polling
+      timeout: 10000,            // Reduced timeout
       forceNew: true,
       reconnection: true,
       reconnectionAttempts: this.maxReconnectAttempts,
       reconnectionDelay: this.reconnectDelay,
-      reconnectionDelayMax: 5000
+      reconnectionDelayMax: 5000,
+      extraHeaders: {            // Add headers for better connection handling
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      }
     });
 
     this.setupEventListeners();
@@ -134,17 +154,31 @@ class SocketClient {
         attempts: this.reconnectAttempts,
         final: true
       });
+      this.connectionLock = false; // Release connection lock
+      
+      // Clean up the socket instance
+      if (this.socket) {
+        this.socket.removeAllListeners();
+        this.socket.close();
+        this.socket = null;
+      }
       return;
     }
 
     this.reconnectAttempts++;
-    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 10000);
+    const delay = Math.min(2000 * Math.pow(2, this.reconnectAttempts), 10000);
     
     console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts}) in ${delay}ms`);
     
     setTimeout(() => {
-      if (!this.isConnected) {
-        this.socket.connect();
+      if (!this.isConnected && this.socket) {
+        // Clean up before attempting to reconnect
+        this.socket.removeAllListeners();
+        this.socket.close();
+        this.socket = null;
+        this.connectionLock = false;
+        // Attempt a fresh connection
+        this.connect(this.socket?.auth?.token);
       }
     }, delay);
   }

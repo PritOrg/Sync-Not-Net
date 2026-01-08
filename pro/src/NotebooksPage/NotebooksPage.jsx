@@ -16,7 +16,8 @@ import {
   Container,
   Alert,
   Snackbar,
-  Pagination
+  Pagination,
+  Chip
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -30,15 +31,18 @@ import {
   Refresh,
   ArrowDropDown,
   AutoAwesome,
-  Create
+  Create,
+  Label as LabelIcon
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NotebookCard, NotebookListItem } from '../Components/NotebookCard';
 import { ModernActionButton } from '../Components/ModernUI';
 import { NotebookCardSkeleton } from '../Components/LoadingStates';
 import { InlineErrorFallback } from '../Components/ErrorBoundary';
+import DeleteNotebookDialog from '../Components/DeleteNotebookDialog';
+import AdvancedSearchAndFilter from '../Components/AdvancedSearchAndFilter';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import axiosInstance from '../utils/axiosConfig';
 
 const NotebooksPage = () => {
   const [notebooks, setNotebooks] = useState([]);
@@ -47,11 +51,23 @@ const NotebooksPage = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [tabValue, setTabValue] = useState(0);
+  
+  // Advanced search state
+  const [searchParams, setSearchParams] = useState({});
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    pages: 1
+  });
   const [sortAnchorEl, setSortAnchorEl] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [createMenuAnchor, setCreateMenuAnchor] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [notebookToDelete, setNotebookToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -76,34 +92,72 @@ const NotebooksPage = () => {
 
 
 
-  const fetchNotebooks = useCallback(async (currentFavorites = [], page = 1, searchTerm = '', sortBy = 'updatedAt', sortOrder = 'desc') => {
+  const fetchNotebooks = useCallback(async (currentFavorites = [], page = 1, advancedSearchParams = null) => {
     try {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem('token');
 
       if (!token) {
-        navigate('/auth?mode=login');
+        setSnackbar({
+          open: true,
+          message: 'Please sign in to view notebooks',
+          severity: 'warning'
+        });
+        setTimeout(() => navigate('/auth?mode=login'), 2000);
         return;
       }
 
       // Build query parameters
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: itemsPerPage.toString(),
-        sortBy,
-        sortOrder
+        limit: itemsPerPage.toString()
       });
 
-      if (searchTerm.trim()) {
-        params.append('search', searchTerm.trim());
+      // Use advanced search params if provided, otherwise use simple search
+      if (advancedSearchParams) {
+        if (advancedSearchParams.query) {
+          params.append('query', advancedSearchParams.query);
+        }
+        
+        // Add tag filters
+        if (advancedSearchParams.tags && advancedSearchParams.tags.length > 0) {
+          const tagIds = advancedSearchParams.tags.map(tag => tag._id).join(',');
+          params.append('tags', tagIds);
+        }
+        
+        // Add date filters
+        if (advancedSearchParams.dateFrom) {
+          params.append('dateFrom', advancedSearchParams.dateFrom.toISOString());
+        }
+        
+        if (advancedSearchParams.dateTo) {
+          params.append('dateTo', advancedSearchParams.dateTo.toISOString());
+        }
+        
+        // Add sort options
+        if (advancedSearchParams.sortBy) {
+          params.append('sortBy', advancedSearchParams.sortBy);
+        }
+        
+        if (advancedSearchParams.sortOrder) {
+          params.append('sortOrder', advancedSearchParams.sortOrder);
+        }
+        
+        // Add additional filters
+        if (advancedSearchParams.onlyMine) {
+          params.append('onlyMine', 'true');
+        }
+        
+        if (advancedSearchParams.onlyShared) {
+          params.append('onlyShared', 'true');
+        }
+      } else if (searchQuery.trim()) {
+        // Simple search if no advanced params but search query exists
+        params.append('query', searchQuery.trim());
       }
 
-      const response = await axios.get(`${API_BASE_URL}/api/notebooks/my-notebooks?${params.toString()}`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.get(`/api/notebooks/search?${params.toString()}`);
 
       const notebooksData = response.data.notebooks || [];
       const paginationData = response.data.pagination || {};
@@ -132,6 +186,12 @@ const NotebooksPage = () => {
           case 401:
             errorMessage = 'Authentication expired. Please sign in again.';
             snackbarMessage = 'Session expired. Redirecting to login...';
+            localStorage.removeItem('token'); // Clear invalid token
+            setSnackbar({
+              open: true,
+              message: snackbarMessage,
+              severity: 'warning'
+            });
             setTimeout(() => navigate('/auth?mode=login'), 2000);
             break;
           case 403:
@@ -239,6 +299,15 @@ const NotebooksPage = () => {
     setSearchQuery(value);
     setCurrentPage(1); // Reset to first page when searching
   };
+  
+  // Advanced search handler
+  const handleAdvancedSearch = (searchParams) => {
+    setSearchParams(searchParams);
+    setCurrentPage(1); // Reset to first page when searching with advanced filters
+    
+    // Call fetch notebooks with the advanced search parameters
+    fetchNotebooks(favorites, 1, searchParams);
+  };
 
   // Sort handler
   const handleSortSelect = (sortOption) => {
@@ -311,23 +380,34 @@ const NotebooksPage = () => {
     });
   };
 
-  const handleDeleteNotebook = async (notebookId) => {
-    if (!window.confirm('Are you sure you want to delete this notebook? This action cannot be undone.')) {
-      return;
-    }
+  const handleOpenDeleteDialog = (notebook) => {
+    setNotebookToDelete(notebook);
+    setDeleteDialogOpen(true);
+  };
 
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    // Clear the notebook to delete after a delay to avoid UI flicker
+    setTimeout(() => setNotebookToDelete(null), 300);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!notebookToDelete) return;
+
+      setIsDeleting(true);
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`${API_BASE_URL}/api/notebooks/${notebookId}`, {
-        headers: { "Authorization": token }
-      });
+      await axiosInstance.delete(`/api/notebooks/${notebookToDelete._id}`);
 
-      setNotebooks(prev => prev.filter(notebook => notebook._id !== notebookId));
-      setSnackbar({
+      // Update the notebooks state to remove the deleted notebook
+      setNotebooks(prev => prev.filter(notebook => notebook._id !== notebookToDelete._id));
+            setSnackbar({
         open: true,
         message: 'Notebook deleted successfully',
         severity: 'success'
       });
+      
+      // Close the dialog
+      handleCloseDeleteDialog();
     } catch (error) {
       console.error('Error deleting notebook:', error);
 
@@ -369,11 +449,11 @@ const NotebooksPage = () => {
   };
 
   const handleCreateNotebook = () => {
-    navigate('/Notebook/new');
+    navigate('/create-notebook');
   };
 
   const handleCreateEnhancedNotebook = () => {
-    navigate('/Notebook/create');
+    navigate('/create-enhanced');
   };
 
   const handleRefresh = () => {
@@ -444,22 +524,13 @@ const NotebooksPage = () => {
             gap: 2,
             alignItems: { xs: 'stretch', sm: 'center' }
           }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Search your notebooks..."
-              value={searchQuery}
-              onChange={handleSearchChange}
+            <AdvancedSearchAndFilter 
+              initialSearchTerm={searchQuery}
+              onSearch={handleAdvancedSearch}
+              className="search-component"
               sx={{
-                maxWidth: '500px',
-                backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                borderRadius: 2,
-                '& .MuiOutlinedInput-root': {
-                  color: 'white',
-                  '& fieldset': { borderColor: 'transparent' },
-                  '&:hover fieldset': { borderColor: 'transparent' },
-                  '&.Mui-focused fieldset': { borderColor: 'transparent' },
-                },
+                maxWidth: '100%',
+                flex: 1,
                 '& .MuiInputBase-input::placeholder': {
                   color: 'rgba(255, 255, 255, 0.7)',
                   opacity: 1,
@@ -748,7 +819,7 @@ const NotebooksPage = () => {
                         onEnhancedEdit={handleEnhancedEdit}
                         onToggleFavorite={handleToggleFavorite}
                         onShare={handleShareNotebook}
-                        onDelete={handleDeleteNotebook}
+                        onDelete={() => handleOpenDeleteDialog(notebook)}
                       />
                     ) : (
                       <NotebookListItem
@@ -758,7 +829,7 @@ const NotebooksPage = () => {
                         onEnhancedEdit={handleEnhancedEdit}
                         onToggleFavorite={handleToggleFavorite}
                         onShare={handleShareNotebook}
-                        onDelete={handleDeleteNotebook}
+                        onDelete={() => handleOpenDeleteDialog(notebook)}
                       />
                     )}
                   </motion.div>
@@ -811,6 +882,15 @@ const NotebooksPage = () => {
           </Box>
         </motion.div>
       )}
+
+      {/* Delete Notebook Dialog */}
+      <DeleteNotebookDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        notebookTitle={notebookToDelete?.title || 'this notebook'}
+        isDeleting={isDeleting}
+      />
 
       {/* Snackbar for notifications */}
       <Snackbar

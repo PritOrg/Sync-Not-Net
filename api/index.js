@@ -35,6 +35,7 @@ const Notebook = require('./models/notebookModel');
 // Import routes
 const userRoutes = require('./routes/userRoutes');
 const notebookRoutes = require('./routes/notebookRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -133,6 +134,7 @@ app.set('io', io);
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api', commentRoutes);
 // All notebook routes with optional authentication - supports both public and authenticated access
 app.use('/api/notebooks', (req, res, next) => {
   // Allow unauthenticated GET access for /:urlIdentifier/access and /:urlIdentifier

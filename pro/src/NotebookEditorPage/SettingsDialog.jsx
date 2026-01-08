@@ -40,7 +40,27 @@ const SettingsDialog = ({ open, onClose, notebookData, onSave, urlIdentifier, on
   useEffect(() => {
     if (open && notebookData) {
       setCustomUrl(urlIdentifier || '');
-      setTags(notebookData.tags || []);
+      // Convert tags to objects with id and name
+      const tagList = (notebookData.tags || []).map(tag => {
+        // Handle different tag object formats
+        if (typeof tag === 'string') {
+          return { id: tag, name: tag };
+        }
+        // Handle case where tag might be a MongoDB document
+        if (tag._id && tag.name) {
+          return { id: tag._id, name: tag.name };
+        }
+        // Handle case where tag might be a plain object
+        if (tag.id && tag.name) {
+          return { id: tag.id, name: tag.name };
+        }
+        // If the tag is just an ID, use it as both id and name temporarily
+        return { id: tag, name: tag.toString() };
+      });
+      setTags(tagList);
+      
+      // Log for debugging
+      console.log('Initial tags:', tagList);
     }
   }, [open, notebookData, urlIdentifier]);
 
@@ -143,31 +163,84 @@ const SettingsDialog = ({ open, onClose, notebookData, onSave, urlIdentifier, on
   };
 
   const handleAddTag = () => {
-    if (newTag.trim() && !tags.includes(newTag.trim())) {
-      setTags([...tags, newTag.trim()]);
-      setNewTag('');
+    const trimmedTag = newTag.trim();
+    if (!trimmedTag) {
+      setError('Tag cannot be empty.');
+      return;
     }
+    
+    if (trimmedTag.length > 50) {
+      setError('Tag name cannot be longer than 50 characters.');
+      return;
+    }
+    
+    // Check if tag already exists (case-insensitive)
+    if (tags.some(tag => tag.name.toLowerCase() === trimmedTag.toLowerCase())) {
+      setError('This tag already exists.');
+      return;
+    }
+
+    // Create a temporary ID for new tags
+    const newTagObj = {
+      id: `temp_${Date.now()}`,
+      name: trimmedTag
+    };
+    
+    setTags([...tags, newTagObj]);
+    setNewTag('');
+    setError(''); // Clear any previous errors
   };
 
   const handleRemoveTag = (tagToRemove) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
+    setTags(tags.filter(tag => tag.id !== tagToRemove.id));
   };
 
   const handleTagsSave = async () => {
+    if (!tags.length) {
+      setError('Please add at least one tag before saving.');
+      return;
+    }
+
     try {
       setSaving(true);
       const token = localStorage.getItem('token');
-      await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/tags`, {
+      
+      // Send tag names to be processed on the server
+      const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}/tags`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ tags })
+        body: JSON.stringify({ 
+          tags: tags.map(tag => ({ name: tag.name.trim() }))
+        })
       });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update tags');
+      }
+
       setSuccess('Tags updated successfully!');
+      
+      // Update the tags with the returned tag objects
+      if (data.tags) {
+        const updatedTags = data.tags.map(tag => ({
+          id: tag._id || tag.id,
+          name: tag.name
+        }));
+        setTags(updatedTags);
+        
+        // If onSave prop exists, call it to update parent component
+        if (onSave) {
+          onSave({ tags: data.tags }, true);
+        }
+      }
     } catch (error) {
-      setError('Failed to update tags.');
+      console.error('Error saving tags:', error);
+      setError(error.message || 'Failed to update tags. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -411,13 +484,14 @@ const SettingsDialog = ({ open, onClose, notebookData, onSave, urlIdentifier, on
                   </Button>
                 </Box>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {tags.map((tag, index) => (
+                  {tags.map((tag) => (
                     <Chip
-                      key={index}
-                      label={tag}
+                      key={tag.id}
+                      label={tag.name || tag.toString()}
                       onDelete={disabled ? undefined : () => handleRemoveTag(tag)}
                       variant="outlined"
                       sx={{ borderRadius: 2 }}
+                      title={tag.name || tag.toString()}
                     />
                   ))}
                 </Box>

@@ -33,13 +33,13 @@ const PasswordSettingsDialog = ({ open, onClose, notebookId, initialSettings = {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Initialize state from props
+  // Initialize state when dialog opens
   useEffect(() => {
     if (open) {
-      setIsPasswordEnabled(!!initialSettings.password);
-      setPassword(initialSettings.password || '');
+      setIsPasswordEnabled(!!initialSettings.requiresPassword);
+      setPassword('');
     }
-  }, [open, initialSettings]);
+  }, [open]);
 
   const handleTogglePasswordProtection = (event) => {
     setIsPasswordEnabled(event.target.checked);

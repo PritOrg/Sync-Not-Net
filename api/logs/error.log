@@ -1853,3 +1853,868 @@
   level: 'error',
   timestamp: '2025-07-17 19:50:07'
 }
+{
+  message: 'Error adding comment: Comment validation failed: notebookID: Path `notebookID` is required., userID: Path `userID` is required.',
+  level: 'error',
+  service: 'sync-not-net-api',
+  timestamp: '2025-10-24 21:02:38'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    'tags.0': CastError: Cast to [ObjectId] failed for value "[ 'Hello' ]" (type string) at path "tags.0" because of "CastError"
+        at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:414:15)
+        at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+        at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+        at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+        at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1778:19
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+      stringValue: `"[ 'Hello' ]"`,
+      messageFormat: undefined,
+      kind: '[ObjectId]',
+      value: "[ 'Hello' ]",
+      path: 'tags.0',
+      reason: CastError: Cast to ObjectId failed for value "Hello" (type string) at path "tags" because of "BSONError"
+          at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:251:11)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+          at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+          at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1778:19
+          at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+        stringValue: '"Hello"',
+        messageFormat: undefined,
+        kind: 'ObjectId',
+        value: 'Hello',
+        path: 'tags',
+        reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+            at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+            at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+            at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+            at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+            at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+            at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+            at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+            at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+            at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1778:19
+            at process.processTicksAndRejections (node:internal/process/task_queues:105:5),
+        valueType: 'string'
+      },
+      valueType: 'string'
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: `Error updating notebook tags: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'Hello' ]" (type string) at path "tags.0" because of "CastError"`,
+  stack: `ValidationError: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'Hello' ]" (type string) at path "tags.0" because of "CastError"\n` +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at model.$set (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:1480:12)\n' +
+    '    at model.set [as tags] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\helpers\\document\\compile.js:205:19)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1778:19\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-10-24 21:03:09'
+}
+{
+  message: 'Error adding comment: Comment validation failed: notebookID: Path `notebookID` is required., userID: Path `userID` is required.',
+  level: 'error',
+  service: 'sync-not-net-api',
+  timestamp: '2025-10-24 22:45:07'
+}
+{
+  service: 'sync-not-net-api',
+  message: 'MongoDB connection error: Server selection timed out after 5000 ms',
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+        type: 'RSSecondary',
+        hosts: [
+          'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+          'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+          'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017'
+        ],
+        passives: [],
+        arbiters: [],
+        tags: {
+          workloadType: 'OPERATIONAL',
+          nodeType: 'ELECTABLE',
+          region: 'ASIA_SOUTH_1',
+          provider: 'GCP',
+          availabilityZone: 'asia-south1-a',
+          diskState: 'READY'
+        },
+        minWireVersion: 0,
+        maxWireVersion: 25,
+        roundTripTime: 1347,
+        minRoundTripTime: 0,
+        lastUpdateTime: 9914701,
+        lastWriteDate: 2025-10-24T17:17:34.000Z,
+        error: null,
+        topologyVersion: {
+          processId: new ObjectId('68f92eac27d13ab671fb3253'),
+          counter: 4
+        },
+        setName: 'atlas-8cmen7-shard-0',
+        setVersion: 1,
+        electionId: null,
+        logicalSessionTimeoutMinutes: 30,
+        maxMessageSizeBytes: 48000000,
+        maxWriteBatchSize: 100000,
+        maxBsonObjectSize: 16777216,
+        primary: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        me: 'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+        '$clusterTime': {
+          clusterTime: new Timestamp({ t: 1761326254, i: 1 }),
+          signature: {
+            hash: <Buffer cd 33 fb a9 0d 96 d6 14 2e 2c 13 7e c9 0e 07 a2 b9 79 21 7d>,
+            keyId: new Long('7506251022516355074')
+          }
+        },
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+        type: 'RSSecondary',
+        hosts: [
+          'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+          'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+          'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017'
+        ],
+        passives: [],
+        arbiters: [],
+        tags: {
+          diskState: 'READY',
+          nodeType: 'ELECTABLE',
+          provider: 'GCP',
+          availabilityZone: 'asia-south1-b',
+          region: 'ASIA_SOUTH_1',
+          workloadType: 'OPERATIONAL'
+        },
+        minWireVersion: 0,
+        maxWireVersion: 25,
+        roundTripTime: 1382,
+        minRoundTripTime: 0,
+        lastUpdateTime: 9914699,
+        lastWriteDate: 2025-10-24T17:17:34.000Z,
+        error: null,
+        topologyVersion: {
+          processId: new ObjectId('68f9340b46146c1c479e67d0'),
+          counter: 3
+        },
+        setName: 'atlas-8cmen7-shard-0',
+        setVersion: 1,
+        electionId: null,
+        logicalSessionTimeoutMinutes: 30,
+        maxMessageSizeBytes: 48000000,
+        maxWriteBatchSize: 100000,
+        maxBsonObjectSize: 16777216,
+        primary: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        me: 'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+        '$clusterTime': {
+          clusterTime: new Timestamp({ t: 1761326254, i: 1 }),
+          signature: {
+            hash: <Buffer cd 33 fb a9 0d 96 d6 14 2e 2c 13 7e c9 0e 07 a2 b9 79 21 7d>,
+            keyId: new Long('7506251022516355074')
+          }
+        },
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 9910970,
+        lastWriteDate: 0,
+        error: null,
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      }
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-8cmen7-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: 30
+  },
+  code: undefined,
+  cause: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+        type: 'RSSecondary',
+        hosts: [
+          'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+          'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+          'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017'
+        ],
+        passives: [],
+        arbiters: [],
+        tags: {
+          workloadType: 'OPERATIONAL',
+          nodeType: 'ELECTABLE',
+          region: 'ASIA_SOUTH_1',
+          provider: 'GCP',
+          availabilityZone: 'asia-south1-a',
+          diskState: 'READY'
+        },
+        minWireVersion: 0,
+        maxWireVersion: 25,
+        roundTripTime: 1347,
+        minRoundTripTime: 0,
+        lastUpdateTime: 9914701,
+        lastWriteDate: 2025-10-24T17:17:34.000Z,
+        error: null,
+        topologyVersion: {
+          processId: new ObjectId('68f92eac27d13ab671fb3253'),
+          counter: 4
+        },
+        setName: 'atlas-8cmen7-shard-0',
+        setVersion: 1,
+        electionId: null,
+        logicalSessionTimeoutMinutes: 30,
+        maxMessageSizeBytes: 48000000,
+        maxWriteBatchSize: 100000,
+        maxBsonObjectSize: 16777216,
+        primary: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        me: 'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+        '$clusterTime': {
+          clusterTime: new Timestamp({ t: 1761326254, i: 1 }),
+          signature: {
+            hash: <Buffer cd 33 fb a9 0d 96 d6 14 2e 2c 13 7e c9 0e 07 a2 b9 79 21 7d>,
+            keyId: new Long('7506251022516355074')
+          }
+        },
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+        type: 'RSSecondary',
+        hosts: [
+          'ac-qbbqtuk-shard-00-00.vnxfnlq.mongodb.net:27017',
+          'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+          'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017'
+        ],
+        passives: [],
+        arbiters: [],
+        tags: {
+          diskState: 'READY',
+          nodeType: 'ELECTABLE',
+          provider: 'GCP',
+          availabilityZone: 'asia-south1-b',
+          region: 'ASIA_SOUTH_1',
+          workloadType: 'OPERATIONAL'
+        },
+        minWireVersion: 0,
+        maxWireVersion: 25,
+        roundTripTime: 1382,
+        minRoundTripTime: 0,
+        lastUpdateTime: 9914699,
+        lastWriteDate: 2025-10-24T17:17:34.000Z,
+        error: null,
+        topologyVersion: {
+          processId: new ObjectId('68f9340b46146c1c479e67d0'),
+          counter: 3
+        },
+        setName: 'atlas-8cmen7-shard-0',
+        setVersion: 1,
+        electionId: null,
+        logicalSessionTimeoutMinutes: 30,
+        maxMessageSizeBytes: 48000000,
+        maxWriteBatchSize: 100000,
+        maxBsonObjectSize: 16777216,
+        primary: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        me: 'ac-qbbqtuk-shard-00-01.vnxfnlq.mongodb.net:27017',
+        '$clusterTime': {
+          clusterTime: new Timestamp({ t: 1761326254, i: 1 }),
+          signature: {
+            hash: <Buffer cd 33 fb a9 0d 96 d6 14 2e 2c 13 7e c9 0e 07 a2 b9 79 21 7d>,
+            keyId: new Long('7506251022516355074')
+          }
+        },
+        iscryptd: false
+      },
+      'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017' => ServerDescription {
+        address: 'ac-qbbqtuk-shard-00-02.vnxfnlq.mongodb.net:27017',
+        type: 'Unknown',
+        hosts: [],
+        passives: [],
+        arbiters: [],
+        tags: {},
+        minWireVersion: 0,
+        maxWireVersion: 0,
+        roundTripTime: -1,
+        minRoundTripTime: 0,
+        lastUpdateTime: 9910970,
+        lastWriteDate: 0,
+        error: null,
+        topologyVersion: null,
+        setName: null,
+        setVersion: null,
+        electionId: null,
+        logicalSessionTimeoutMinutes: null,
+        maxMessageSizeBytes: null,
+        maxWriteBatchSize: null,
+        maxBsonObjectSize: null,
+        primary: null,
+        me: null,
+        '$clusterTime': null,
+        iscryptd: false
+      }
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-8cmen7-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: 30
+  },
+  level: 'error',
+  stack: 'MongooseServerSelectionError: Server selection timed out after 5000 ms\n' +
+    '    at _handleConnectionErrors (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\connection.js:1165:11)\n' +
+    '    at NativeConnection.openUri (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\connection.js:1096:11)',
+  timestamp: '2025-10-24 22:47:43'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    'tags.0': CastError: Cast to [ObjectId] failed for value "[ 'yes' ]" (type string) at path "tags.0" because of "CastError"
+        at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:414:15)
+        at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+        at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+        at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+        at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1934:19
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+      stringValue: `"[ 'yes' ]"`,
+      messageFormat: undefined,
+      kind: '[ObjectId]',
+      value: "[ 'yes' ]",
+      path: 'tags.0',
+      reason: CastError: Cast to ObjectId failed for value "yes" (type string) at path "tags" because of "BSONError"
+          at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:251:11)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+          at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+          at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1934:19
+          at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+        stringValue: '"yes"',
+        messageFormat: undefined,
+        kind: 'ObjectId',
+        value: 'yes',
+        path: 'tags',
+        reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+            at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+            at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+            at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+            at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+            at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+            at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+            at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+            at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+            at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1934:19
+            at process.processTicksAndRejections (node:internal/process/task_queues:105:5),
+        valueType: 'string'
+      },
+      valueType: 'string'
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: `Error updating notebook tags: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'yes' ]" (type string) at path "tags.0" because of "CastError"`,
+  stack: `ValidationError: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'yes' ]" (type string) at path "tags.0" because of "CastError"\n` +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at model.$set (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:1480:12)\n' +
+    '    at model.set [as tags] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\helpers\\document\\compile.js:205:19)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1934:19\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-10-24 22:57:08'
+}
+{
+  message: 'Error adding comment: Comment validation failed: notebookId: Path `notebookId` is required.',
+  level: 'error',
+  service: 'sync-not-net-api',
+  timestamp: '2025-10-24 22:59:00'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: 'Error joining notebook: Operation `notebooks.findOne()` buffering timed out after 10000ms',
+  stack: 'MongooseError: Operation `notebooks.findOne()` buffering timed out after 10000ms\n' +
+    '    at Timeout.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:187:23)\n' +
+    '    at listOnTimeout (node:internal/timers:594:17)\n' +
+    '    at process.processTimers (node:internal/timers:529:7)',
+  timestamp: '2025-10-24 23:09:53'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: 'Error joining notebook: Operation `notebooks.findOne()` buffering timed out after 10000ms',
+  stack: 'MongooseError: Operation `notebooks.findOne()` buffering timed out after 10000ms\n' +
+    '    at Timeout.<anonymous> (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:187:23)\n' +
+    '    at listOnTimeout (node:internal/timers:594:17)\n' +
+    '    at process.processTimers (node:internal/timers:529:7)',
+  timestamp: '2025-10-24 23:09:53'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    'tags.0': CastError: Cast to [ObjectId] failed for value "[ 'HEllo' ]" (type string) at path "tags.0" because of "CastError"
+        at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:414:15)
+        at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+        at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+        at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+        at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1984:19
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+      stringValue: `"[ 'HEllo' ]"`,
+      messageFormat: undefined,
+      kind: '[ObjectId]',
+      value: "[ 'HEllo' ]",
+      path: 'tags.0',
+      reason: CastError: Cast to ObjectId failed for value "HEllo" (type string) at path "tags" because of "BSONError"
+          at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:251:11)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+          at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+          at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1984:19
+          at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+        stringValue: '"HEllo"',
+        messageFormat: undefined,
+        kind: 'ObjectId',
+        value: 'HEllo',
+        path: 'tags',
+        reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+            at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+            at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+            at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+            at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+            at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+            at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+            at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+            at model.set [as tags] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+            at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1984:19
+            at process.processTicksAndRejections (node:internal/process/task_queues:105:5),
+        valueType: 'string'
+      },
+      valueType: 'string'
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: `Error updating notebook tags: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'HEllo' ]" (type string) at path "tags.0" because of "CastError"`,
+  stack: `ValidationError: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'HEllo' ]" (type string) at path "tags.0" because of "CastError"\n` +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at model.$set (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:1480:12)\n' +
+    '    at model.set [as tags] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\helpers\\document\\compile.js:205:19)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1984:19\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-10-29 10:41:39'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    'tags.0': ValidatorError: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError"
+        at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:797:37)
+        at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+        at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+        at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+        at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+        at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+        at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11)
+        at Query._completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2611:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2689:10
+        at new Promise (<anonymous>) {
+      properties: {
+        path: 'tags.0',
+        message: `Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError"`,
+        type: 'cast',
+        value: "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]",
+        reason: CastError: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError"
+            at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:414:15)
+            at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+            at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+            at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+            at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+            at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+            at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+            at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11)
+            at Query._completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2611:7)
+            at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2689:10 {
+          stringValue: `"[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]"`,
+          messageFormat: undefined,
+          kind: '[ObjectId]',
+          value: "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]",
+          path: 'tags.0',
+          reason: CastError: Cast to ObjectId failed for value "my-my-note-0098" (type string) at path "tags" because of "BSONError"
+              at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:251:11)
+              at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+              at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+              at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+              at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+              at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+              at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+              at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+              at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+              at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11) {
+            stringValue: '"my-my-note-0098"',
+            messageFormat: undefined,
+            kind: 'ObjectId',
+            value: 'my-my-note-0098',
+            path: 'tags',
+            reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+                at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+                at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+                at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+                at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+                at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+                at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+                at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+                at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+                at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+                at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42),
+            valueType: 'string'
+          },
+          valueType: 'string'
+        }
+      },
+      kind: 'cast',
+      path: 'tags.0',
+      value: "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]",
+      reason: CastError: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError"
+          at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:414:15)
+          at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+          at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+          at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+          at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+          at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+          at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+          at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11)
+          at Query._completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2611:7)
+          at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2689:10 {
+        stringValue: `"[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]"`,
+        messageFormat: undefined,
+        kind: '[ObjectId]',
+        value: "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]",
+        path: 'tags.0',
+        reason: CastError: Cast to ObjectId failed for value "my-my-note-0098" (type string) at path "tags" because of "BSONError"
+            at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:251:11)
+            at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+            at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+            at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+            at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+            at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+            at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+            at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+            at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+            at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11) {
+          stringValue: '"my-my-note-0098"',
+          messageFormat: undefined,
+          kind: 'ObjectId',
+          value: 'my-my-note-0098',
+          path: 'tags',
+          reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+              at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+              at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+              at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+              at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+              at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+              at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+              at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+              at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+              at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+              at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42),
+          valueType: 'string'
+        },
+        valueType: 'string'
+      }
+    },
+    collaborators: CastError: Cast to embedded failed for value "6901a198a80c3cb0bcd7b833" (type string) at path "collaborators" because of "ObjectParameterError"
+        at SchemaDocumentArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:502:19)
+        at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+        at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+        at model.set [as collaborators] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+        at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1735:28
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+      stringValue: '"6901a198a80c3cb0bcd7b833"',
+      messageFormat: undefined,
+      kind: 'embedded',
+      value: '6901a198a80c3cb0bcd7b833',
+      path: 'collaborators',
+      reason: ObjectParameterError: Parameter "obj" to Document() must be an object, got "6901a198a80c3cb0bcd7b833" (type string)
+          at EmbeddedDocument.Document (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:123:11)
+          at EmbeddedDocument.Subdocument (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\types\subdocument.js:34:12)
+          at EmbeddedDocument.ArraySubdocument [as constructor] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\types\arraySubdocument.js:44:15)
+          at new EmbeddedDocument (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:131:17)
+          at SchemaDocumentArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:496:22)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+          at model.set [as collaborators] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+          at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1735:28
+          at process.processTicksAndRejections (node:internal/process/task_queues:105:5),
+      valueType: 'string'
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: `Error updating notebook collaborators: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError", collaborators: Cast to embedded failed for value "6901a198a80c3cb0bcd7b833" (type string) at path "collaborators" because of "ObjectParameterError"`,
+  stack: `ValidationError: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError", collaborators: Cast to embedded failed for value "6901a198a80c3cb0bcd7b833" (type string) at path "collaborators" because of "ObjectParameterError"\n` +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at init (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:797:18)\n' +
+    '    at Document.$__init (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:707:3)\n' +
+    '    at model.syncWrapper [as $__init] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\kareem\\index.js:331:25)\n' +
+    '    at Document.init (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:651:8)\n' +
+    '    at Document.$init (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:667:42)\n' +
+    '    at Object.createModelAndInit (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\queryHelpers.js:119:12)\n' +
+    '    at completeOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:3285:11)\n' +
+    '    at Query._completeOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2611:7)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2689:10',
+  timestamp: '2025-10-29 10:42:08'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    'tags.0': ValidatorError: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError"
+        at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:797:37)
+        at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+        at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+        at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+        at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+        at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+        at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11)
+        at Query._completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2611:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2689:10
+        at new Promise (<anonymous>) {
+      properties: {
+        path: 'tags.0',
+        message: `Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError"`,
+        type: 'cast',
+        value: "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]",
+        reason: CastError: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError"
+            at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:414:15)
+            at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+            at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+            at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+            at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+            at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+            at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+            at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11)
+            at Query._completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2611:7)
+            at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2689:10 {
+          stringValue: `"[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]"`,
+          messageFormat: undefined,
+          kind: '[ObjectId]',
+          value: "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]",
+          path: 'tags.0',
+          reason: CastError: Cast to ObjectId failed for value "my-my-note-0098" (type string) at path "tags" because of "BSONError"
+              at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:251:11)
+              at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+              at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+              at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+              at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+              at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+              at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+              at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+              at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+              at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11) {
+            stringValue: '"my-my-note-0098"',
+            messageFormat: undefined,
+            kind: 'ObjectId',
+            value: 'my-my-note-0098',
+            path: 'tags',
+            reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+                at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+                at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+                at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+                at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+                at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+                at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+                at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+                at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+                at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+                at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42),
+            valueType: 'string'
+          },
+          valueType: 'string'
+        }
+      },
+      kind: 'cast',
+      path: 'tags.0',
+      value: "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]",
+      reason: CastError: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError"
+          at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:414:15)
+          at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+          at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+          at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+          at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+          at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+          at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+          at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11)
+          at Query._completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2611:7)
+          at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2689:10 {
+        stringValue: `"[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]"`,
+        messageFormat: undefined,
+        kind: '[ObjectId]',
+        value: "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]",
+        path: 'tags.0',
+        reason: CastError: Cast to ObjectId failed for value "my-my-note-0098" (type string) at path "tags" because of "BSONError"
+            at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:251:11)
+            at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+            at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+            at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+            at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+            at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+            at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+            at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42)
+            at Object.createModelAndInit (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\queryHelpers.js:119:12)
+            at completeOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:3285:11) {
+          stringValue: '"my-my-note-0098"',
+          messageFormat: undefined,
+          kind: 'ObjectId',
+          value: 'my-my-note-0098',
+          path: 'tags',
+          reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+              at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\lib\bson.cjs:2538:23)
+              at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+              at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+              at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+              at SchemaArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\array.js:410:32)
+              at init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:794:35)
+              at Document.$__init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:707:3)
+              at model.syncWrapper [as $__init] (D:\Github_Repos\Sync-Not-Net\api\node_modules\kareem\index.js:331:25)
+              at Document.init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:651:8)
+              at Document.$init (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:667:42),
+          valueType: 'string'
+        },
+        valueType: 'string'
+      }
+    },
+    collaborators: CastError: Cast to embedded failed for value "6901a316a80c3cb0bcd7b84f" (type string) at path "collaborators" because of "ObjectParameterError"
+        at SchemaDocumentArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:502:19)
+        at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+        at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+        at model.set [as collaborators] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+        at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1735:28
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+      stringValue: '"6901a316a80c3cb0bcd7b84f"',
+      messageFormat: undefined,
+      kind: 'embedded',
+      value: '6901a316a80c3cb0bcd7b84f',
+      path: 'collaborators',
+      reason: ObjectParameterError: Parameter "obj" to Document() must be an object, got "6901a316a80c3cb0bcd7b84f" (type string)
+          at EmbeddedDocument.Document (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:123:11)
+          at EmbeddedDocument.Subdocument (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\types\subdocument.js:34:12)
+          at EmbeddedDocument.ArraySubdocument [as constructor] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\types\arraySubdocument.js:44:15)
+          at new EmbeddedDocument (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:131:17)
+          at SchemaDocumentArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:496:22)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+          at model.set [as collaborators] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+          at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1735:28
+          at process.processTicksAndRejections (node:internal/process/task_queues:105:5),
+      valueType: 'string'
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: `Error updating notebook collaborators: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError", collaborators: Cast to embedded failed for value "6901a316a80c3cb0bcd7b84f" (type string) at path "collaborators" because of "ObjectParameterError"`,
+  stack: `ValidationError: Notebook validation failed: tags.0: Cast to [ObjectId] failed for value "[ 'my-my-note-0098', 'hell yeah', 'my saved', 'he-path-of-neo' ]" (type string) at path "tags.0" because of "CastError", collaborators: Cast to embedded failed for value "6901a316a80c3cb0bcd7b84f" (type string) at path "collaborators" because of "ObjectParameterError"\n` +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at init (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:797:18)\n' +
+    '    at Document.$__init (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:707:3)\n' +
+    '    at model.syncWrapper [as $__init] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\kareem\\index.js:331:25)\n' +
+    '    at Document.init (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:651:8)\n' +
+    '    at Document.$init (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:667:42)\n' +
+    '    at Object.createModelAndInit (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\queryHelpers.js:119:12)\n' +
+    '    at completeOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:3285:11)\n' +
+    '    at Query._completeOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2611:7)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2689:10',
+  timestamp: '2025-10-29 10:48:49'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    collaborators: CastError: Cast to embedded failed for value "6901a82c0b3c77b6ddedd02d" (type string) at path "collaborators" because of "ObjectParameterError"
+        at SchemaDocumentArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:502:19)
+        at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+        at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+        at model.set [as collaborators] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+        at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1735:28
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+      stringValue: '"6901a82c0b3c77b6ddedd02d"',
+      messageFormat: undefined,
+      kind: 'embedded',
+      value: '6901a82c0b3c77b6ddedd02d',
+      path: 'collaborators',
+      reason: ObjectParameterError: Parameter "obj" to Document() must be an object, got "6901a82c0b3c77b6ddedd02d" (type string)
+          at EmbeddedDocument.Document (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:123:11)
+          at EmbeddedDocument.Subdocument (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\types\subdocument.js:34:12)
+          at EmbeddedDocument.ArraySubdocument [as constructor] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\types\arraySubdocument.js:44:15)
+          at new EmbeddedDocument (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:131:17)
+          at SchemaDocumentArray.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\documentArray.js:496:22)
+          at SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+          at model.$set (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:1438:22)
+          at model.set [as collaborators] (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\helpers\document\compile.js:205:19)
+          at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1735:28
+          at process.processTicksAndRejections (node:internal/process/task_queues:105:5),
+      valueType: 'string'
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating notebook collaborators: Notebook validation failed: collaborators: Cast to embedded failed for value "6901a82c0b3c77b6ddedd02d" (type string) at path "collaborators" because of "ObjectParameterError"',
+  stack: 'ValidationError: Notebook validation failed: collaborators: Cast to embedded failed for value "6901a82c0b3c77b6ddedd02d" (type string) at path "collaborators" because of "ObjectParameterError"\n' +
+    '    at Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at model.$set (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:1480:12)\n' +
+    '    at model.set [as collaborators] (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\helpers\\document\\compile.js:205:19)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1735:28\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-10-29 11:42:36'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: 'Error updating notebook collaborators: collaboratorIds is not defined',
+  stack: 'ReferenceError: collaboratorIds is not defined\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1760:79\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-10-29 11:50:49'
+}
+{
+  service: 'sync-not-net-api',
+  level: 'error',
+  message: 'Error updating notebook collaborators: collaboratorIds is not defined',
+  stack: 'ReferenceError: collaboratorIds is not defined\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1760:79\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
+  timestamp: '2025-10-29 11:51:29'
+}
