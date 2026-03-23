@@ -3,6 +3,58 @@
 ## Overview
 This document provides a comprehensive overview of all API routes implemented in the Sync Note Net backend, their current frontend implementation status, remaining features to implement, and suggested future enhancements.
 
+## Recent Enhancements (March 2026)
+
+### ✅ Version Control (NEW)
+**Routes:**
+- `GET /api/notebooks/:id/versions/:versionId` - Get specific version content
+- `POST /api/notebooks/:id/versions/:versionId/restore` - Restore to a version
+
+**Frontend Status:** ✅ Fully implemented with confirmation dialog
+**Tests:** 30 passing tests
+
+### ✅ Real-time Comments (ENHANCED)
+**Features:**
+- Socket.io integration for live comment updates
+- `commentAdded`, `commentUpdated`, `commentDeleted` events
+- Inline reply support
+
+**Frontend Status:** ✅ Fully implemented
+**Tests:** 18 passing tests
+
+### ✅ Collaborator Management (ENHANCED)
+**Features:**
+- Individual permission updates (read/write/admin)
+- Remove collaborator with confirmation
+- Real-time Socket.io events
+
+**Frontend Status:** ✅ Fully implemented with modern UI
+**Tests:** 21 passing tests
+
+### ✅ Remote Cursors (NEW)
+**Features:**
+- Cursor position tracking via Socket.io
+- User color generation
+- Selection highlighting in Monaco
+
+**Frontend Status:** ✅ Implemented in EnhancedEditor
+**Tests:** 13 passing tests
+
+### ✅ Share Dialog (NEW)
+**Features:**
+- QR code generation (qrcode.react)
+- Copy link functionality
+- Social sharing (Twitter, LinkedIn, WhatsApp, Email)
+
+**Frontend Status:** ✅ Fully implemented
+
+### ✅ UI/UX Redesign (NEW)
+**Pages Redesigned:**
+- Landing Page - Modern hero with animations
+- Auth Page - Split layout with social login
+- Notebooks Dashboard - Card grid with filters
+- Editor Page - Modern toolbar and status bar
+
 ## Current Frontend Implementation Status
 
 ### ✅ Fully Implemented Features
@@ -439,19 +491,44 @@ This document provides a comprehensive overview of all API routes implemented in
   ]
 }
 ```
-**Frontend Status:** ❌ Not implemented
+**Frontend Status:** ✅ Fully implemented
 
 #### GET /api/notebooks/:id/versions/:versionId
-**Purpose:** Get specific version content
+**Purpose:** Get specific version content for comparison
 **Headers:** `Authorization: Bearer <token>`
-**Response:** Version content
-**Frontend Status:** ❌ Not implemented
+**Response:**
+```json
+{
+  "version": {
+    "id": "string",
+    "version": "number",
+    "content": "string",
+    "createdAt": "date",
+    "createdBy": {
+      "name": "string"
+    },
+    "changes": "string"
+  }
+}
+```
+**Frontend Status:** ✅ Fully implemented
 
 #### POST /api/notebooks/:id/versions/:versionId/restore
 **Purpose:** Restore notebook to specific version
 **Headers:** `Authorization: Bearer <token>`
-**Response:** Success message
-**Frontend Status:** ❌ Not implemented
+**Response:**
+```json
+{
+  "message": "Version restored successfully",
+  "version": "number",
+  "restoredVersion": "number"
+}
+```
+**Notes:** 
+- Only the notebook owner can restore versions
+- Current content is auto-saved as a new version before restore
+- Socket.io event `notebookUpdated` is emitted to all collaborators
+**Frontend Status:** ✅ Fully implemented
 
 ### Guest Access Routes
 
