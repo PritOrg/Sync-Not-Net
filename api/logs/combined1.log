@@ -9520,3 +9520,9 @@
   service: 'sync-not-net-api',
   timestamp: '2026-03-24 01:21:48'
 }
+{
+  message: '::1 - - [23/Mar/2026:19:54:21 +0000] "GET /api/notebooks HTTP/1.1" 200 7909 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:24:21'
+}

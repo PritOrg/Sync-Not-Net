@@ -283,7 +283,7 @@ const NotebooksDashboard = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [favorites, setFavorites] = useState([]);
 
-  // Fetch notebooks
+  // Fetch notebooks based on current filter
   const fetchNotebooks = useCallback(async () => {
     try {
       setLoading(true);
@@ -293,35 +293,35 @@ const NotebooksDashboard = () => {
         return;
       }
 
-      const response = await axios.get(`${API_BASE_URL}/api/notebooks`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const headers = { Authorization: `Bearer ${token}` };
+      let response;
 
-      setNotebooks(response.data.notebooks || []);
+      if (currentFilter === 'favorites') {
+        response = await axios.get(`${API_BASE_URL}/api/notebooks/favorites`, { headers });
+        setNotebooks(response.data.notebooks || []);
+      } else if (currentFilter === 'shared') {
+        response = await axios.get(`${API_BASE_URL}/api/notebooks/shared`, { headers });
+        setNotebooks(response.data.notebooks || []);
+      } else {
+        response = await axios.get(`${API_BASE_URL}/api/notebooks`, { headers });
+        setNotebooks(response.data.notebooks || []);
+      }
     } catch (err) {
       console.error('Error fetching notebooks:', err);
       setError('Failed to load notebooks');
     } finally {
       setLoading(false);
     }
-  }, [navigate]);
+  }, [navigate, currentFilter]);
 
   useEffect(() => {
     fetchNotebooks();
   }, [fetchNotebooks]);
 
-  // Filter notebooks
+  // Filter notebooks by search
   const filteredNotebooks = notebooks.filter((nb) => {
-    const matchesSearch = nb.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    return nb.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       nb.content?.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (currentFilter === 'favorites') {
-      return matchesSearch && favorites.includes(nb._id);
-    }
-    if (currentFilter === 'shared') {
-      return matchesSearch && nb.creatorID !== JSON.parse(localStorage.getItem('user') || '{}').id;
-    }
-    return matchesSearch;
   });
 
   // Handle create notebook
@@ -369,11 +369,32 @@ const NotebooksDashboard = () => {
     }
   };
 
-  // Toggle favorite
-  const toggleFavorite = (id) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-    );
+  // Toggle favorite via API
+  const toggleFavorite = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${API_BASE_URL}/api/notebooks/${id}/favorite`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      if (response.data.isFavorite) {
+        setFavorites((prev) => [...prev, id]);
+        setSnackbar({ open: true, message: 'Added to favorites', severity: 'success' });
+      } else {
+        setFavorites((prev) => prev.filter((f) => f !== id));
+        setSnackbar({ open: true, message: 'Removed from favorites', severity: 'info' });
+      }
+      
+      // Refresh notebooks if viewing favorites
+      if (currentFilter === 'favorites') {
+        fetchNotebooks();
+      }
+    } catch (err) {
+      console.error('Error toggling favorite:', err);
+      setSnackbar({ open: true, message: 'Failed to update favorites', severity: 'error' });
+    }
   };
 
   return (
