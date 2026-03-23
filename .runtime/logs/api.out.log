@@ -1,0 +1,9 @@
+
+> api@1.0.0 start
+> node index.js
+
+[32minfo[39m: Running without Redis in development mode {"service":"sync-not-net-api","timestamp":"2026-03-15 18:33:30"}
+[32minfo[39m: Server is running on http://localhost:5000 {"service":"sync-not-net-api","timestamp":"2026-03-15 18:33:30"}
+[32minfo[39m: Environment: development {"service":"sync-not-net-api","timestamp":"2026-03-15 18:33:30"}
+[32minfo[39m: MongoDB Connected successfully {"service":"sync-not-net-api","timestamp":"2026-03-15 18:33:32"}
+[32minfo[39m: User Anonymous connected with socket AoHtR0N1_rV1vqLbAAAB {"service":"sync-not-net-api","timestamp":"2026-03-15 18:33:48"}

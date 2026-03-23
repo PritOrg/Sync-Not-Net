@@ -87540,3 +87540,393 @@
   service: 'sync-not-net-api',
   timestamp: '2025-10-29 11:54:43'
 }
+{
+  message: 'Running without Redis in development mode',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:01:52'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:01:52'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:01:52'
+}
+{
+  service: 'sync-not-net-api',
+  errno: undefined,
+  code: 'ENOTFOUND',
+  syscall: 'querySrv',
+  hostname: '_mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net',
+  level: 'error',
+  message: 'MongoDB connection error: querySrv ENOTFOUND _mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net',
+  stack: 'Error: querySrv ENOTFOUND _mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net\n' +
+    '    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:293:17)',
+  timestamp: '2026-03-14 16:01:52'
+}
+{
+  message: 'Running without Redis in development mode',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:09:17'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:09:17'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:09:17'
+}
+{
+  message: 'User Anonymous connected with socket h0AcnjMJKyuhg028AAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:09:17'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:09:18'
+}
+{
+  message: 'User Anonymous connected with socket 4O5llc1oraYCyhywAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:09:56'
+}
+{
+  message: 'Login attempt with non-existent email: pritgmail@mail.com',
+  level: 'warn',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:10:05'
+}
+{
+  message: '::1 - - [14/Mar/2026:10:40:05 +0000] "POST /api/users/login HTTP/1.1" 401 71 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:10:05'
+}
+{
+  message: 'Failed login attempt for email: pritmail@mail.com',
+  level: 'warn',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:10:14'
+}
+{
+  message: '::1 - - [14/Mar/2026:10:40:14 +0000] "POST /api/users/login HTTP/1.1" 401 71 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:10:14'
+}
+{
+  message: 'User Anonymous connected with socket i5L7CYuM-eheqVNxAAAF',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:10:38'
+}
+{
+  message: 'User Anonymous connected with socket JHVzP0nnpBZdzCPaAAAH',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:10:45'
+}
+{
+  message: 'User Anonymous connected with socket sX4eiC_RsCsmHAlfAAAJ',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:11:39'
+}
+{
+  message: 'User logged in: beta@gmail.com',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:11:46'
+}
+{
+  message: '::1 - - [14/Mar/2026:10:41:46 +0000] "POST /api/users/login HTTP/1.1" 200 393 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:11:46'
+}
+{
+  message: '::1 - - [14/Mar/2026:10:41:48 +0000] "GET /api/notebooks/tags HTTP/1.1" 200 60 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:11:48'
+}
+{
+  message: '::1 - - [14/Mar/2026:10:41:48 +0000] "GET /api/notebooks/search?page=1&limit=10 HTTP/1.1" 200 2474 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:11:48'
+}
+{
+  message: 'User Beta tester connected with socket uEJ75-dH8Ed7wv20AAAL',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:12:34'
+}
+{
+  message: 'User Anonymous connected with socket whimCAyMPWiq5z9MAAAP',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:13:07'
+}
+{
+  message: 'User Beta tester connected with socket YRxNpIxZfhmDJPk_AAAO',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:13:07'
+}
+{
+  message: '::1 - - [14/Mar/2026:10:43:21 +0000] "GET /api/notebooks/tags HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:13:21'
+}
+{
+  message: '::1 - - [14/Mar/2026:10:43:21 +0000] "GET /api/notebooks/search?page=1&limit=10 HTTP/1.1" 200 2474 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 16:13:21'
+}
+{
+  message: 'User Anonymous connected with socket Ret0mmxUWeOTnhkkAAAR',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:05:56'
+}
+{
+  message: '::1 - - [14/Mar/2026:11:35:56 +0000] "GET /api/notebooks/tags HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:05:56'
+}
+{
+  message: '::1 - - [14/Mar/2026:11:35:56 +0000] "GET /api/notebooks/search?page=1&limit=10 HTTP/1.1" 200 2474 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:05:56'
+}
+{
+  message: 'User Beta tester connected with socket 0p8kBcr2IMjRPH0_AAAT',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:05:59'
+}
+{
+  message: '::1 - - [14/Mar/2026:11:35:59 +0000] "GET /api/notebooks/the-path-of-neo HTTP/1.1" 200 585 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:05:59'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:05:59'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 686f734a9840f0639fc70bbc',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:06:00'
+}
+{
+  message: '::1 - - [14/Mar/2026:11:36:27 +0000] "GET /api/users/search?query=abc HTTP/1.1" 200 132 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:06:27'
+}
+{
+  message: '::1 - - [14/Mar/2026:11:36:30 +0000] "GET /api/users/search?query=pri HTTP/1.1" 200 512 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:06:30'
+}
+{
+  message: '::1 - - [14/Mar/2026:11:36:30 +0000] "GET /api/users/search?query=prit HTTP/1.1" 200 513 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:06:30'
+}
+{
+  message: 'User Beta tester disconnected from notebook 686f734a9840f0639fc70bbc. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-14 17:34:11'
+}
+{
+  message: 'Running without Redis in development mode',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:33:30'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:33:30'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:33:30'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:33:32'
+}
+{
+  message: 'User Anonymous connected with socket AoHtR0N1_rV1vqLbAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:33:48'
+}
+{
+  message: 'Running without Redis in development mode',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:36:26'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:36:26'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:36:26'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:36:28'
+}
+{
+  message: 'User Anonymous connected with socket XlQsLkhQh-IPHIyjAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:37:18'
+}
+{
+  message: 'SIGINT received, shutting down gracefully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:40:18'
+}
+{
+  message: 'Running without Redis in development mode',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:41:38'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:41:38'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:41:38'
+}
+{
+  message: 'User Anonymous connected with socket VcSZt4jJmxMPf9aFAAAB',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:41:38'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:41:39'
+}
+{
+  message: 'User Anonymous connected with socket IhkFv4XEvNX4Zu2dAAAD',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:42:24'
+}
+{
+  message: 'SIGINT received, shutting down gracefully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:43:01'
+}
+{
+  message: 'Running without Redis in development mode',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:57:24'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:57:24'
+}
+{
+  message: 'Environment: development',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:57:24'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:57:26'
+}
+{
+  message: 'SIGINT received, shutting down gracefully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-15 18:57:31'
+}
+{
+  message: 'Running without Redis in development mode',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-23 21:00:09'
+}
+{
+  message: 'Server is running on http://localhost:5000',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-23 21:00:09'
+}
+{
+  message: 'Environment: test',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-23 21:00:09'
+}
+{
+  message: 'MongoDB Connected successfully',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-23 21:00:14'
+}

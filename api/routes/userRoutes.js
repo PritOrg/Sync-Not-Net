@@ -7,7 +7,6 @@ const { catchAsync } = require('../middlewares/errorHandler');
 const {
   validateUserRegistration,
   validateUserLogin,
-  validateUserSearch,
   validateObjectId
 } = require('../middlewares/validation');
 const { verifyToken } = require('../middlewares/verifyToken');
@@ -162,69 +161,15 @@ router.post('/login', validateUserLogin, catchAsync(async (req, res) => {
   });
 }));
 
-// Search for collaborators with enhanced security and validation
-router.get('/search', verifyToken, validateUserSearch, catchAsync(async (req, res) => {
-  const { query } = req.query;
-
-  // Create case-insensitive regex for search
-  const searchRegex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-
-  // Find users matching the search query (exclude current user)
-  const users = await User.find({
-    $and: [
-      { _id: { $ne: req.userId } }, // Exclude current user
-      {
-        $or: [
-          { name: searchRegex },
-          { email: searchRegex }
-        ]
-      }
-    ]
-  })
-  .select('name email role')
-  .limit(20) // Limit results to prevent abuse
-  .sort({ name: 1 });
-
-  res.json({
-    users,
-    total: users.length,
-    query
-  });
-}));
-
+/**
+ * Search for users by name or email
+ * @route GET /api/users/search
+ * @param {string} req.query.q - Search query (minimum 2 characters)
+ * @param {number} req.query.limit - Results limit (default: 10, max: 50)
+ * @returns {array} Array of matching users with id, name, email, avatar
+ * @access Private
+ */
 // Search users for collaboration
-router.get('/search', verifyToken, catchAsync(async (req, res) => {
-  const { q: query, limit = 10 } = req.query;
-
-  if (!query || query.trim().length < 2) {
-    return res.json({ users: [] });
-  }
-
-  const searchRegex = new RegExp(query.trim(), 'i');
-  
-  const users = await User.find({
-    _id: { $ne: req.user.id }, // Exclude current user
-    $or: [
-      { name: searchRegex },
-      { email: searchRegex }
-    ]
-  })
-  .select('_id name email avatar')
-  .limit(parseInt(limit))
-  .sort({ name: 1 });
-
-  res.json({
-    users: users.map(user => ({
-      _id: user._id,
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar
-    }))
-  });
-}));
-
-// Search users (authenticated route)
 router.get('/search', verifyToken, catchAsync(async (req, res) => {
   try {
     const { q } = req.query;

@@ -2718,3 +2718,15 @@
     '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)',
   timestamp: '2025-10-29 11:51:29'
 }
+{
+  service: 'sync-not-net-api',
+  errno: undefined,
+  code: 'ENOTFOUND',
+  syscall: 'querySrv',
+  hostname: '_mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net',
+  level: 'error',
+  message: 'MongoDB connection error: querySrv ENOTFOUND _mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net',
+  stack: 'Error: querySrv ENOTFOUND _mongodb._tcp.paradisecluster.vnxfnlq.mongodb.net\n' +
+    '    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:293:17)',
+  timestamp: '2026-03-14 16:01:52'
+}

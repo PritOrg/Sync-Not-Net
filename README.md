@@ -1,7 +1,5 @@
 ## Sync Not Net
 
-In a world where code and prose were once sworn enemies, one hero dared to dream of a union between the two. Behold, Sync Not Net, the revolutionary tool that transforms your Notepad vibes into a Code Editor paradise!
-
 ### Project Context
 
 Sync Not Net is a MERN (MongoDB, Express, React, Node.js) stack application designed to bridge the gap between creative writing and coding. The application allows users to write in a Notepad-like interface and seamlessly convert their text into a Code Editor interface using the powerful Monaco Editor. This unique approach helps users focus on writing without the distractions of a traditional code editor, and then transition smoothly into a coding environment.
@@ -19,14 +17,41 @@ Sync Not Net is a MERN (MongoDB, Express, React, Node.js) stack application desi
 
 To get started with Sync Not Net, follow these steps:
 
-1. **Clone the Repository , and start play with it !**:
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/PritOrg/Sync-Not-Net.git
-   npm install
+   cd Sync-Not-Net
+   ```
+2. **Run the setup step once if you want dependencies and env files prepared without starting the apps**:
+   ```bash
+   npm run setup
+   ```
+3. **Start the full project from the repo root**:
+   ```bash
    npm start
    ```
-4. **Open in Browser**:
+4. **Open in browser**:
    Navigate to `http://localhost:3000` in your web browser.
+
+### Root Commands
+
+- `npm start`: cross-platform root launcher for backend and frontend.
+- `npm run setup`: installs missing dependencies and creates missing local env files.
+- `npm run stop`: stops backend and frontend started by the root launcher.
+
+### Startup Notes
+
+- The backend runs on `http://localhost:5000`.
+- The frontend runs on `http://localhost:3000`.
+- If `api/.env` is missing, it is copied from `api/.env.example`.
+- If `pro/.env` is missing, it is created with `REACT_APP_BACKEND_URL=http://localhost:5000`.
+- If port `3000` or `5000` is already in use, `npm start` exits early with a clear error instead of partially starting the project.
+
+### Troubleshooting
+
+- If startup says a port is already in use, stop the process already bound to `3000` or `5000`, then run `npm start` again.
+- If you previously launched the apps from the repo root, run `npm run stop` before starting again.
+- If backend startup still fails after ports are free, review your local `api/.env` values, especially `MONGODB_URI`, `JWT_SECRET`, `PORT`, and `CORS_ORIGIN`.
 
 ### Usage
 

@@ -100,15 +100,15 @@ This document provides a comprehensive overview of all API routes implemented in
 
 #### 1. Guest Access System
 **Routes:**
-- `POST /api/notebooks/guest-access` - Create guest access link
-- `GET /api/notebooks/guest/:token` - Access notebook as guest
-- `PUT /api/notebooks/guest/:token` - Update guest permissions
+- `POST /api/notebooks/:id/register-guest` - Register as guest
+- `GET /api/notebooks/:urlIdentifier/access` - Get access permissions
+- `POST /api/notebooks/:urlIdentifier/verify-password` - Verify password for protected access
 
 **Frontend Implementation:**
-- ❌ **NOT IMPLEMENTED:** No guest access UI
-- ❌ **MISSING:** Guest link generation
-- ❌ **MISSING:** Guest access flow
-- ❌ **MISSING:** Guest permission management
+- ✅ Backend guest registration and access routes implemented
+- ✅ AccessPrompt and password verify routes exist
+- 🔄 **PARTIAL:** Guest UI integration needs completion
+- 🔄 **PARTIAL:** Link generation/revocation pending
 
 #### 2. Comments System
 **Routes:**
@@ -118,10 +118,10 @@ This document provides a comprehensive overview of all API routes implemented in
 - `DELETE /api/notebooks/:id/comments/:commentId` - Delete comment
 
 **Frontend Implementation:**
-- ❌ **NOT IMPLEMENTED:** No comments UI exists
-- ❌ **MISSING:** Comment threads
-- ❌ **MISSING:** Comment editing
-- ❌ **MISSING:** Comment deletion
+- ✅ Backend routes fully implemented (commentRoutes.js)
+- ✅ CommentsPanel component exists
+- 🔄 **PARTIAL:** API integration needs verification
+- 🔄 **PARTIAL:** Real-time socket emission needs testing
 
 #### 3. Advanced Search & Filtering
 **Routes:**

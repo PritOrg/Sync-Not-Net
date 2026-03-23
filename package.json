@@ -1,0 +1,9 @@
+{
+  "name": "sync-not-net",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/start.js",
+    "setup": "node scripts/start.js --setup-only",
+    "stop": "node scripts/stop.js"
+  }
+}
