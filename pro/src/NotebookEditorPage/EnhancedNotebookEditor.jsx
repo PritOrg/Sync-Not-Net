@@ -1,782 +1,1054 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useParams, useNavigate, useBeforeUnload } from 'react-router-dom';
 import {
   Box,
-  Typography,
   Paper,
-  Grid,
-  Button,
+  Typography,
   IconButton,
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Switch,
-  FormControlLabel,
   Tooltip,
-  Fab,
-  SpeedDial,
-  SpeedDialAction,
-  SpeedDialIcon,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
+  Button,
   Divider,
-  useTheme,
-  useMediaQuery,
-  Alert,
-  Snackbar,
-  LinearProgress,
-  Breadcrumbs,
-  Link,
+  Chip,
   Avatar,
   AvatarGroup,
   Badge,
-  Card,
-  CardContent,
-  CardActions,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails
+  LinearProgress,
+  CircularProgress,
+  Skeleton,
+  useTheme,
+  alpha,
+  Drawer,
+  Portal,
+  Backdrop,
+  Snackbar,
+  Alert,
+  Fade,
+  Grow,
+  Slide,
 } from '@mui/material';
 import {
-  Save,
-  Settings,
-  Share,
-  Download,
-  Upload,
-  Fullscreen,
-  FullscreenExit,
-  Preview,
-  Code,
-  Article,
-  History,
-  People,
-  Bookmark,
-  BookmarkBorder,
-  Edit,
-  ExpandMore,
-  Close,
-  Add,
-  Delete,
-  Visibility,
-  VisibilityOff,
-  Lock,
-  Public,
-  AutoMode,
-  SmartToy,
-  CloudUpload,
-  RestartAlt,
-  Schedule,
-  NavigateNext,
-  Home,
-  MenuBook,
-  Comment,
-  Notifications,
-  NotificationsOff,
-  VolumeUp,
-  VolumeOff,
-  Palette,
-  TextFields,
-  FormatSize,
-  ZoomIn,
-  ZoomOut,
-  DarkMode,
-  LightMode,
-  Split,
-  ViewSidebar,
-  ViewColumn
+  Save as SaveIcon,
+  Settings as SettingsIcon,
+  AutoMode as AutoSaveIcon,
+  Code as CodeIcon,
+  Edit as EditIcon,
+  AccessTime as ClockIcon,
+  CloudSync as CloudSyncIcon,
+  CloudOff as CloudOffIcon,
+  Warning as WarningIcon,
+  Visibility as VisibilityIcon,
+  ArrowBack as ArrowBackIcon,
+  Keyboard as KeyboardIcon,
+  History as HistoryIcon,
+  Lock as LockIcon,
+  Comment as CommentIcon,
+  Close as CloseIcon,
+  Share as ShareIcon,
+  People as PeopleIcon,
+  MoreVert as MoreVertIcon,
+  Download as DownloadIcon,
+  ContentCopy as CopyIcon,
+  Link as LinkIcon,
+  Fullscreen as FullscreenIcon,
+  FullscreenExit as FullscreenExitIcon,
+  Undo as UndoIcon,
+  Redo as RedoIcon,
+  FormatBold as BoldIcon,
+  FormatItalic as ItalicIcon,
+  FormatUnderlined as UnderlineIcon,
+  Tune as TuneIcon,
+  Menu as MenuIcon,
+  ChevronLeft as ChevronLeftIcon,
+  FiberManualRecord as DotIcon,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { io } from 'socket.io-client';
 import EnhancedEditor from '../Components/EnhancedEditor';
-import UserPresence from '../Components/UserPresence';
+import EnhancedUserPresence from '../Components/EnhancedUserPresence';
+import VersionHistoryDialog from './VersionHistoryDialog';
+import VersionComparisonDialog from './VersionComparisonDialog';
+import CommentsPanel from './CommentsPanel';
+import SettingsDialog from './SettingsDialog';
+import PasswordSettingsDialog from './PasswordSettingsDialog';
+import PermissionsSettingsDialog from './PermissionsSettingsDialog';
+import CollaboratorsSettingsDialog from './CollaboratorsSettingsDialog';
+import DeleteNotebookDialog from '../Components/DeleteNotebookDialog';
+import KeyboardShortcutsDialog from '../Components/KeyboardShortcutsDialog';
+import ErrorBoundary from '../Components/ErrorBoundary';
+import socketClient from '../utils/socketClient';
+import { processContentFromBackend, prepareContentForBackend } from '../utils/contentUtils';
+import ShareDialog from './ShareDialog';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
-const EnhancedNotebookEditor = () => {
-  const { urlIdentifier } = useParams();
-  const navigate = useNavigate();
+// Animation variants
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+};
+
+const slideInRight = {
+  initial: { x: 400, opacity: 0 },
+  animate: { x: 0, opacity: 1, transition: { type: 'spring', damping: 25, stiffness: 200 } },
+  exit: { x: 400, opacity: 0, transition: { duration: 0.2 } },
+};
+
+const fadeInUp = {
+  initial: { y: 30, opacity: 0 },
+  animate: { y: 0, opacity: 1, transition: { duration: 0.3, ease: 'easeOut' } },
+};
+
+// Status indicator component
+const ConnectionStatus = ({ isConnected, connectionError }) => (
+  <motion.div
+    initial={{ scale: 0 }}
+    animate={{ scale: 1 }}
+    transition={{ type: 'spring', damping: 15 }}
+  >
+    <Tooltip title={isConnected ? 'Connected' : connectionError || 'Disconnected'}>
+      <Chip
+        icon={
+          isConnected ? (
+            <CloudSyncIcon sx={{ fontSize: 16 }} />
+          ) : (
+            <CloudOffIcon sx={{ fontSize: 16, color: 'error.main' }} />
+          )
+        }
+        label={isConnected ? 'Live' : 'Offline'}
+        size="small"
+        color={isConnected ? 'success' : 'error'}
+        variant="outlined"
+        sx={{
+          borderRadius: 2,
+          fontWeight: 600,
+          '& .MuiChip-icon': { ml: 0.5 },
+        }}
+      />
+    </Tooltip>
+  </motion.div>
+);
+
+// Auto-save indicator
+const AutoSaveStatus = ({ isSaving, lastSavedTime, hasUnsavedChanges }) => {
+  const getStatus = () => {
+    if (isSaving) return { text: 'Saving...', color: 'warning', icon: <CircularProgress size={14} /> };
+    if (hasUnsavedChanges) return { text: 'Unsaved changes', color: 'warning', icon: <DotIcon sx={{ fontSize: 8 }} /> };
+    if (lastSavedTime) {
+      const timeAgo = Math.round((Date.now() - lastSavedTime.getTime()) / 1000);
+      if (timeAgo < 60) return { text: 'Saved just now', color: 'success', icon: <DotIcon sx={{ fontSize: 8 }} /> };
+      if (timeAgo < 3600) return { text: `Saved ${Math.floor(timeAgo / 60)}m ago`, color: 'success', icon: <DotIcon sx={{ fontSize: 8 }} /> };
+      return { text: `Saved ${Math.floor(timeAgo / 3600)}h ago`, color: 'success', icon: <DotIcon sx={{ fontSize: 8 }} /> };
+    }
+    return { text: 'Not saved', color: 'default', icon: <DotIcon sx={{ fontSize: 8 }} /> };
+  };
+
+  const status = getStatus();
+
+  return (
+    <Chip
+      icon={status.icon}
+      label={status.text}
+      size="small"
+      color={status.color}
+      variant="filled"
+      sx={{
+        borderRadius: 2,
+        fontWeight: 500,
+        fontSize: '0.75rem',
+        height: 28,
+        '& .MuiChip-icon': { ml: 0.5 },
+      }}
+    />
+  );
+};
+
+// Active users display
+const ActiveUsersBar = ({ users, currentUser }) => (
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <AvatarGroup max={4} sx={{ '& .MuiAvatar-root': { width: 32, height: 32, fontSize: '0.875rem' } }}>
+      {users.map((user, idx) => (
+        <Tooltip key={user.id || idx} title={user.name || 'Anonymous'}>
+          <Avatar
+            sx={{
+              bgcolor: `hsl(${(user.id || 0) * 60}, 70%, 50%)`,
+              border: user.id === currentUser?.id ? '2px solid' : 'none',
+              borderColor: 'primary.main',
+            }}
+          >
+            {(user.name || 'A')[0].toUpperCase()}
+          </Avatar>
+        </Tooltip>
+      ))}
+    </AvatarGroup>
+    {users.length > 0 && (
+      <Typography variant="caption" color="text.secondary">
+        {users.length} online
+      </Typography>
+    )}
+  </Box>
+);
+
+// Main toolbar component
+const EditorToolbar = ({
+  title,
+  onTitleChange,
+  isSaving,
+  lastSavedTime,
+  hasUnsavedChanges,
+  isConnected,
+  connectionError,
+  activeUsers,
+  currentUser,
+  onBack,
+  onSettings,
+  onShare,
+  onHistory,
+  onComments,
+  onCollaborators,
+  onPassword,
+  onPermissions,
+  onDelete,
+  onKeyboardShortcuts,
+  onSave,
+  userRole,
+  readOnly,
+}) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const socketRef = useRef(null);
-  const saveTimeoutRef = useRef(null);
 
-  // Core state
-  const [notebook, setNotebook] = useState(null);
-  const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [lastSaved, setLastSaved] = useState(null);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [accessLevel, setAccessLevel] = useState('read');
-  const [userRole, setUserRole] = useState('');
+  return (
+    <Paper
+      component={motion.div}
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      elevation={0}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        px: { xs: 1.5, md: 3 },
+        py: 1.5,
+        borderBottom: '1px solid',
+        borderColor: alpha(theme.palette.divider, 0.5),
+        background: alpha(theme.palette.background.paper, 0.9),
+        backdropFilter: 'blur(20px)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        gap: 2,
+      }}
+    >
+      {/* Left section */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: 1, minWidth: 0 }}>
+        <Tooltip title="Back to notebooks">
+          <IconButton onClick={onBack} size="small" sx={{ color: 'text.secondary' }}>
+            <ArrowBackIcon />
+          </IconButton>
+        </Tooltip>
 
-  // UI state
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [previewMode, setPreviewMode] = useState(false);
-  const [splitView, setSplitView] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [shareDialogOpen, setShareDialogOpen] = useState(false);
-  const [historyOpen, setHistoryOpen] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [fontSize, setFontSize] = useState(14);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(true);
-  const [soundEnabled, setSoundEnabled] = useState(true);
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => onTitleChange(e.target.value)}
+            placeholder="Untitled Notebook"
+            readOnly={readOnly}
+            style={{
+              width: '100%',
+              border: 'none',
+              outline: 'none',
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              background: 'transparent',
+              color: theme.palette.text.primary,
+              padding: '4px 0',
+            }}
+          />
+        </Box>
+      </Box>
 
-  // Collaboration state
-  const [connectedUsers, setConnectedUsers] = useState([]);
-  const [userCursors, setUserCursors] = useState({});
-  const [comments, setComments] = useState([]);
-  const [showComments, setShowComments] = useState(false);
+      {/* Center section - Status */}
+      <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+        <AutoSaveStatus
+          isSaving={isSaving}
+          lastSavedTime={lastSavedTime}
+          hasUnsavedChanges={hasUnsavedChanges}
+        />
+        <ConnectionStatus isConnected={isConnected} connectionError={connectionError} />
+      </Box>
 
-  // Editor state
-  const [editorMode, setEditorMode] = useState('quill');
-  const [wordCount, setWordCount] = useState(0);
-  const [characterCount, setCharacterCount] = useState(0);
-  const [readingTime, setReadingTime] = useState(0);
+      {/* Right section */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        {/* Active users */}
+        <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', mr: 1 }}>
+          <ActiveUsersBar users={activeUsers} currentUser={currentUser} />
+        </Box>
 
-  // Dialogs and modals
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const [error, setError] = useState(null);
+        {/* Action buttons */}
+        <Tooltip title="Save (Ctrl+S)">
+          <span>
+            <IconButton
+              onClick={onSave}
+              disabled={isSaving || readOnly}
+              size="small"
+              color={hasUnsavedChanges ? 'warning' : 'default'}
+            >
+              {isSaving ? <CircularProgress size={20} /> : <SaveIcon />}
+            </IconButton>
+          </span>
+        </Tooltip>
 
-  // SpeedDial actions
-  const speedDialActions = [
-    { icon: <Save />, name: 'Save', action: () => handleSave() },
-    { icon: <Share />, name: 'Share', action: () => setShareDialogOpen(true) },
-    { icon: <Download />, name: 'Download', action: () => handleDownload() },
-    { icon: <History />, name: 'History', action: () => setHistoryOpen(true) },
-    { icon: <Settings />, name: 'Settings', action: () => setSettingsOpen(true) }
+        <Tooltip title="Comments">
+          <IconButton onClick={onComments} size="small">
+            <Badge badgeContent={0} color="primary">
+              <CommentIcon />
+            </Badge>
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="Version History">
+          <IconButton onClick={onHistory} size="small">
+            <HistoryIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="Share">
+          <IconButton onClick={onShare} size="small">
+            <ShareIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+
+        {/* Settings menu */}
+        <Tooltip title="Settings">
+          <IconButton onClick={onSettings} size="small">
+            <SettingsIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    </Paper>
+  );
+};
+
+// Settings drawer content
+const SettingsDrawerContent = ({
+  onClose,
+  onCollaborators,
+  onPassword,
+  onPermissions,
+  onDelete,
+  onKeyboardShortcuts,
+  userRole,
+  editorMode,
+  onEditorModeChange,
+  language,
+  onLanguageChange,
+}) => {
+  const theme = useTheme();
+
+  const menuItems = [
+    {
+      section: 'Editor',
+      items: [
+        { icon: <EditIcon />, label: 'Rich Text Mode', onClick: () => onEditorModeChange('quill'), active: editorMode === 'quill' },
+        { icon: <CodeIcon />, label: 'Code Mode', onClick: () => onEditorModeChange('code'), active: editorMode === 'code' },
+      ],
+    },
+    {
+      section: 'Collaboration',
+      items: [
+        { icon: <PeopleIcon />, label: 'Collaborators', onClick: onCollaborators },
+        { icon: <LockIcon />, label: 'Password Protection', onClick: onPassword },
+        { icon: <VisibilityIcon />, label: 'Permissions', onClick: onPermissions },
+      ],
+    },
+    {
+      section: 'Help',
+      items: [
+        { icon: <KeyboardIcon />, label: 'Keyboard Shortcuts', onClick: onKeyboardShortcuts },
+      ],
+    },
   ];
 
-  useEffect(() => {
-    fetchNotebook();
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-    };
-  }, [urlIdentifier]);
-
-  useEffect(() => {
-    // Auto-save functionality
-    if (hasUnsavedChanges && notebook?.autoSave && accessLevel === 'edit') {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-      saveTimeoutRef.current = setTimeout(() => {
-        handleSave(true);
-      }, 2000);
-    }
-  }, [content, hasUnsavedChanges, notebook?.autoSave, accessLevel]);
-
-  useEffect(() => {
-    // Update statistics
-    const text = content.replace(/<[^>]*>/g, ''); // Remove HTML tags
-    const words = text.trim().split(/\s+/).filter(word => word.length > 0);
-    setWordCount(words.length);
-    setCharacterCount(text.length);
-    setReadingTime(Math.ceil(words.length / 200)); // Assuming 200 WPM reading speed
-  }, [content]);
-
-  const fetchNotebook = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-
-      const response = await axios.get(`${API_BASE_URL}/api/notebooks/${urlIdentifier}/access`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      const { notebook: notebookData, accessLevel: access, userRole: role } = response.data;
-      
-      setNotebook(notebookData);
-      setContent(notebookData.content || '');
-      setAccessLevel(access);
-      setUserRole(role);
-      setEditorMode(notebookData.editorMode || 'quill');
-      setLastSaved(new Date(notebookData.updatedAt));
-      
-      // Initialize Socket.IO connection
-      initializeSocket(notebookData._id, token);
-      
-      // Check if bookmarked
-      checkBookmarkStatus();
-
-    } catch (error) {
-      console.error('Error fetching notebook:', error);
-      setError('Failed to load notebook');
-      
-      if (error.response?.status === 401) {
-        navigate('/auth?mode=login');
-      } else if (error.response?.status === 404) {
-        navigate('/notebooks');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const initializeSocket = (notebookId, token) => {
-    socketRef.current = io(API_BASE_URL, {
-      auth: { token }
+  if (userRole === 'owner') {
+    menuItems.push({
+      section: 'Danger Zone',
+      items: [
+        { icon: <DeleteNotebookDialog />, label: 'Delete Notebook', onClick: onDelete, danger: true },
+      ],
     });
-
-    socketRef.current.emit('join-notebook', notebookId);
-
-    socketRef.current.on('user-joined', (users) => {
-      setConnectedUsers(users);
-    });
-
-    socketRef.current.on('user-left', (users) => {
-      setConnectedUsers(users);
-    });
-
-    socketRef.current.on('content-change', (data) => {
-      if (data.userId !== getUserId()) {
-        setContent(data.content);
-      }
-    });
-
-    socketRef.current.on('cursor-position', (data) => {
-      setUserCursors(prev => ({
-        ...prev,
-        [data.userId]: data.position
-      }));
-    });
-
-    socketRef.current.on('notebook-saved', () => {
-      setLastSaved(new Date());
-      setSaving(false);
-      setHasUnsavedChanges(false);
-    });
-  };
-
-  const getUserId = () => {
-    try {
-      const token = localStorage.getItem('token');
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.userId;
-    } catch {
-      return null;
-    }
-  };
-
-  const handleContentChange = (newContent) => {
-    setContent(newContent);
-    setHasUnsavedChanges(true);
-
-    // Emit content change to other users
-    if (socketRef.current && accessLevel === 'edit') {
-      socketRef.current.emit('content-change', {
-        notebookId: notebook._id,
-        content: newContent,
-        userId: getUserId()
-      });
-    }
-  };
-
-  const handleSave = async (isAutoSave = false) => {
-    if (accessLevel !== 'edit') return;
-
-    try {
-      setSaving(true);
-      const token = localStorage.getItem('token');
-
-      await axios.put(`${API_BASE_URL}/api/notebooks/${urlIdentifier}`, {
-        content,
-        lastModified: new Date().toISOString()
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      setLastSaved(new Date());
-      setHasUnsavedChanges(false);
-
-      if (!isAutoSave) {
-        setSnackbar({
-          open: true,
-          message: 'Notebook saved successfully',
-          severity: 'success'
-        });
-      }
-
-      // Emit save event to other users
-      if (socketRef.current) {
-        socketRef.current.emit('notebook-saved', {
-          notebookId: notebook._id,
-          userId: getUserId()
-        });
-      }
-
-    } catch (error) {
-      console.error('Error saving notebook:', error);
-      setSnackbar({
-        open: true,
-        message: 'Failed to save notebook',
-        severity: 'error'
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDownload = () => {
-    const element = document.createElement('a');
-    const file = new Blob([content], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = `${notebook?.title || 'notebook'}.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  };
-
-  const checkBookmarkStatus = () => {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarked-notebooks') || '[]');
-    setIsBookmarked(bookmarks.includes(notebook?._id));
-  };
-
-  const toggleBookmark = () => {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarked-notebooks') || '[]');
-    let newBookmarks;
-
-    if (isBookmarked) {
-      newBookmarks = bookmarks.filter(id => id !== notebook._id);
-    } else {
-      newBookmarks = [...bookmarks, notebook._id];
-    }
-
-    localStorage.setItem('bookmarked-notebooks', JSON.stringify(newBookmarks));
-    setIsBookmarked(!isBookmarked);
-
-    setSnackbar({
-      open: true,
-      message: isBookmarked ? 'Bookmark removed' : 'Notebook bookmarked',
-      severity: 'success'
-    });
-  };
-
-  const handleFullscreenToggle = () => {
-    if (!isFullscreen) {
-      document.documentElement.requestFullscreen?.();
-    } else {
-      document.exitFullscreen?.();
-    }
-    setIsFullscreen(!isFullscreen);
-  };
-
-  const formatLastSaved = () => {
-    if (!lastSaved) return 'Never';
-    const now = new Date();
-    const diff = Math.floor((now - lastSaved) / 1000);
-
-    if (diff < 60) return `${diff}s ago`;
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    return `${Math.floor(diff / 86400)}d ago`;
-  };
-
-  if (loading) {
-    return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        flexDirection: 'column',
-        gap: 2
-      }}>
-        <LinearProgress sx={{ width: 300 }} />
-        <Typography>Loading notebook...</Typography>
-      </Box>
-    );
   }
 
-  if (error) {
+  return (
+    <Box sx={{ width: 320, p: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+        <Typography variant="h6" fontWeight={600}>Settings</Typography>
+        <IconButton onClick={onClose} size="small">
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
+      {menuItems.map((section, idx) => (
+        <Box key={idx} sx={{ mb: 3 }}>
+          <Typography
+            variant="overline"
+            color="text.secondary"
+            sx={{ display: 'block', mb: 1, fontWeight: 600 }}
+          >
+            {section.section}
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            {section.items.map((item, itemIdx) => (
+              <Button
+                key={itemIdx}
+                startIcon={item.icon}
+                onClick={() => { item.onClick(); onClose(); }}
+                sx={{
+                  justifyContent: 'flex-start',
+                  py: 1.5,
+                  px: 2,
+                  borderRadius: 2,
+                  color: item.danger ? 'error.main' : 'text.primary',
+                  '&:hover': {
+                    bgcolor: item.danger
+                      ? alpha(theme.palette.error.main, 0.08)
+                      : alpha(theme.palette.primary.main, 0.08),
+                  },
+                  ...(item.active && {
+                    bgcolor: alpha(theme.palette.primary.main, 0.12),
+                    color: 'primary.main',
+                  }),
+                }}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </Box>
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
+// Main component
+const EnhancedNotebookEditor = ({ mode = 'view' }) => {
+  const { urlIdentifier: urlIdentifier_from_url } = useParams();
+  const navigate = useNavigate();
+  const theme = useTheme();
+
+  // Core state
+  const [isLoading, setIsLoading] = useState(mode !== 'new');
+  const [urlIdentifier, setUrlIdentifier] = useState(urlIdentifier_from_url);
+  const [content, setContent] = useState('');
+  const [title, setTitle] = useState(mode === 'new' ? 'Untitled Notebook' : '');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [editorMode, setEditorMode] = useState('quill');
+  const [language, setLanguage] = useState('javascript');
+  const [notebookData, setNotebookData] = useState(mode === 'new' ? {} : {});
+  const [isNewNotebook, setIsNewNotebook] = useState(mode === 'new');
+
+  // Save state
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSavedTime, setLastSavedTime] = useState(null);
+  const [autoSave, setAutoSave] = useState(true);
+
+  // Connection state
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionError, setConnectionError] = useState(null);
+  const [activeUsers, setActiveUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Dialog states
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isVersionHistoryOpen, setIsVersionHistoryOpen] = useState(false);
+  const [isVersionComparisonOpen, setIsVersionComparisonOpen] = useState(false);
+  const [compareVersions, setCompareVersions] = useState({ oldId: null, newId: null });
+  const [isCommentsPanelOpen, setIsCommentsPanelOpen] = useState(false);
+  const [isCollaboratorsSettingsOpen, setIsCollaboratorsSettingsOpen] = useState(false);
+  const [isPasswordSettingsOpen, setIsPasswordSettingsOpen] = useState(false);
+  const [isPermissionsSettingsOpen, setIsPermissionsSettingsOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isKeyboardShortcutsOpen, setIsKeyboardShortcutsOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Access state
+  const [userRole, setUserRole] = useState('viewer');
+  const [accessLevel, setAccessLevel] = useState('read');
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+
+  // Conflict state (Phase 6 placeholder)
+  const [conflictData, setConflictData] = useState(null);
+
+  // Notification state
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+
+  // Refs
+  const saveTimer = useRef(null);
+  const lastSavedContent = useRef('');
+
+  const showNotification = useCallback((message, severity = 'info') => {
+    setSnackbar({ open: true, message, severity });
+  }, []);
+
+  // Fetch notebook data or create new
+  const fetchNotebookData = useCallback(async () => {
+    // For new notebooks, don't fetch
+    if (mode === 'new') {
+      setIsLoading(false);
+      setUserRole('owner');
+      setAccessLevel('owner');
+      return;
+    }
+
+    if (!urlIdentifier_from_url) {
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showNotification('Please login to view this notebook', 'error');
+        navigate('/auth?mode=login');
+        return;
+      }
+
+      const headers = { 'Content-Type': 'application/json' };
+      headers['Authorization'] = `Bearer ${token}`;
+
+      const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlIdentifier_from_url}`, { headers });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          showNotification('Please login to access this notebook', 'error');
+          navigate('/auth?mode=login');
+          return;
+        }
+        if (response.status === 403) {
+          showNotification('You do not have permission to access this notebook', 'error');
+          navigate('/notebooks');
+          return;
+        }
+        if (response.status === 404) {
+          showNotification('Notebook not found', 'error');
+          navigate('/notebooks');
+          return;
+        }
+        throw new Error(errorData.message || 'Failed to load notebook');
+      }
+
+      const data = await response.json();
+      // API returns notebook data at root level, not nested under 'notebook'
+      const notebook = data.notebook || data;
+
+      setNotebookData(notebook);
+      setTitle(notebook.title || '');
+      setContent(processContentFromBackend(notebook.content) || '');
+      setEditorMode(notebook.editorMode || 'quill');
+      setLanguage(notebook.language || 'javascript');
+      setAutoSave(notebook.autoSave ?? true);
+      setUserRole(notebook.userRole || 'viewer');
+      setAccessLevel(notebook.accessLevel || 'read');
+      setUrlIdentifier(notebook.urlIdentifier);
+      lastSavedContent.current = notebook.content;
+      setIsNewNotebook(false);
+
+      // Join socket room
+      if (token && socketClient.isConnected && notebook._id) {
+        socketClient.joinNotebook(notebook._id);
+      }
+    } catch (error) {
+      console.error('Error fetching notebook:', error);
+      showNotification(error.message || 'Failed to load notebook', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [urlIdentifier_from_url, showNotification, mode, navigate]);
+
+  // Save notebook - handles both creating new and updating existing
+  const saveNotebook = useCallback(async (manual = false) => {
+    // For new notebooks, create first
+    if (isNewNotebook || !notebookData?._id) {
+      setIsSaving(true);
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          showNotification('Please login to save', 'error');
+          navigate('/auth?mode=login');
+          return;
+        }
+
+        const preparedContent = prepareContentForBackend(content);
+        const newUrlIdentifier = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 
+                                 `notebook-${Date.now()}`;
+
+        const response = await fetch(`${API_BASE_URL}/api/notebooks`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: title || 'Untitled Notebook',
+            content: preparedContent,
+            editorMode,
+            language,
+            autoSave,
+            urlIdentifier: newUrlIdentifier,
+            permissions: 'everyone',
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to create notebook');
+        }
+
+        const data = await response.json();
+        const notebook = data.notebook || data;
+        
+        setNotebookData(notebook);
+        setUrlIdentifier(notebook.urlIdentifier);
+        lastSavedContent.current = preparedContent;
+        setLastSavedTime(new Date());
+        setHasUnsavedChanges(false);
+        setIsNewNotebook(false);
+        setUserRole('owner');
+        setAccessLevel('owner');
+
+        showNotification('Notebook created successfully', 'success');
+        
+        // Navigate to the new notebook URL
+        if (notebook.urlIdentifier) {
+          navigate(`/Notebook/${notebook.urlIdentifier}`, { replace: true });
+        }
+      } catch (error) {
+        console.error('Create error:', error);
+        showNotification(error.message || 'Failed to create notebook', 'error');
+      } finally {
+        setIsSaving(false);
+      }
+      return;
+    }
+
+    // For existing notebooks, update
+    if (!manual && content === lastSavedContent.current) return;
+
+    setIsSaving(true);
+    try {
+      const token = localStorage.getItem('token');
+      const preparedContent = prepareContentForBackend(content);
+
+      const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({
+          title,
+          content: preparedContent,
+          editorMode,
+          language,
+          autoSave,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Save failed');
+
+      const data = await response.json();
+      lastSavedContent.current = preparedContent;
+      setLastSavedTime(new Date());
+      setHasUnsavedChanges(false);
+
+      if (manual) showNotification('Saved successfully', 'success');
+    } catch (error) {
+      console.error('Save error:', error);
+      showNotification('Failed to save', 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [notebookData?._id, content, title, editorMode, language, autoSave, showNotification, isNewNotebook, navigate]);
+
+  // Auto-save effect
+  useEffect(() => {
+    if (autoSave && hasUnsavedChanges && !isSaving) {
+      saveTimer.current = setTimeout(() => saveNotebook(false), 3000);
+    }
+    return () => clearTimeout(saveTimer.current);
+  }, [autoSave, hasUnsavedChanges, isSaving, saveNotebook]);
+
+  // Content change handler
+  const handleContentChange = useCallback((newContent) => {
+    setContent(newContent);
+    setHasUnsavedChanges(true);
+  }, []);
+
+  // Socket setup
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const userInfo = JSON.parse(localStorage.getItem('user') || '{}');
+      setCurrentUser(userInfo);
+      socketClient.connect(token);
+    }
+
+    socketClient.on('connectionStatusChanged', (status) => {
+      setIsConnected(status.connected);
+      setConnectionError(status.reason || null);
+    });
+
+    socketClient.on('notebookUpdated', (data) => {
+      if (data.updatedBy?.id !== currentUser?.id) {
+        if (data.content) setContent(processContentFromBackend(data.content));
+        if (data.title) setTitle(data.title);
+        showNotification(`Updated by ${data.updatedBy?.name || 'another user'}`, 'info');
+      }
+    });
+
+    socketClient.on('joinedNotebook', (data) => {
+      setActiveUsers(data.currentUsers || []);
+    });
+
+    socketClient.on('userJoined', (data) => {
+      setActiveUsers(prev => [...prev.filter(u => u.id !== data.user.id), data.user]);
+    });
+
+    socketClient.on('userLeft', (data) => {
+      setActiveUsers(prev => prev.filter(u => u.id !== data.userId));
+    });
+
+    return () => {
+      socketClient.off('connectionStatusChanged');
+      socketClient.off('notebookUpdated');
+      socketClient.off('joinedNotebook');
+      socketClient.off('userJoined');
+      socketClient.off('userLeft');
+    };
+  }, []);
+
+  // Fetch data on mount
+  useEffect(() => {
+    fetchNotebookData();
+  }, [fetchNotebookData]);
+
+  // Warn before leaving with unsaved changes
+  useBeforeUnload(
+    useCallback((e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        return 'You have unsaved changes.';
+      }
+    }, [hasUnsavedChanges])
+  );
+
+  const readOnly = accessLevel === 'read';
+  const canEdit = accessLevel === 'write' || accessLevel === 'owner';
+
+  if (isLoading) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        flexDirection: 'column',
-        gap: 2
-      }}>
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-        <Button variant="contained" onClick={() => navigate('/notebooks')}>
-          Back to Notebooks
-        </Button>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Skeleton variant="rectangular" height={64} />
+        <Box sx={{ flex: 1, p: 3 }}>
+          <Skeleton variant="rectangular" height="100%" sx={{ borderRadius: 2 }} />
+        </Box>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ 
-      height: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column',
-      bgcolor: 'background.default'
-    }}>
-      {/* Header */}
-      <Paper 
-        elevation={0} 
-        sx={{ 
-          borderRadius: 0,
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          px: 2,
-          py: 1
+    <ErrorBoundary>
+      <Box
+        component={motion.div}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        sx={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          bgcolor: alpha(theme.palette.background.default, 0.98),
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          {/* Breadcrumbs */}
-          <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-            <Breadcrumbs separator={<NavigateNext fontSize="small" />}>
-              <Link 
-                color="inherit" 
-                onClick={() => navigate('/notebooks')}
-                sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 0.5 }}
-              >
-                <Home fontSize="small" />
-                Notebooks
-              </Link>
-              <Typography color="text.primary" sx={{ fontWeight: 'medium' }}>
-                {notebook?.title || 'Untitled'}
-              </Typography>
-            </Breadcrumbs>
-          </Box>
+        {/* Toolbar */}
+        <EditorToolbar
+          title={title}
+          onTitleChange={setTitle}
+          isSaving={isSaving}
+          lastSavedTime={lastSavedTime}
+          hasUnsavedChanges={hasUnsavedChanges}
+          isConnected={isConnected}
+          connectionError={connectionError}
+          activeUsers={activeUsers}
+          currentUser={currentUser}
+          onBack={() => navigate('/notebooks')}
+          onSettings={() => setIsSettingsOpen(true)}
+          onShare={() => setIsShareOpen(true)}
+          onHistory={() => setIsVersionHistoryOpen(true)}
+          onComments={() => setIsCommentsPanelOpen(true)}
+          onCollaborators={() => setIsCollaboratorsSettingsOpen(true)}
+          onPassword={() => setIsPasswordSettingsOpen(true)}
+          onPermissions={() => setIsPermissionsSettingsOpen(true)}
+          onDelete={() => setIsDeleteDialogOpen(true)}
+          onKeyboardShortcuts={() => setIsKeyboardShortcutsOpen(true)}
+          onSave={() => saveNotebook(true)}
+          userRole={userRole}
+          readOnly={readOnly}
+        />
 
-          {/* Center - Status */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {saving && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <LinearProgress size={16} />
-                <Typography variant="caption">Saving...</Typography>
-              </Box>
-            )}
-            
-            {hasUnsavedChanges && !saving && (
-              <Chip 
-                label="Unsaved changes" 
-                size="small" 
-                color="warning" 
-                variant="outlined" 
-              />
-            )}
-
-            <Typography variant="caption" color="text.secondary">
-              Last saved: {formatLastSaved()}
-            </Typography>
-
-            {/* Connected users */}
-            {connectedUsers.length > 0 && (
-              <UserPresence users={connectedUsers} />
-            )}
-          </Box>
-
-          {/* Right side actions */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Tooltip title={isBookmarked ? 'Remove bookmark' : 'Bookmark'}>
-              <IconButton onClick={toggleBookmark} size="small">
-                {isBookmarked ? <Bookmark color="primary" /> : <BookmarkBorder />}
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title="Statistics">
-              <Button
-                size="small"
-                variant="outlined"
-                sx={{ borderRadius: 2 }}
-                onClick={() => setSidebarOpen(true)}
-              >
-                {wordCount} words
-              </Button>
-            </Tooltip>
-
-            <Tooltip title={previewMode ? 'Edit mode' : 'Preview mode'}>
-              <IconButton 
-                onClick={() => setPreviewMode(!previewMode)}
-                color={previewMode ? 'primary' : 'default'}
-                size="small"
-              >
-                {previewMode ? <Edit /> : <Preview />}
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
-              <IconButton onClick={handleFullscreenToggle} size="small">
-                {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
-              </IconButton>
-            </Tooltip>
-
-            {accessLevel === 'edit' && (
-              <Button
-                variant="contained"
-                onClick={() => handleSave()}
-                disabled={saving || !hasUnsavedChanges}
-                startIcon={<Save />}
-                size="small"
-                sx={{ borderRadius: 2 }}
-              >
-                Save
-              </Button>
-            )}
-          </Box>
-        </Box>
-      </Paper>
-
-      {/* Main Content */}
-      <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        {/* Editor */}
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          {accessLevel === 'read' && (
-            <Alert severity="info" sx={{ m: 1, borderRadius: 2 }}>
-              You are viewing this notebook in read-only mode.
-            </Alert>
-          )}
-
-          <Box sx={{ flex: 1, p: 2 }}>
-            <EnhancedEditor
-              content={content}
-              onChange={handleContentChange}
-              editorMode={editorMode}
-              readOnly={accessLevel === 'read'}
-              fontSize={fontSize}
-              darkMode={isDarkMode}
-              splitView={splitView}
-              previewMode={previewMode}
-            />
-          </Box>
-        </Box>
-
-        {/* Comments sidebar */}
-        {showComments && (
-          <Paper 
-            sx={{ 
-              width: 300, 
-              borderLeft: `1px solid ${theme.palette.divider}`,
-              borderRadius: 0
+        {/* Saving indicator */}
+        {isSaving && (
+          <LinearProgress
+            sx={{
+              position: 'absolute',
+              top: 64,
+              left: 0,
+              right: 0,
+              zIndex: 99,
             }}
-          >
-            <Box sx={{ p: 2, borderBottom: `1px solid ${theme.palette.divider}` }}>
-              <Typography variant="h6">Comments</Typography>
-            </Box>
-            <Box sx={{ p: 2 }}>
-              <Typography variant="body2" color="text.secondary">
-                No comments yet
-              </Typography>
-            </Box>
-          </Paper>
+          />
         )}
-      </Box>
 
-      {/* SpeedDial for mobile */}
-      {isMobile && (
-        <SpeedDial
-          ariaLabel="Actions"
-          sx={{ position: 'fixed', bottom: 16, right: 16 }}
-          icon={<SpeedDialIcon />}
-        >
-          {speedDialActions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={action.action}
-            />
-          ))}
-        </SpeedDial>
-      )}
-
-      {/* Sidebar */}
-      <Drawer
-        anchor="right"
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      >
-        <Box sx={{ width: 300, p: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Document Statistics
-          </Typography>
-          
-          <Card sx={{ mb: 2 }}>
-            <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="h4" color="primary">
-                    {wordCount}
-                  </Typography>
-                  <Typography variant="caption">Words</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="h4" color="secondary">
-                    {characterCount}
-                  </Typography>
-                  <Typography variant="caption">Characters</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="h4" color="success.main">
-                    {readingTime}
-                  </Typography>
-                  <Typography variant="caption">Min read</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="h4" color="warning.main">
-                    {notebook?.version || 1}
-                  </Typography>
-                  <Typography variant="caption">Version</Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography>Display Settings</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={isDarkMode}
-                    onChange={(e) => setIsDarkMode(e.target.checked)}
-                  />
-                }
-                label="Dark mode"
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={splitView}
-                    onChange={(e) => setSplitView(e.target.checked)}
-                  />
-                }
-                label="Split view"
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={showComments}
-                    onChange={(e) => setShowComments(e.target.checked)}
-                  />
-                }
-                label="Show comments"
-              />
-              
-              <Box sx={{ mt: 2 }}>
-                <Typography gutterBottom>Font Size</Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <IconButton 
-                    size="small"
-                    onClick={() => setFontSize(Math.max(10, fontSize - 2))}
-                  >
-                    <ZoomOut />
-                  </IconButton>
-                  <Typography variant="body2">{fontSize}px</Typography>
-                  <IconButton 
-                    size="small"
-                    onClick={() => setFontSize(Math.min(24, fontSize + 2))}
-                  >
-                    <ZoomIn />
-                  </IconButton>
-                </Box>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography>Notifications</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={notifications}
-                    onChange={(e) => setNotifications(e.target.checked)}
-                  />
-                }
-                label="Enable notifications"
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={soundEnabled}
-                    onChange={(e) => setSoundEnabled(e.target.checked)}
-                  />
-                }
-                label="Sound effects"
-              />
-            </AccordionDetails>
-          </Accordion>
+        {/* Main editor area */}
+        <Box sx={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+          <EnhancedEditor
+            content={content}
+            onChange={handleContentChange}
+            onSave={() => saveNotebook(true)}
+            editorMode={editorMode}
+            onModeChange={setEditorMode}
+            language={language}
+            onLanguageChange={setLanguage}
+            readOnly={readOnly}
+            autoSave={autoSave}
+            placeholder="Start writing your notebook..."
+            // Phase 4: Remote cursor props
+            remoteCursors={activeUsers.map(u => ({
+              user: u,
+              position: u.cursorPosition || null,
+              selection: u.cursorSelection || null
+            }))}
+            currentUserId={currentUser?.id}
+            notebookId={notebookData?._id || ''}
+            socketClient={socketClient}
+          />
         </Box>
-      </Drawer>
 
-      {/* Settings Dialog */}
-      <Dialog
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>Notebook Settings</DialogTitle>
-        <DialogContent>
-          {/* Settings content will be similar to SettingsDialog */}
-          <Typography>Settings panel coming soon...</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setSettingsOpen(false)}>Close</Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Share Dialog */}
-      <Dialog
-        open={shareDialogOpen}
-        onClose={() => setShareDialogOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Share Notebook</DialogTitle>
-        <DialogContent>
-          <Typography>Share functionality coming soon...</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShareDialogOpen(false)}>Close</Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: '100%' }}
+        {/* Comments drawer */}
+        <Drawer
+          anchor="right"
+          open={isCommentsPanelOpen}
+          onClose={() => setIsCommentsPanelOpen(false)}
+          PaperProps={{
+            sx: {
+              width: { xs: '100%', sm: 400 },
+              bgcolor: alpha(theme.palette.background.paper, 0.98),
+            },
+          }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Box>
+          <CommentsPanel
+            notebookId={notebookData?._id || ''}
+            userRole={userRole}
+            accessLevel={accessLevel}
+            isGuest={false}
+          />
+        </Drawer>
+
+        {/* Settings drawer */}
+        <Drawer
+          anchor="right"
+          open={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+        >
+          <SettingsDrawerContent
+            onClose={() => setIsSettingsOpen(false)}
+            onCollaborators={() => setIsCollaboratorsSettingsOpen(true)}
+            onPassword={() => setIsPasswordSettingsOpen(true)}
+            onPermissions={() => setIsPermissionsSettingsOpen(true)}
+            onDelete={() => setIsDeleteDialogOpen(true)}
+            onKeyboardShortcuts={() => setIsKeyboardShortcutsOpen(true)}
+            userRole={userRole}
+            editorMode={editorMode}
+            onEditorModeChange={setEditorMode}
+            language={language}
+            onLanguageChange={setLanguage}
+          />
+        </Drawer>
+
+        {/* Phase 5: Share dialog */}
+        <ShareDialog
+          open={isShareOpen}
+          onClose={() => setIsShareOpen(false)}
+          notebookId={notebookData?._id || ''}
+          notebookTitle={title || 'Untitled'}
+          urlIdentifier={urlIdentifier || ''}
+          permissions={notebookData?.permissions || 'everyone'}
+        />
+
+        {/* Version History Dialog */}
+        <VersionHistoryDialog
+          open={isVersionHistoryOpen}
+          onClose={() => setIsVersionHistoryOpen(false)}
+          notebookId={notebookData?._id || ''}
+          onVersionRestore={async () => {
+            await fetchNotebookData();
+            setIsVersionHistoryOpen(false);
+            showNotification('Version restored', 'success');
+          }}
+          onCompareVersions={(oldId, newId) => {
+            setCompareVersions({ oldId, newId });
+            setIsVersionComparisonOpen(true);
+            setIsVersionHistoryOpen(false);
+          }}
+        />
+
+        <VersionComparisonDialog
+          open={isVersionComparisonOpen}
+          onClose={() => {
+            setIsVersionComparisonOpen(false);
+            setIsVersionHistoryOpen(true);
+          }}
+          notebookId={notebookData?._id || ''}
+          oldVersionId={compareVersions.oldId}
+          newVersionId={compareVersions.newId}
+          onVersionRestore={async () => {
+            await fetchNotebookData();
+            setIsVersionComparisonOpen(false);
+            showNotification('Version restored', 'success');
+          }}
+        />
+
+        {/* Collaborators Dialog */}
+        <CollaboratorsSettingsDialog
+          open={isCollaboratorsSettingsOpen}
+          onClose={() => setIsCollaboratorsSettingsOpen(false)}
+          notebookId={notebookData?._id || ''}
+          initialSettings={{ collaborators: notebookData?.collaborators || [] }}
+          searchCollaborators={async (query) => {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${API_BASE_URL}/api/users/search?q=${query}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            return response.data.users || [];
+          }}
+          onSave={async (settings) => {
+            const token = localStorage.getItem('token');
+            await axios.put(`${API_BASE_URL}/api/notebooks/${notebookData?._id}/collaborators`, settings, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            await fetchNotebookData();
+          }}
+        />
+
+        {/* Password Dialog */}
+        <PasswordSettingsDialog
+          open={isPasswordSettingsOpen}
+          onClose={() => setIsPasswordSettingsOpen(false)}
+          notebookId={notebookData?._id || ''}
+          hasPassword={!!notebookData?.hasPassword}
+        />
+
+        {/* Permissions Dialog */}
+        <PermissionsSettingsDialog
+          open={isPermissionsSettingsOpen}
+          onClose={() => setIsPermissionsSettingsOpen(false)}
+          notebookId={notebookData?._id || ''}
+          currentPermissions={notebookData?.permissions || 'everyone'}
+        />
+
+        {/* Delete Dialog */}
+        <DeleteNotebookDialog
+          open={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          notebookTitle={title}
+          isDeleting={isDeleting}
+          onConfirm={async () => {
+            try {
+              setIsDeleting(true);
+              const token = localStorage.getItem('token');
+              await axios.delete(`${API_BASE_URL}/api/notebooks/${notebookData?._id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              showNotification('Notebook deleted', 'success');
+              setTimeout(() => navigate('/notebooks'), 1000);
+            } catch (error) {
+              showNotification('Delete failed', 'error');
+            } finally {
+              setIsDeleting(false);
+              setIsDeleteDialogOpen(false);
+            }
+          }}
+        />
+
+        {/* Keyboard Shortcuts Dialog */}
+        <KeyboardShortcutsDialog
+          open={isKeyboardShortcutsOpen}
+          onClose={() => setIsKeyboardShortcutsOpen(false)}
+        />
+
+        {/* Phase 6: Conflict Resolution placeholder */}
+        <Portal>
+          <Backdrop
+            open={!!conflictData}
+            sx={{ zIndex: 1400 }}
+          >
+            {conflictData && (
+              <Paper sx={{ p: 4, maxWidth: 600, borderRadius: 3 }}>
+                <Typography variant="h6" gutterBottom>Conflict Detected</Typography>
+                <Typography color="text.secondary" paragraph>
+                  Another user has modified this notebook. Choose how to resolve:
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Button variant="contained" onClick={() => setConflictData(null)}>
+                    Keep My Changes
+                  </Button>
+                  <Button variant="outlined" onClick={() => setConflictData(null)}>
+                    Use Server Version
+                  </Button>
+                </Box>
+              </Paper>
+            )}
+          </Backdrop>
+        </Portal>
+
+        {/* Connection error */}
+        <Portal>
+          <Backdrop
+            open={!!connectionError && !isConnected}
+            sx={{ zIndex: 1400, flexDirection: 'column', gap: 2 }}
+          >
+            <CloudOffIcon sx={{ fontSize: 64 }} />
+            <Typography variant="h6">Connection Lost</Typography>
+            <Typography variant="body2">{connectionError}</Typography>
+            <Button variant="contained" onClick={() => window.location.reload()}>
+              Reconnect
+            </Button>
+          </Backdrop>
+        </Portal>
+
+        {/* Notification snackbar */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+            severity={snackbar.severity}
+            variant="filled"
+            sx={{ borderRadius: 2 }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </Box>
+    </ErrorBoundary>
   );
 };
 

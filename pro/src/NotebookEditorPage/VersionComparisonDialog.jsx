@@ -80,8 +80,8 @@ const VersionComparisonDialog = ({ open, onClose, notebookId, oldVersionId, newV
         })
       ]);
       
-      setOldVersion(oldResponse.data);
-      setNewVersion(newResponse.data);
+      setOldVersion(oldResponse.data.version);
+      setNewVersion(newResponse.data.version);
     } catch (error) {
       console.error('Error fetching versions:', error);
       setError('Failed to load versions for comparison. Please try again.');

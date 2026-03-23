@@ -11,16 +11,19 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  ListItemSecondaryAction,
+  ListItemIcon,
   Divider,
   Menu,
   MenuItem,
   CircularProgress,
   Collapse,
-  Fade,
   Tooltip,
   Alert,
-  useTheme
+  useTheme,
+  alpha,
+  Chip,
+  Stack,
+  InputAdornment,
 } from '@mui/material';
 import {
   Send as SendIcon,
@@ -30,13 +33,289 @@ import {
   Reply as ReplyIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
-  ChatBubbleOutline as CommentIcon
+  ChatBubbleOutline as CommentIcon,
+  Close as CloseIcon,
+  ThumbUp as LikeIcon,
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import socketClient from '../utils/socketClient';
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Comment item component
+const CommentItem = ({
+  comment,
+  isReply = false,
+  currentUser,
+  userRole,
+  accessLevel,
+  onEdit,
+  onDelete,
+  onReply,
+  replyingTo,
+  replyText,
+  onReplyTextChange,
+  onSubmitReply,
+  submitting,
+}) => {
+  const theme = useTheme();
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [menuAnchor, setMenuAnchor] = useState(null);
+
+  const canModify = currentUser && (
+    currentUser.id === comment.author?.id ||
+    userRole === 'owner' ||
+    accessLevel === 'owner'
+  );
+
+  const authorName = comment.author?.name || comment.guestAuthor?.name || 'Anonymous';
+  const authorInitial = authorName[0]?.toUpperCase() || 'A';
+  const hasReplies = comment.replies && comment.replies.length > 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Box
+        sx={{
+          mb: isReply ? 0 : 2,
+          ml: isReply ? 4 : 0,
+          pl: isReply ? 2 : 0,
+          borderLeft: isReply ? `2px solid ${alpha(theme.palette.primary.main, 0.2)}` : 'none',
+        }}
+      >
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            borderRadius: 2,
+            bgcolor: isReply ? alpha(theme.palette.background.default, 0.5) : alpha(theme.palette.background.paper, 0.8),
+            border: `1px solid ${alpha('#000', 0.06)}`,
+            '&:hover': {
+              borderColor: alpha('#000', 0.12),
+            },
+            transition: 'border-color 0.2s ease',
+          }}
+        >
+          {/* Comment header */}
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+            <Avatar
+              sx={{
+                width: isReply ? 28 : 36,
+                height: isReply ? 28 : 36,
+                fontSize: isReply ? '0.75rem' : '0.875rem',
+                bgcolor: `hsl(${authorName.charCodeAt(0) * 10}, 60%, 50%)`,
+              }}
+            >
+              {authorInitial}
+            </Avatar>
+
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              {/* Author and time */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                <Typography variant="subtitle2" fontWeight={600} noWrap>
+                  {authorName}
+                </Typography>
+                {isReply && (
+                  <Chip label="reply" size="small" sx={{ height: 18, fontSize: '0.65rem' }} />
+                )}
+                <Typography variant="caption" color="text.secondary">
+                  {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                </Typography>
+                {comment.edited && (
+                  <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                    (edited)
+                  </Typography>
+                )}
+              </Box>
+
+              {/* Comment content */}
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.primary',
+                  lineHeight: 1.6,
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {comment.content}
+              </Typography>
+
+              {/* Actions */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
+                {!isReply && (
+                  <Button
+                    size="small"
+                    startIcon={<ReplyIcon sx={{ fontSize: '16px !important' }} />}
+                    onClick={() => onReply(comment.id)}
+                    sx={{
+                      textTransform: 'none',
+                      color: 'text.secondary',
+                      fontSize: '0.75rem',
+                      '&:hover': { bgcolor: alpha('#000', 0.04) },
+                    }}
+                  >
+                    Reply
+                  </Button>
+                )}
+
+                {canModify && (
+                  <>
+                    <Button
+                      size="small"
+                      startIcon={<EditIcon sx={{ fontSize: '16px !important' }} />}
+                      onClick={() => onEdit(comment)}
+                      sx={{
+                        textTransform: 'none',
+                        color: 'text.secondary',
+                        fontSize: '0.75rem',
+                        '&:hover': { bgcolor: alpha('#000', 0.04) },
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="small"
+                      startIcon={<DeleteIcon sx={{ fontSize: '16px !important' }} />}
+                      onClick={() => onDelete(comment.id, isReply, comment.parentId)}
+                      sx={{
+                        textTransform: 'none',
+                        color: 'error.main',
+                        fontSize: '0.75rem',
+                        '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.08) },
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                )}
+              </Box>
+            </Box>
+
+            {/* More menu */}
+            {canModify && (
+              <IconButton
+                size="small"
+                onClick={(e) => setMenuAnchor(e.currentTarget)}
+                sx={{ color: 'text.secondary' }}
+              >
+                <MoreVertIcon fontSize="small" />
+              </IconButton>
+            )}
+
+            <Menu
+              anchorEl={menuAnchor}
+              open={Boolean(menuAnchor)}
+              onClose={() => setMenuAnchor(null)}
+            >
+              <MenuItem onClick={() => { onEdit(comment); setMenuAnchor(null); }}>
+                <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
+                <ListItemText>Edit</ListItemText>
+              </MenuItem>
+              <MenuItem
+                onClick={() => { onDelete(comment.id, isReply, comment.parentId); setMenuAnchor(null); }}
+                sx={{ color: 'error.main' }}
+              >
+                <ListItemIcon><DeleteIcon fontSize="small" color="error" /></ListItemIcon>
+                <ListItemText>Delete</ListItemText>
+              </MenuItem>
+            </Menu>
+          </Box>
+        </Paper>
+
+        {/* Reply input */}
+        <Collapse in={replyingTo === comment.id}>
+          <Box sx={{ mt: 1, ml: 6 }}>
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Write a reply..."
+              value={replyText || ''}
+              onChange={(e) => onReplyTextChange(comment.id, e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  onSubmitReply(comment.id);
+                }
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      size="small"
+                      onClick={() => onSubmitReply(comment.id)}
+                      disabled={!replyText?.trim() || submitting}
+                      color="primary"
+                    >
+                      {submitting ? <CircularProgress size={18} /> : <SendIcon fontSize="small" />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  bgcolor: alpha('#fff', 0.8),
+                },
+              }}
+            />
+          </Box>
+        </Collapse>
+
+        {/* Replies */}
+        {hasReplies && (
+          <Box sx={{ mt: 1 }}>
+            {!isExpanded && (
+              <Button
+                size="small"
+                onClick={() => setIsExpanded(true)}
+                startIcon={<ExpandMoreIcon />}
+                sx={{ ml: 6, textTransform: 'none', fontSize: '0.75rem' }}
+              >
+                Show {comment.replies.length} {comment.replies.length === 1 ? 'reply' : 'replies'}
+              </Button>
+            )}
+            <Collapse in={isExpanded}>
+              <Box sx={{ mt: 1 }}>
+                {comment.replies.map((reply) => (
+                  <CommentItem
+                    key={reply.id}
+                    comment={reply}
+                    isReply
+                    currentUser={currentUser}
+                    userRole={userRole}
+                    accessLevel={accessLevel}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onReply={onReply}
+                  />
+                ))}
+                {hasReplies && (
+                  <Button
+                    size="small"
+                    onClick={() => setIsExpanded(false)}
+                    startIcon={<ExpandLessIcon />}
+                    sx={{ ml: 6, textTransform: 'none', fontSize: '0.75rem' }}
+                  >
+                    Hide replies
+                  </Button>
+                )}
+              </Box>
+            </Collapse>
+          </Box>
+        )}
+      </Box>
+    </motion.div>
+  );
+};
+
+// Main CommentsPanel component
 const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
   const theme = useTheme();
   const [comments, setComments] = useState([]);
@@ -44,16 +323,43 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
   const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState('');
   const [replyText, setReplyText] = useState({});
-  const [editText, setEditText] = useState({});
-  const [expandedComments, setExpandedComments] = useState({});
   const [replyingTo, setReplyingTo] = useState(null);
-  const [editingId, setEditingId] = useState(null);
+  const [editingComment, setEditingComment] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [menuTarget, setMenuTarget] = useState(null);
 
-  // Fetch comments on mount and when notebookId changes
+  // Fetch comments
+  const fetchComments = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_BASE_URL}/api/notebooks/${notebookId}/comments`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setComments(response.data.comments || []);
+    } catch (err) {
+      setError('Failed to load comments');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch current user
+  const fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setCurrentUser(response.data.user);
+      }
+    } catch (err) {
+      console.error('Error fetching user:', err);
+    }
+  };
+
+  // Initial fetch
   useEffect(() => {
     if (notebookId) {
       fetchComments();
@@ -61,549 +367,329 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
     }
   }, [notebookId]);
 
-  // Fetch the current user's info
-  const fetchCurrentUser = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setCurrentUser(response.data.user);
-      }
-    } catch (error) {
-      console.error('Error fetching current user:', error);
-    }
-  };
+  // Socket.io listeners for real-time updates
+  useEffect(() => {
+    if (!notebookId || !socketClient.isConnected) return;
 
-  // Fetch all comments for this notebook
-  const fetchComments = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const token = localStorage.getItem('token');
-      
-      const response = await axios.get(`${API_BASE_URL}/api/notebooks/${notebookId}/comments`, {
-        headers: { Authorization: `Bearer ${token}` }
+    const handleCommentAdded = (data) => {
+      // Check if this comment is for this notebook
+      const commentNotebookId = data.notebookId?.toString() || data.notebookId;
+      if (commentNotebookId !== notebookId.toString()) return;
+
+      setComments((prev) => {
+        // Check if we already have this comment (avoid duplicates from our own actions)
+        const exists = prev.some((c) => c.id === data.id) ||
+          prev.some((c) => c.replies?.some((r) => r.id === data.id));
+        if (exists) return prev;
+
+        // If it's a reply, add to parent's replies
+        if (data.parentId) {
+          return prev.map((comment) => {
+            if (comment.id === data.parentId) {
+              const replyExists = comment.replies?.some((r) => r.id === data.id);
+              if (replyExists) return comment;
+              return { ...comment, replies: [...(comment.replies || []), data] };
+            }
+            return comment;
+          });
+        }
+        // Otherwise, add as top-level comment
+        return [...prev, data];
       });
-      
-      // Organize comments into a hierarchical structure
-      const commentsData = response.data.comments || [];
-      setComments(commentsData);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      setError('Failed to load comments');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  // Add a new comment
+    const handleCommentUpdated = (data) => {
+      setComments((prev) =>
+        prev.map((comment) => {
+          if (comment.id === data.id) {
+            return { ...comment, content: data.content, edited: true };
+          }
+          if (comment.replies) {
+            return {
+              ...comment,
+              replies: comment.replies.map((reply) =>
+                reply.id === data.id ? { ...reply, content: data.content, edited: true } : reply
+              ),
+            };
+          }
+          return comment;
+        })
+      );
+    };
+
+    const handleCommentDeleted = (data) => {
+      const { commentId, parentId } = data;
+      if (parentId) {
+        setComments((prev) =>
+          prev.map((comment) => {
+            if (comment.id === parentId) {
+              return {
+                ...comment,
+                replies: (comment.replies || []).filter((r) => r.id !== commentId),
+              };
+            }
+            return comment;
+          })
+        );
+      } else {
+        setComments((prev) => prev.filter((c) => c.id !== commentId));
+      }
+    };
+
+    socketClient.on('commentAdded', handleCommentAdded);
+    socketClient.on('commentUpdated', handleCommentUpdated);
+    socketClient.on('commentDeleted', handleCommentDeleted);
+
+    return () => {
+      socketClient.off('commentAdded');
+      socketClient.off('commentUpdated');
+      socketClient.off('commentDeleted');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notebookId]);
+
+  // Add comment
   const handleAddComment = async () => {
     if (!newComment.trim() || submitting) return;
-
     try {
       setSubmitting(true);
       const token = localStorage.getItem('token');
-      
-      const payload = { content: newComment.trim() };
       const response = await axios.post(
-        `${API_BASE_URL}/api/notebooks/${notebookId}/comments`, 
-        payload, 
+        `${API_BASE_URL}/api/notebooks/${notebookId}/comments`,
+        { content: newComment.trim() },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
-      // Add the new comment to our state
-      const newCommentData = response.data.comment;
-      setComments(prev => [...prev, newCommentData]);
-      
-      // Clear the input
+      setComments((prev) => [...prev, response.data.comment]);
       setNewComment('');
-    } catch (error) {
-      console.error('Error adding comment:', error);
+    } catch (err) {
       setError('Failed to add comment');
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Add a reply to a comment
+  // Add reply
   const handleAddReply = async (parentId) => {
     if (!replyText[parentId]?.trim() || submitting) return;
-
     try {
       setSubmitting(true);
       const token = localStorage.getItem('token');
-      
-      const payload = {
-        content: replyText[parentId].trim(),
-        parentId: parentId
-      };
-      
       const response = await axios.post(
-        `${API_BASE_URL}/api/notebooks/${notebookId}/comments`, 
-        payload, 
+        `${API_BASE_URL}/api/notebooks/${notebookId}/comments`,
+        { content: replyText[parentId].trim(), parentId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
-      // Add the new reply to our state
-      const newReplyData = response.data.comment;
-      
-      // Update the comments state with the new reply
-      setComments(prev => {
-        return prev.map(comment => {
-          if (comment.id === parentId) {
-            return {
-              ...comment,
-              replies: [...(comment.replies || []), newReplyData]
-            };
-          }
-          return comment;
-        });
-      });
-      
-      // Clear the reply state
-      setReplyText(prev => ({ ...prev, [parentId]: '' }));
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.id === parentId
+            ? { ...comment, replies: [...(comment.replies || []), response.data.comment] }
+            : comment
+        )
+      );
+      setReplyText((prev) => ({ ...prev, [parentId]: '' }));
       setReplyingTo(null);
-    } catch (error) {
-      console.error('Error adding reply:', error);
+    } catch (err) {
       setError('Failed to add reply');
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Edit a comment
-  const handleEditComment = async (commentId, isReply = false, parentId = null) => {
-    if (!editText[commentId]?.trim() || submitting) return;
-
-    try {
-      setSubmitting(true);
-      const token = localStorage.getItem('token');
-      
-      const payload = { content: editText[commentId].trim() };
-      
-      await axios.put(
-        `${API_BASE_URL}/api/notebooks/${notebookId}/comments/${commentId}`, 
-        payload, 
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
-      // Update the comment in our state
-      if (isReply && parentId) {
-        setComments(prev => {
-          return prev.map(comment => {
-            if (comment.id === parentId) {
-              return {
-                ...comment,
-                replies: (comment.replies || []).map(reply => 
-                  reply.id === commentId ? { ...reply, content: editText[commentId] } : reply
-                )
-              };
-            }
-            return comment;
-          });
-        });
-      } else {
-        setComments(prev => {
-          return prev.map(comment => 
-            comment.id === commentId ? { ...comment, content: editText[commentId] } : comment
-          );
-        });
-      }
-      
-      // Clear the edit state
-      setEditText(prev => ({ ...prev, [commentId]: '' }));
-      setEditingId(null);
-    } catch (error) {
-      console.error('Error editing comment:', error);
-      setError('Failed to edit comment');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  // Delete a comment
+  // Delete comment
   const handleDeleteComment = async (commentId, isReply = false, parentId = null) => {
     try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API_BASE_URL}/api/notebooks/${notebookId}/comments/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (isReply && parentId) {
+        setComments((prev) =>
+          prev.map((comment) =>
+            comment.id === parentId
+              ? { ...comment, replies: (comment.replies || []).filter((r) => r.id !== commentId) }
+              : comment
+          )
+        );
+      } else {
+        setComments((prev) => prev.filter((c) => c.id !== commentId));
+      }
+    } catch (err) {
+      setError('Failed to delete comment');
+    }
+  };
+
+  // Edit comment
+  const handleEditComment = (comment) => {
+    setEditingComment(comment);
+    setNewComment(comment.content);
+  };
+
+  // Update comment
+  const handleUpdateComment = async () => {
+    if (!editingComment || !newComment.trim() || submitting) return;
+    try {
       setSubmitting(true);
       const token = localStorage.getItem('token');
-      
-      await axios.delete(
-        `${API_BASE_URL}/api/notebooks/${notebookId}/comments/${commentId}`, 
+      await axios.put(
+        `${API_BASE_URL}/api/notebooks/${notebookId}/comments/${editingComment.id}`,
+        { content: newComment.trim() },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
-      // Remove the comment from our state
-      if (isReply && parentId) {
-        setComments(prev => {
-          return prev.map(comment => {
-            if (comment.id === parentId) {
-              return {
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.id === editingComment.id
+            ? { ...comment, content: newComment.trim(), edited: true }
+            : {
                 ...comment,
-                replies: (comment.replies || []).filter(reply => reply.id !== commentId)
-              };
-            }
-            return comment;
-          });
-        });
-      } else {
-        setComments(prev => prev.filter(comment => comment.id !== commentId));
-      }
-    } catch (error) {
-      console.error('Error deleting comment:', error);
-      setError('Failed to delete comment');
+                replies: comment.replies?.map((r) =>
+                  r.id === editingComment.id ? { ...r, content: newComment.trim(), edited: true } : r
+                ),
+              }
+        )
+      );
+      setEditingComment(null);
+      setNewComment('');
+    } catch (err) {
+      setError('Failed to update comment');
     } finally {
       setSubmitting(false);
-      handleCloseMenu();
     }
   };
 
-  // Toggle reply form visibility
-  const handleToggleReply = (commentId) => {
-    setReplyingTo(replyingTo === commentId ? null : commentId);
-    if (!replyText[commentId]) {
-      setReplyText(prev => ({ ...prev, [commentId]: '' }));
-    }
-  };
-
-  // Start editing a comment
-  const handleStartEditing = (commentId, content) => {
-    setEditingId(commentId);
-    setEditText(prev => ({ ...prev, [commentId]: content }));
-    handleCloseMenu();
-  };
-
-  // Toggle expanded state for comment replies
-  const handleToggleExpand = (commentId) => {
-    setExpandedComments(prev => ({
-      ...prev,
-      [commentId]: !prev[commentId]
-    }));
-  };
-
-  // Handle opening the menu for a comment
-  const handleOpenMenu = (event, commentId) => {
-    setAnchorEl(event.currentTarget);
-    setMenuTarget(commentId);
-  };
-
-  // Close the menu
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-    setMenuTarget(null);
-  };
-
-  // Check if the current user can edit/delete a comment
-  const canModifyComment = (comment) => {
-    if (!currentUser) return false;
-    return currentUser.id === comment.author.id || userRole === 'owner' || accessLevel === 'owner';
-  };
-
-  // Render a comment
-  const renderComment = (comment, isReply = false, parentId = null) => {
-    const isEditing = editingId === comment.id;
-    const isExpanded = expandedComments[comment.id];
-    const hasReplies = comment.replies && comment.replies.length > 0;
-    
-    return (
-      <React.Fragment key={comment.id}>
-        <ListItem
-          alignItems="flex-start"
-          sx={{
-            pl: isReply ? 4 : 2,
-            pr: 2,
-            py: 1.5,
-            backgroundColor: isReply ? 'rgba(0,0,0,0.01)' : 'transparent'
-          }}
-        >
-          <ListItemAvatar>
-            <Avatar
-              alt={comment.author.name}
-              src={comment.author.avatar}
-              sx={{ 
-                width: isReply ? 30 : 40, 
-                height: isReply ? 30 : 40,
-                bgcolor: theme.palette.primary.main
-              }}
-            >
-              {comment.author.name.charAt(0).toUpperCase()}
-            </Avatar>
-          </ListItemAvatar>
-          
-          <ListItemText
-            primary={
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="subtitle2" component="span">
-                  {comment.author.name}
-                  {isReply && (
-                    <Typography component="span" variant="caption" sx={{ ml: 1 }}>
-                      (reply)
-                    </Typography>
-                  )}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
-                </Typography>
-              </Box>
-            }
-            secondary={
-              <>
-                {isEditing ? (
-                  <Box sx={{ mt: 1 }}>
-                    <TextField
-                      fullWidth
-                      multiline
-                      minRows={2}
-                      value={editText[comment.id] || ''}
-                      onChange={(e) => setEditText({ ...editText, [comment.id]: e.target.value })}
-                      variant="outlined"
-                      size="small"
-                      sx={{ mb: 1 }}
-                    />
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 1 }}>
-                      <Button 
-                        size="small" 
-                        onClick={() => setEditingId(null)}
-                        color="inherit"
-                      >
-                        Cancel
-                      </Button>
-                      <Button 
-                        size="small" 
-                        variant="contained" 
-                        onClick={() => handleEditComment(comment.id, isReply, parentId)}
-                        disabled={submitting}
-                      >
-                        Save
-                      </Button>
-                    </Box>
-                  </Box>
-                ) : (
-                  <Typography
-                    variant="body2"
-                    color="text.primary"
-                    component="div"
-                    sx={{ 
-                      whiteSpace: 'pre-wrap',
-                      mt: 0.5,
-                      overflowWrap: 'break-word'
-                    }}
-                  >
-                    {comment.content}
-                  </Typography>
-                )}
-
-                {!isEditing && !isReply && (
-                  <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Button
-                      size="small"
-                      startIcon={<ReplyIcon fontSize="small" />}
-                      onClick={() => handleToggleReply(comment.id)}
-                      sx={{ textTransform: 'none', minWidth: 0, p: 0 }}
-                    >
-                      Reply
-                    </Button>
-                    
-                    {hasReplies && (
-                      <Button
-                        size="small"
-                        endIcon={isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
-                        onClick={() => handleToggleExpand(comment.id)}
-                        sx={{ textTransform: 'none', minWidth: 0, p: 0 }}
-                      >
-                        {comment.replies.length} {comment.replies.length === 1 ? 'reply' : 'replies'}
-                      </Button>
-                    )}
-                  </Box>
-                )}
-
-                {/* Reply form */}
-                {replyingTo === comment.id && !isReply && (
-                  <Box sx={{ mt: 2, ml: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Write a reply..."
-                      multiline
-                      minRows={2}
-                      value={replyText[comment.id] || ''}
-                      onChange={(e) => setReplyText({ ...replyText, [comment.id]: e.target.value })}
-                      variant="outlined"
-                      size="small"
-                    />
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 1 }}>
-                      <Button 
-                        size="small" 
-                        onClick={() => handleToggleReply(comment.id)}
-                        color="inherit"
-                      >
-                        Cancel
-                      </Button>
-                      <Button 
-                        size="small" 
-                        variant="contained" 
-                        endIcon={<SendIcon />}
-                        onClick={() => handleAddReply(comment.id)}
-                        disabled={!replyText[comment.id] || submitting}
-                      >
-                        Reply
-                      </Button>
-                    </Box>
-                  </Box>
-                )}
-              </>
-            }
-            sx={{ margin: 0 }}
-          />
-
-          {canModifyComment(comment) && (
-            <ListItemSecondaryAction>
-              <IconButton 
-                edge="end" 
-                size="small"
-                onClick={(e) => handleOpenMenu(e, comment.id)}
-              >
-                <MoreVertIcon fontSize="small" />
-              </IconButton>
-            </ListItemSecondaryAction>
-          )}
-        </ListItem>
-
-        {/* Replies */}
-        {!isReply && hasReplies && (
-          <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-            <List disablePadding>
-              {comment.replies.map(reply => renderComment(reply, true, comment.id))}
-            </List>
-          </Collapse>
-        )}
-
-        <Divider variant={isReply ? "inset" : "fullWidth"} component="li" />
-      </React.Fragment>
-    );
+  const handleReplyTextChange = (parentId, text) => {
+    setReplyText((prev) => ({ ...prev, [parentId]: text }));
   };
 
   return (
-    <Paper
-      elevation={0}
+    <Box
       sx={{
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 2,
-        overflow: 'hidden',
-        border: `1px solid ${theme.palette.divider}`
+        bgcolor: alpha(theme.palette.background.default, 0.98),
       }}
     >
-      <Box sx={{ 
-        p: 2, 
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        bgcolor: 'background.default',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 1
-      }}>
-        <CommentIcon color="primary" />
-        <Typography variant="subtitle1" fontWeight="medium">
-          Comments
-        </Typography>
+      {/* Header */}
+      <Box
+        sx={{
+          p: 2,
+          borderBottom: '1px solid',
+          borderColor: alpha('#000', 0.08),
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <CommentIcon color="primary" />
+          <Typography variant="h6" fontWeight={600}>
+            Comments
+          </Typography>
+          <Chip
+            label={comments.length}
+            size="small"
+            sx={{ height: 20, fontSize: '0.7rem' }}
+          />
+        </Box>
       </Box>
-      
+
+      {/* Error alert */}
       {error && (
-        <Alert severity="error" sx={{ m: 2 }} onClose={() => setError(null)}>
+        <Alert severity="error" onClose={() => setError(null)} sx={{ m: 2 }}>
           {error}
         </Alert>
       )}
-      
+
       {/* Comments list */}
-      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+      <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
             <CircularProgress />
           </Box>
         ) : comments.length === 0 ? (
-          <Box sx={{ p: 3, textAlign: 'center', color: 'text.secondary' }}>
-            <Typography variant="body2">
+          <Box sx={{ textAlign: 'center', py: 6 }}>
+            <CommentIcon sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }} />
+            <Typography color="text.secondary">
               No comments yet. Be the first to comment!
             </Typography>
           </Box>
         ) : (
-          <List sx={{ width: '100%', bgcolor: 'background.paper', py: 0 }}>
-            {comments.map(comment => renderComment(comment))}
-          </List>
+          <AnimatePresence>
+            {comments.map((comment) => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                currentUser={currentUser}
+                userRole={userRole}
+                accessLevel={accessLevel}
+                onEdit={handleEditComment}
+                onDelete={handleDeleteComment}
+                onReply={(id) => setReplyingTo(replyingTo === id ? null : id)}
+                replyingTo={replyingTo}
+                replyText={replyText[comment.id]}
+                onReplyTextChange={handleReplyTextChange}
+                onSubmitReply={handleAddReply}
+                submitting={submitting}
+              />
+            ))}
+          </AnimatePresence>
         )}
       </Box>
-      
-      {/* Add comment form */}
-      {(userRole !== 'viewer' || accessLevel !== 'read') && !isGuest && (
-        <Box sx={{ 
-          p: 2, 
-          borderTop: `1px solid ${theme.palette.divider}`,
-          backgroundColor: 'background.paper' 
-        }}>
-          <TextField
-            fullWidth
-            placeholder="Add a comment..."
-            multiline
-            minRows={2}
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            variant="outlined"
-            size="small"
-          />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-            <Button 
-              variant="contained"
-              endIcon={<SendIcon />}
-              onClick={handleAddComment}
-              disabled={!newComment.trim() || submitting}
-              sx={{ borderRadius: 1, mt: 1 }}
-            >
-              {submitting ? 'Sending...' : 'Comment'}
-            </Button>
-          </Box>
-        </Box>
-      )}
-      
-      {/* Comment menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+
+      {/* Add comment input */}
+      <Box
+        sx={{
+          p: 2,
+          borderTop: '1px solid',
+          borderColor: alpha('#000', 0.08),
+          bgcolor: alpha('#fff', 0.8),
         }}
       >
-        {menuTarget && (
-          <>
-            <MenuItem onClick={() => {
-              const comment = comments.find(c => c.id === menuTarget) || 
-                comments.flatMap(c => c.replies || []).find(r => r.id === menuTarget);
-              if (comment) {
-                handleStartEditing(menuTarget, comment.content);
-              }
-            }}>
-              <EditIcon fontSize="small" sx={{ mr: 1 }} />
-              Edit
-            </MenuItem>
-            <MenuItem onClick={() => {
-              const isReply = !comments.find(c => c.id === menuTarget);
-              const parentId = isReply ? 
-                comments.find(c => (c.replies || []).some(r => r.id === menuTarget))?.id : null;
-              handleDeleteComment(menuTarget, isReply, parentId);
-            }}>
-              <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
-              Delete
-            </MenuItem>
-          </>
+        {editingComment && (
+          <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="caption" color="text.secondary">
+              Editing comment
+            </Typography>
+            <IconButton size="small" onClick={() => { setEditingComment(null); setNewComment(''); }}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </Box>
         )}
-      </Menu>
-    </Paper>
+        <TextField
+          fullWidth
+          multiline
+          maxRows={4}
+          placeholder="Write a comment..."
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              editingComment ? handleUpdateComment() : handleAddComment();
+            }
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={editingComment ? handleUpdateComment : handleAddComment}
+                  disabled={!newComment.trim() || submitting}
+                  color="primary"
+                >
+                  {submitting ? <CircularProgress size={20} /> : <SendIcon />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2,
+              bgcolor: '#fff',
+            },
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
 

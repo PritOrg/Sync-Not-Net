@@ -13,13 +13,31 @@ import {
   Avatar,
   Alert,
   Snackbar,
-  CircularProgress
+  CircularProgress,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  IconButton,
+  Tooltip,
+  Paper
 } from '@mui/material';
 import {
   Save as SaveIcon,
   People as PeopleIcon,
   Add as AddIcon,
+  Close as CloseIcon,
+  Visibility as ViewIcon,
+  Edit as EditIcon,
+  AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
+import Swal from 'sweetalert2';
+
+const ACCESS_LEVELS = [
+  { value: 'read', label: 'View Only', icon: <ViewIcon fontSize="small" />, color: '#6b7280' },
+  { value: 'write', label: 'Can Edit', icon: <EditIcon fontSize="small" />, color: '#3b82f6' },
+  { value: 'admin', label: 'Admin', icon: <AdminIcon fontSize="small" />, color: '#ef4444' }
+];
 
 const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSettings = {}, searchCollaborators, onSave }) => {
   const [collaborators, setCollaborators] = useState([]);
@@ -31,7 +49,14 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
   // Initialize state when dialog opens
   useEffect(() => {
     if (open) {
-      setCollaborators(initialSettings.collaborators || []);
+      // Map collaborators to include access level
+      const mappedCollaborators = (initialSettings.collaborators || []).map(c => ({
+        _id: c._id || c.id || c.userId?._id,
+        name: c.name || c.userId?.name || 'Unknown',
+        email: c.email || c.userId?.email || '',
+        access: c.access || 'write'
+      }));
+      setCollaborators(mappedCollaborators);
     }
   }, [open]);
 
@@ -47,13 +72,39 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
   };
 
   const addCollaborator = (user) => {
-    if (user && !collaborators.find(c => (c._id || c.id || c) === (user._id || user.id))) {
-      setCollaborators([...collaborators, user]);
+    if (user && !collaborators.find(c => c._id === (user._id || user.id))) {
+      setCollaborators([...collaborators, {
+        _id: user._id || user.id,
+        name: user.name,
+        email: user.email,
+        access: 'write' // Default to write access
+      }]);
     }
   };
 
-  const removeCollaborator = (userId) => {
-    setCollaborators(collaborators.filter(c => (c._id || c.id || c) !== userId));
+  const removeCollaborator = async (userId) => {
+    const collaborator = collaborators.find(c => c._id === userId);
+    
+    const result = await Swal.fire({
+      title: 'Remove Collaborator?',
+      text: `Are you sure you want to remove ${collaborator?.name || 'this user'} from the notebook?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, remove',
+      cancelButtonText: 'Cancel'
+    });
+    
+    if (result.isConfirmed) {
+      setCollaborators(collaborators.filter(c => c._id !== userId));
+    }
+  };
+
+  const updateCollaboratorAccess = (userId, newAccess) => {
+    setCollaborators(collaborators.map(c => 
+      c._id === userId ? { ...c, access: newAccess } : c
+    ));
   };
 
   const handleSaveCollaborators = async () => {
@@ -68,8 +119,8 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
 
       const settings = {
         collaborators: collaborators.map(c => ({
-          userId: c._id || c.id || c,
-          access: 'write' // Default to write access for now
+          userId: c._id,
+          access: c.access
         }))
       };
 
@@ -86,6 +137,10 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
     } finally {
       setLoading(false);
     }
+  };
+
+  const getAccessLevelInfo = (access) => {
+    return ACCESS_LEVELS.find(a => a.value === access) || ACCESS_LEVELS[0];
   };
 
   return (
@@ -160,24 +215,82 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
 
           {collaborators.length > 0 ? (
             <Box sx={{ mt: 3 }}>
-              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                Current collaborators:
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }}>
+                Current collaborators ({collaborators.length}):
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {collaborators.map((collaborator, index) => (
-                  <Chip
-                    key={collaborator._id || collaborator.id || index}
-                    avatar={
-                      <Avatar sx={{ width: 24, height: 24, fontSize: '0.7rem' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                {collaborators.map((collaborator) => {
+                  const accessInfo = getAccessLevelInfo(collaborator.access);
+                  return (
+                    <Paper
+                      key={collaborator._id}
+                      variant="outlined"
+                      sx={{
+                        p: 1.5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        borderRadius: 2
+                      }}
+                    >
+                      <Avatar
+                        sx={{ 
+                          width: 36, 
+                          height: 36, 
+                          fontSize: '0.875rem',
+                          bgcolor: 'primary.main'
+                        }}
+                      >
                         {collaborator.name ? collaborator.name[0].toUpperCase() : 'U'}
                       </Avatar>
-                    }
-                    label={collaborator.name || collaborator.email || 'Unknown'}
-                    onDelete={() => removeCollaborator(collaborator._id || collaborator.id || collaborator)}
-                    variant="outlined"
-                    sx={{ borderRadius: 2 }}
-                  />
-                ))}
+                      
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography variant="body2" fontWeight={500} noWrap>
+                          {collaborator.name}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" noWrap>
+                          {collaborator.email}
+                        </Typography>
+                      </Box>
+                      
+                      <FormControl size="small" sx={{ minWidth: 120 }}>
+                        <Select
+                          value={collaborator.access}
+                          onChange={(e) => updateCollaboratorAccess(collaborator._id, e.target.value)}
+                          sx={{
+                            '& .MuiSelect-select': {
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0.5
+                            }
+                          }}
+                        >
+                          {ACCESS_LEVELS.map((level) => (
+                            <MenuItem key={level.value} value={level.value}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: level.color }}>
+                                {level.icon}
+                                <span>{level.label}</span>
+                              </Box>
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      
+                      <Tooltip title="Remove collaborator">
+                        <IconButton
+                          size="small"
+                          onClick={() => removeCollaborator(collaborator._id)}
+                          sx={{ 
+                            color: 'error.main',
+                            '&:hover': { bgcolor: 'error.lighter' }
+                          }}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Paper>
+                  );
+                })}
               </Box>
             </Box>
           ) : (
