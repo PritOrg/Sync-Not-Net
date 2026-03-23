@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Notebook = require('../models/notebookModel');
 const NotebookVersion = require('../models/notebookVersionModel');
+const User = require('../models/userModel');
 const Tag = require('../models/tagModel');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -213,6 +214,143 @@ router.get('/my-notebooks', verifyToken, catchAsync(async (req, res) => {
     res.status(500).json({
       error: 'Server error',
       message: 'Failed to fetch notebooks'
+    });
+  }
+}));
+
+// Get notebooks shared with the user (collaborations)
+router.get('/shared', verifyToken, catchAsync(async (req, res) => {
+  const {
+    page = 1,
+    limit = 12,
+    search = '',
+    sortBy = 'updatedAt',
+    sortOrder = 'desc'
+  } = req.query;
+
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+  const skip = (pageNum - 1) * limitNum;
+
+  // Build search query for notebooks where user is a collaborator
+  const searchQuery = {
+    collaborators: req.user.id,
+    creatorID: { $ne: req.user.id } // Exclude own notebooks
+  };
+
+  if (search.trim()) {
+    searchQuery.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { content: { $regex: search, $options: 'i' } },
+      { tags: { $in: [new RegExp(search, 'i')] } }
+    ];
+  }
+
+  // Build sort object
+  const sortObj = {};
+  sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+  try {
+    // Get total count for pagination
+    const total = await Notebook.countDocuments(searchQuery);
+
+    // Get notebooks with pagination
+    const notebooks = await Notebook.find(searchQuery)
+      .populate('creatorID', 'name email')
+      .populate('collaborators', 'name email')
+      .sort(sortObj)
+      .skip(skip)
+      .limit(limitNum)
+      .exec();
+
+    const totalPages = Math.ceil(total / limitNum);
+
+    res.json({
+      notebooks,
+      pagination: {
+        page: pageNum,
+        pages: totalPages,
+        total,
+        limit: limitNum,
+        hasNext: pageNum < totalPages,
+        hasPrev: pageNum > 1
+      }
+    });
+  } catch (error) {
+    logger.error('Error fetching shared notebooks:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to fetch shared notebooks'
+    });
+  }
+}));
+
+// Get user's favorited notebooks
+router.get('/favorites', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate({
+      path: 'favorites',
+      populate: [
+        { path: 'creatorID', select: 'name email' },
+        { path: 'collaborators', select: 'name email' }
+      ]
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'User not found',
+        message: 'User account not found'
+      });
+    }
+
+    res.json({
+      notebooks: user.favorites || []
+    });
+  } catch (error) {
+    logger.error('Error fetching favorites:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to fetch favorite notebooks'
+    });
+  }
+}));
+
+// Toggle favorite on notebook
+router.post('/:id/favorite', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const notebook = await Notebook.findById(req.params.id);
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Notebook not found'
+      });
+    }
+
+    const user = await User.findById(req.user.id);
+    const favoriteIndex = user.favorites.indexOf(req.params.id);
+    
+    if (favoriteIndex > -1) {
+      // Remove from favorites
+      user.favorites.splice(favoriteIndex, 1);
+      await user.save();
+      res.json({
+        message: 'Removed from favorites',
+        isFavorite: false
+      });
+    } else {
+      // Add to favorites
+      user.favorites.push(req.params.id);
+      await user.save();
+      res.json({
+        message: 'Added to favorites',
+        isFavorite: true
+      });
+    }
+  } catch (error) {
+    logger.error('Error toggling favorite:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to update favorites'
     });
   }
 }));
@@ -763,73 +901,6 @@ router.get('/', verifyToken, catchAsync(async (req, res) => {
       sortOrder: sortOrder === 1 ? 'asc' : 'desc'
     }
   });
-}));
-
-// Get notebooks shared with the user (collaborations)
-router.get('/shared', verifyToken, catchAsync(async (req, res) => {
-  const {
-    page = 1,
-    limit = 12,
-    search = '',
-    sortBy = 'updatedAt',
-    sortOrder = 'desc'
-  } = req.query;
-
-  const pageNum = parseInt(page);
-  const limitNum = parseInt(limit);
-  const skip = (pageNum - 1) * limitNum;
-
-  // Build search query for notebooks where user is a collaborator
-  const searchQuery = {
-    collaborators: req.user.id,
-    creatorID: { $ne: req.user.id } // Exclude own notebooks
-  };
-
-  if (search.trim()) {
-    searchQuery.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { content: { $regex: search, $options: 'i' } },
-      { tags: { $in: [new RegExp(search, 'i')] } }
-    ];
-  }
-
-  // Build sort object
-  const sortObj = {};
-  sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
-
-  try {
-    // Get total count for pagination
-    const total = await Notebook.countDocuments(searchQuery);
-
-    // Get notebooks with pagination
-    const notebooks = await Notebook.find(searchQuery)
-      .populate('creatorID', 'name email')
-      .populate('collaborators', 'name email')
-      .sort(sortObj)
-      .skip(skip)
-      .limit(limitNum)
-      .exec();
-
-    const totalPages = Math.ceil(total / limitNum);
-
-    res.json({
-      notebooks,
-      pagination: {
-        page: pageNum,
-        pages: totalPages,
-        total,
-        limit: limitNum,
-        hasNext: pageNum < totalPages,
-        hasPrev: pageNum > 1
-      }
-    });
-  } catch (error) {
-    logger.error('Error fetching shared notebooks:', error);
-    res.status(500).json({
-      error: 'Server error',
-      message: 'Failed to fetch shared notebooks'
-    });
-  }
 }));
 
 // Get notebook access with enhanced security (no password exposure)

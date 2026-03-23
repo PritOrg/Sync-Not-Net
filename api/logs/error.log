@@ -2730,3 +2730,1476 @@
     '    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:293:17)',
   timestamp: '2026-03-14 16:01:52'
 }
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1707:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1707:22',
+  timestamp: '2026-03-23 22:36:34'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1775:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1775:21',
+  timestamp: '2026-03-23 22:36:35'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1707:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1707:22',
+  timestamp: '2026-03-23 22:41:07'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1775:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1775:21',
+  timestamp: '2026-03-23 22:41:07'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1707:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1707:22',
+  timestamp: '2026-03-23 22:44:17'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1775:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1775:21',
+  timestamp: '2026-03-23 22:44:18'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1707:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1707:22',
+  timestamp: '2026-03-23 22:45:29'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1775:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1775:21',
+  timestamp: '2026-03-23 22:45:29'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1707:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1707:22',
+  timestamp: '2026-03-23 22:45:59'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1775:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1775:21',
+  timestamp: '2026-03-23 22:46:00'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1707:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1707:22',
+  timestamp: '2026-03-23 22:46:23'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1775:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1775:21',
+  timestamp: '2026-03-23 22:46:24'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1707:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1707:22',
+  timestamp: '2026-03-23 22:58:48'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1775:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1775:21',
+  timestamp: '2026-03-23 22:58:48'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2110:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2110:22',
+  timestamp: '2026-03-23 23:02:20'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    'collaborators.0.access': ValidatorError: `admin` is not a valid enum value for path `access`.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaString.SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: '`admin` is not a valid enum value for path `access`.',
+        type: 'enum',
+        enumValues: [ 'read', 'write' ],
+        path: 'access',
+        fullPath: undefined,
+        value: 'admin'
+      },
+      kind: 'enum',
+      path: 'access',
+      value: 'admin',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating notebook collaborators: Notebook validation failed: collaborators.0.access: `admin` is not a valid enum value for path `access`.',
+  stack: 'ValidationError: Notebook validation failed: collaborators.0.access: `admin` is not a valid enum value for path `access`.\n' +
+    '    at model.Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at EmbeddedDocument.Subdocument.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\types\\subdocument.js:229:12)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2026-03-23 23:02:22'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    'collaborators.0.access': ValidatorError: `admin` is not a valid enum value for path `access`.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaString.SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: '`admin` is not a valid enum value for path `access`.',
+        type: 'enum',
+        enumValues: [ 'read', 'write' ],
+        path: 'access',
+        fullPath: undefined,
+        value: 'admin'
+      },
+      kind: 'enum',
+      path: 'access',
+      value: 'admin',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating collaborator permission: Notebook validation failed: collaborators.0.access: `admin` is not a valid enum value for path `access`.',
+  stack: 'ValidationError: Notebook validation failed: collaborators.0.access: `admin` is not a valid enum value for path `access`.\n' +
+    '    at model.Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at EmbeddedDocument.Subdocument.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\types\\subdocument.js:229:12)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2026-03-23 23:05:58'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2113:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2113:22',
+  timestamp: '2026-03-23 23:06:01'
+}
+{
+  service: 'sync-not-net-api',
+  errors: {
+    'collaborators.0.access': ValidatorError: `admin` is not a valid enum value for path `access`.
+        at validate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1404:13)
+        at SchemaString.SchemaType.doValidate (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1388:7)
+        at D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\document.js:3105:18
+        at processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: {
+        validator: [Function (anonymous)],
+        message: '`admin` is not a valid enum value for path `access`.',
+        type: 'enum',
+        enumValues: [ 'read', 'write' ],
+        path: 'access',
+        fullPath: undefined,
+        value: 'admin'
+      },
+      kind: 'enum',
+      path: 'access',
+      value: 'admin',
+      reason: undefined,
+      [Symbol(mongoose#validatorError)]: true
+    }
+  },
+  _message: 'Notebook validation failed',
+  level: 'error',
+  message: 'Error updating collaborator permission: Notebook validation failed: collaborators.0.access: `admin` is not a valid enum value for path `access`.',
+  stack: 'ValidationError: Notebook validation failed: collaborators.0.access: `admin` is not a valid enum value for path `access`.\n' +
+    '    at model.Document.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3352:32)\n' +
+    '    at EmbeddedDocument.Subdocument.invalidate (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\types\\subdocument.js:229:12)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\document.js:3113:17\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:85:11)',
+  timestamp: '2026-03-23 23:06:02'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2113:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2113:22',
+  timestamp: '2026-03-23 23:07:13'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1710:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1710:22',
+  timestamp: '2026-03-23 23:07:42'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1778:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1778:21',
+  timestamp: '2026-03-23 23:07:42'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2113:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2113:22',
+  timestamp: '2026-03-23 23:07:53'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1710:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1710:22',
+  timestamp: '2026-03-23 23:09:59'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1778:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1778:21',
+  timestamp: '2026-03-23 23:09:59'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2113:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2113:22',
+  timestamp: '2026-03-23 23:10:10'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1710:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1710:22',
+  timestamp: '2026-03-23 23:30:36'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1778:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1778:21',
+  timestamp: '2026-03-23 23:30:36'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2113:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2113:22',
+  timestamp: '2026-03-23 23:30:48'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1710:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1710:22',
+  timestamp: '2026-03-24 00:20:17'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1778:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1778:21',
+  timestamp: '2026-03-24 00:20:17'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2113:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2113:22',
+  timestamp: '2026-03-24 00:20:28'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1710:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1710:22',
+  timestamp: '2026-03-24 00:40:17'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1778:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1778:21',
+  timestamp: '2026-03-24 00:40:18'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2113:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2113:22',
+  timestamp: '2026-03-24 00:40:29'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1742:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1742:22',
+  timestamp: '2026-03-24 00:56:48'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1810:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1810:21',
+  timestamp: '2026-03-24 00:56:49'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2145:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2145:22',
+  timestamp: '2026-03-24 00:57:01'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1813:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version history: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1813:22',
+  timestamp: '2026-03-24 01:21:17'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:1881:21,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching version: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "NotebookVersion"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:1881:21',
+  timestamp: '2026-03-24 01:21:17'
+}
+{
+  service: 'sync-not-net-api',
+  stringValue: '"invalid-id"',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: 'invalid-id',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\bson\src\objectid.ts:120:15)
+      at castObjectId (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaObjectId.SchemaType.applySetters (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1255:12)
+      at SchemaObjectId.SchemaType.castForQuery (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\schemaType.js:1673:17)
+      at cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\cast.js:390:32)
+      at model.Query.Query.cast (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:5055:12)
+      at model.Query.Query._castConditions (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2351:10)
+      at model.Query._findOne (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:2674:8)
+      at model.Query.exec (D:\Github_Repos\Sync-Not-Net\api\node_modules\mongoose\lib\query.js:4604:80)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at D:\Github_Repos\Sync-Not-Net\api\routes\notebookRoutes.js:2216:22,
+  valueType: 'string',
+  level: 'error',
+  message: 'Error fetching notebook collaborators: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"',
+  stack: 'CastError: Cast to ObjectId failed for value "invalid-id" (type string) at path "_id" for model "Notebook"\n' +
+    '    at SchemaObjectId.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schema\\objectId.js:251:11)\n' +
+    '    at SchemaObjectId.SchemaType.applySetters (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1255:12)\n' +
+    '    at SchemaObjectId.SchemaType.castForQuery (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\schemaType.js:1673:17)\n' +
+    '    at cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\cast.js:390:32)\n' +
+    '    at model.Query.Query.cast (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:5055:12)\n' +
+    '    at model.Query.Query._castConditions (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2351:10)\n' +
+    '    at model.Query._findOne (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:2674:8)\n' +
+    '    at model.Query.exec (D:\\Github_Repos\\Sync-Not-Net\\api\\node_modules\\mongoose\\lib\\query.js:4604:80)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at D:\\Github_Repos\\Sync-Not-Net\\api\\routes\\notebookRoutes.js:2216:22',
+  timestamp: '2026-03-24 01:21:29'
+}

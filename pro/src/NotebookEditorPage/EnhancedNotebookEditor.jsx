@@ -76,6 +76,7 @@ import ErrorBoundary from '../Components/ErrorBoundary';
 import socketClient from '../utils/socketClient';
 import { processContentFromBackend, prepareContentForBackend } from '../utils/contentUtils';
 import ShareDialog from './ShareDialog';
+import UnifiedAccessPrompt from './UnifiedAccessPrompt';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
@@ -478,6 +479,16 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
   const [accessLevel, setAccessLevel] = useState('read');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
+  // Guest and password access state
+  const [requiresGuestName, setRequiresGuestName] = useState(false);
+  const [requiresPassword, setRequiresPassword] = useState(false);
+  const [guestInfo, setGuestInfo] = useState(() => {
+    const savedGuest = localStorage.getItem('guestInfo');
+    return savedGuest ? JSON.parse(savedGuest) : null;
+  });
+  const [accessError, setAccessError] = useState('');
+  const [isVerifyingAccess, setIsVerifyingAccess] = useState(false);
+
   // Conflict state (Phase 6 placeholder)
   const [conflictData, setConflictData] = useState(null);
 
@@ -491,6 +502,131 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
   const showNotification = useCallback((message, severity = 'info') => {
     setSnackbar({ open: true, message, severity });
   }, []);
+
+  // Register as guest user
+  const registerGuest = useCallback(async (guestName, urlId) => {
+    if (!guestName || !urlId) throw new Error('Missing guest name or notebook identifier');
+    const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlId}/register-guest`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guestName })
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to register guest');
+    }
+    return await response.json();
+  }, []);
+
+  // Verify notebook password
+  const verifyPassword = useCallback(async (urlId, password) => {
+    if (!password || !urlId) throw new Error('Missing password or notebook identifier');
+    
+    // Get guest info if available
+    const guestData = localStorage.getItem('guestInfo');
+    const guestInfo = guestData ? JSON.parse(guestData) : null;
+    
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    
+    // Include guest info in request
+    const body = { password };
+    if (guestInfo) {
+      headers['X-Guest-Id'] = guestInfo.id;
+      headers['X-Guest-Name'] = guestInfo.name;
+    }
+    
+    const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlId}/verify-password`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body)
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to verify password');
+    }
+    return await response.json();
+  }, []);
+
+  // Handle guest name submission
+  const handleGuestNameSubmit = useCallback(async (guestName) => {
+    setIsVerifyingAccess(true);
+    setAccessError('');
+    try {
+      const result = await registerGuest(guestName, urlIdentifier_from_url);
+      
+      // Save guest info
+      const guestData = result.guestUser || result;
+      setGuestInfo(guestData);
+      localStorage.setItem('guestInfo', JSON.stringify(guestData));
+      
+      // Check if password is required
+      if (result.requiresPassword) {
+        setRequiresGuestName(false);
+        setRequiresPassword(true);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Load notebook data
+      setRequiresGuestName(false);
+      loadNotebookFromResponse(result);
+    } catch (error) {
+      console.error('Guest registration error:', error);
+      setAccessError(error.message || 'Failed to register as guest');
+    } finally {
+      setIsVerifyingAccess(false);
+    }
+  }, [urlIdentifier_from_url, registerGuest]);
+
+  // Handle password submission
+  const handlePasswordSubmit = useCallback(async (password) => {
+    setIsVerifyingAccess(true);
+    setAccessError('');
+    try {
+      const result = await verifyPassword(urlIdentifier_from_url, password);
+      
+      // Save password verification token if provided
+      if (result.token) {
+        localStorage.setItem('passwordToken', result.token);
+      }
+      
+      // Load notebook data
+      setRequiresPassword(false);
+      loadNotebookFromResponse(result);
+    } catch (error) {
+      console.error('Password verification error:', error);
+      setAccessError(error.message || 'Invalid password');
+    } finally {
+      setIsVerifyingAccess(false);
+    }
+  }, [urlIdentifier_from_url, verifyPassword]);
+
+  // Load notebook data from API response
+  const loadNotebookFromResponse = useCallback((data) => {
+    const notebook = data.notebook || data;
+    
+    setNotebookData(notebook);
+    setTitle(notebook.title || '');
+    setContent(processContentFromBackend(notebook.content) || '');
+    setEditorMode(notebook.editorMode || 'quill');
+    setLanguage(notebook.language || 'javascript');
+    setAutoSave(notebook.autoSave ?? true);
+    setUserRole(notebook.userRole || data.userRole || 'guest');
+    setAccessLevel(notebook.accessLevel || data.accessLevel || 'read');
+    setUrlIdentifier(notebook.urlIdentifier);
+    lastSavedContent.current = notebook.content;
+    setIsNewNotebook(false);
+    setIsLoading(false);
+
+    // Join socket room
+    const token = localStorage.getItem('token');
+    if (socketClient.isConnected && notebook._id) {
+      socketClient.joinNotebook(notebook._id, guestInfo);
+    }
+  }, [guestInfo]);
 
   // Fetch notebook data or create new
   const fetchNotebookData = useCallback(async () => {
@@ -510,64 +646,68 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
 
     try {
       const token = localStorage.getItem('token');
-      if (!token) {
-        showNotification('Please login to view this notebook', 'error');
-        navigate('/auth?mode=login');
-        return;
-      }
-
+      const savedGuestInfo = localStorage.getItem('guestInfo');
+      const parsedGuestInfo = savedGuestInfo ? JSON.parse(savedGuestInfo) : null;
+      
+      // Build headers
       const headers = { 'Content-Type': 'application/json' };
-      headers['Authorization'] = `Bearer ${token}`;
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      // Add guest info if available
+      if (parsedGuestInfo) {
+        headers['X-Guest-Id'] = parsedGuestInfo.id;
+        headers['X-Guest-Name'] = parsedGuestInfo.name;
+      }
 
       const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlIdentifier_from_url}`, { headers });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        
+        // Handle authentication required
         if (response.status === 401) {
+          // If we have error about guest name required, show guest prompt
+          if (errorData.message?.includes('name') || errorData.message?.includes('guest')) {
+            setRequiresGuestName(true);
+            setIsLoading(false);
+            return;
+          }
+          // Otherwise need to login
           showNotification('Please login to access this notebook', 'error');
           navigate('/auth?mode=login');
           return;
         }
+        
+        // Handle access denied / password required
         if (response.status === 403) {
-          showNotification('You do not have permission to access this notebook', 'error');
+          if (errorData.requiresPassword || errorData.message?.includes('password')) {
+            setRequiresPassword(true);
+            setIsLoading(false);
+            return;
+          }
+          showNotification(errorData.message || 'Access denied', 'error');
           navigate('/notebooks');
           return;
         }
+        
         if (response.status === 404) {
           showNotification('Notebook not found', 'error');
           navigate('/notebooks');
           return;
         }
+        
         throw new Error(errorData.message || 'Failed to load notebook');
       }
 
       const data = await response.json();
-      // API returns notebook data at root level, not nested under 'notebook'
-      const notebook = data.notebook || data;
-
-      setNotebookData(notebook);
-      setTitle(notebook.title || '');
-      setContent(processContentFromBackend(notebook.content) || '');
-      setEditorMode(notebook.editorMode || 'quill');
-      setLanguage(notebook.language || 'javascript');
-      setAutoSave(notebook.autoSave ?? true);
-      setUserRole(notebook.userRole || 'viewer');
-      setAccessLevel(notebook.accessLevel || 'read');
-      setUrlIdentifier(notebook.urlIdentifier);
-      lastSavedContent.current = notebook.content;
-      setIsNewNotebook(false);
-
-      // Join socket room
-      if (token && socketClient.isConnected && notebook._id) {
-        socketClient.joinNotebook(notebook._id);
-      }
+      loadNotebookFromResponse(data);
     } catch (error) {
       console.error('Error fetching notebook:', error);
       showNotification(error.message || 'Failed to load notebook', 'error');
-    } finally {
-      setIsLoading(false);
     }
-  }, [urlIdentifier_from_url, showNotification, mode, navigate]);
+  }, [urlIdentifier_from_url, mode, navigate, showNotification, loadNotebookFromResponse]);
 
   // Save notebook - handles both creating new and updating existing
   const saveNotebook = useCallback(async (manual = false) => {
@@ -748,6 +888,22 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
 
   const readOnly = accessLevel === 'read';
   const canEdit = accessLevel === 'write' || accessLevel === 'owner';
+
+  // Show access prompts if needed
+  if (requiresGuestName || requiresPassword) {
+    return (
+      <UnifiedAccessPrompt
+        requiresGuestName={requiresGuestName}
+        requiresPassword={requiresPassword}
+        notebookTitle={title || 'Untitled Notebook'}
+        creatorName={notebookData?.creator?.name || ''}
+        onSubmitGuestName={handleGuestNameSubmit}
+        onSubmitPassword={handlePasswordSubmit}
+        loading={isVerifyingAccess}
+        error={accessError}
+      />
+    );
+  }
 
   if (isLoading) {
     return (

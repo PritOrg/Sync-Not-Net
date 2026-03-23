@@ -14,6 +14,7 @@ const userModel = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['admin', 'editor', 'viewer'], default: 'editor' },
   profilePicture: { type: String },
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notebook' }],
   failedLoginAttempts: { type: Number, default: 0 },
   lockoutUntil: { type: Date },
   lastLogin: { type: Date },
