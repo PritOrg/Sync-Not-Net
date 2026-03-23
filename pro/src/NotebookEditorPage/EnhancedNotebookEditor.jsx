@@ -67,7 +67,6 @@ import EnhancedUserPresence from '../Components/EnhancedUserPresence';
 import VersionHistoryDialog from './VersionHistoryDialog';
 import VersionComparisonDialog from './VersionComparisonDialog';
 import CommentsPanel from './CommentsPanel';
-import SettingsDialog from './SettingsDialog';
 import PasswordSettingsDialog from './PasswordSettingsDialog';
 import PermissionsSettingsDialog from './PermissionsSettingsDialog';
 import CollaboratorsSettingsDialog from './CollaboratorsSettingsDialog';
