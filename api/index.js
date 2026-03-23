@@ -523,9 +523,16 @@ process.on('SIGINT', () => {
   });
 });
 
-// Server listening
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  logger.info(`Server is running on http://localhost:${PORT}`);
-  logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+// Server listening - only in non-test mode
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+    logger.info(`Server is running on http://localhost:${PORT}`);
+    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
+
+// Export app and server for tests and external use
+module.exports = app;
+module.exports.server = server;
+module.exports.io = io;

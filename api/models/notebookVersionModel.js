@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 
-const notebookVersionModel = new mongoose.Schema({
-  notebookID: { type: mongoose.Schema.Types.ObjectId, ref: 'Notebook', required: true },
+const notebookVersionSchema = new mongoose.Schema({
+  notebookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Notebook', required: true, index: true },
   version: { type: Number, required: true },
-  content: { type: String, required: true },
-  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },  // Who updated the version
-  updatedAt: { type: Date, default: Date.now },
+  content: { type: String, default: '' },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  changes: { type: String, default: '' },
+  createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('NotebookVersion', notebookVersionModel);
+// Index for efficient queries
+notebookVersionSchema.index({ notebookId: 1, version: -1 });
+
+module.exports = mongoose.model('NotebookVersion', notebookVersionSchema);

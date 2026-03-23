@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Notebook = require('../models/notebookModel');
+const NotebookVersion = require('../models/notebookVersionModel');
 const Tag = require('../models/tagModel');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -1661,20 +1662,23 @@ router.put('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
     }
 
     // Process each collaborator to ensure it has the correct structure
-    const processedCollaborators = collaborators.map(c => {
-      // Extract userId based on different possible formats
-      const userId = typeof c.userId === 'string' ? c.userId : 
-                    c.userId?._id || c.userId?.id || c.userId;
-      
-      if (!userId) {
-        throw new Error('Invalid collaborator data: missing userId');
-      }
+    const processedCollaborators = collaborators
+      .map(c => {
+        // Extract userId based on different possible formats
+        const userId = typeof c.userId === 'string' ? c.userId : 
+                      c.userId?._id || c.userId?.id || c.userId;
+        
+        if (!userId) {
+          throw new Error('Invalid collaborator data: missing userId');
+        }
 
-      return {
-        userId: userId,
-        access: c.access || 'write' // Default to 'write' if not specified
-      };
-    });
+        return {
+          userId: userId,
+          access: c.access || 'write' // Default to 'write' if not specified
+        };
+      })
+      // Filter out the owner from being added as collaborator
+      .filter(c => c.userId.toString() !== notebook.creatorID.toString());
 
     notebook.collaborators = processedCollaborators;
     await notebook.save();
@@ -1714,7 +1718,7 @@ router.get('/:id/versions', verifyToken, catchAsync(async (req, res) => {
 
     // Check if user has access to view versions
     const isCreator = notebook.creatorID.toString() === req.user.id.toString();
-    const isCollaborator = notebook.collaborators.some(c => c.toString() === req.user.id.toString());
+    const isCollaborator = notebook.collaborators.some(c => c.userId && c.userId.toString() === req.user.id.toString());
     
     if (!isCreator && !isCollaborator && notebook.permissions !== 'everyone') {
       return res.status(403).json({
@@ -1724,7 +1728,7 @@ router.get('/:id/versions', verifyToken, catchAsync(async (req, res) => {
     }
 
     // Get version history from NotebookVersion model
-    const versions = await NotebookVersionModel.find({ notebookId: notebook._id })
+    const versions = await NotebookVersion.find({ notebookId: notebook._id })
       .populate('createdBy', 'name email')
       .sort({ createdAt: -1 });
 
@@ -1747,6 +1751,127 @@ router.get('/:id/versions', verifyToken, catchAsync(async (req, res) => {
   }
 }));
 
+// Get specific version content for comparison
+router.get('/:id/versions/:versionId', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const { id, versionId } = req.params;
+
+    const notebook = await Notebook.findById(id);
+
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Notebook not found'
+      });
+    }
+
+    const isCreator = notebook.creatorID.toString() === req.user.id.toString();
+    const isCollaborator = notebook.collaborators.some(c => c.userId && c.userId.toString() === req.user.id.toString());
+
+    if (!isCreator && !isCollaborator && notebook.permissions !== 'everyone') {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'You do not have permission to view this version'
+      });
+    }
+
+    const version = await NotebookVersion.findById(versionId);
+
+    if (!version || version.notebookId.toString() !== id) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Version not found'
+      });
+    }
+
+    res.json({
+      version: {
+        id: version._id,
+        version: version.version,
+        content: extractContentFromXML(version.content),
+        createdAt: version.createdAt,
+        createdBy: version.createdBy,
+        changes: version.changes
+      }
+    });
+  } catch (error) {
+    logger.error('Error fetching version:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to fetch version'
+    });
+  }
+}));
+
+// Restore notebook to a specific version
+router.post('/:id/versions/:versionId/restore', verifyToken, catchAsync(async (req, res) => {
+  try {
+    const { id, versionId } = req.params;
+
+    const notebook = await Notebook.findById(id);
+
+    if (!notebook) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Notebook not found'
+      });
+    }
+
+    if (notebook.creatorID.toString() !== req.user.id.toString()) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'Only the notebook owner can restore versions'
+      });
+    }
+
+    const versionToRestore = await NotebookVersion.findById(versionId);
+
+    if (!versionToRestore || versionToRestore.notebookId.toString() !== id) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'Version not found'
+      });
+    }
+
+    await new NotebookVersion({
+      notebookId: notebook._id,
+      content: notebook.content,
+      version: notebook.version || 1,
+      createdBy: req.user.id,
+      changes: 'Auto-saved before restore'
+    }).save();
+
+    notebook.content = versionToRestore.content;
+    notebook.version = (notebook.version || 1) + 1;
+    await notebook.save();
+
+    const io = getIO(req);
+    if (io) {
+      io.to(id).emit('notebookUpdated', {
+        notebookId: id,
+        content: notebook.content,
+        version: notebook.version,
+        updatedBy: {
+          id: req.user.id,
+          name: req.user.name
+        },
+        restoredFrom: versionToRestore.version
+      });
+    }
+
+    res.json({
+      message: 'Version restored successfully',
+      version: notebook.version,
+      restoredVersion: versionToRestore.version
+    });
+  } catch (error) {
+    logger.error('Error restoring version:', error);
+    res.status(500).json({
+      error: 'Server error',
+      message: 'Failed to restore version'
+    });
+  }
+}));
 
 
 // Update notebook custom URL
@@ -1985,7 +2110,7 @@ router.put('/:id/tags', verifyToken, catchAsync(async (req, res) => {
 router.get('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
   try {
     const notebookId = req.params.id;
-    const notebook = await Notebook.findById(notebookId).populate('collaborators', 'name email');
+    const notebook = await Notebook.findById(notebookId);
     
     if (!notebook) {
       return res.status(404).json({
@@ -1995,25 +2120,30 @@ router.get('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
     }
     
     // Check ownership or collaborator access
-    const userId = req.user.id;
+    const userId = req.user.id.toString();
     const isOwner = notebook.creatorID.toString() === userId;
     const isCollaborator = notebook.collaborators.some(collab => 
-      collab._id.toString() === userId || collab.id.toString() === userId
+      (collab.userId?.toString() || collab.toString()) === userId
     );
     
-    if (!isOwner && !isCollaborator) {
+    if (!isOwner && !isCollaborator && notebook.permissions !== 'everyone') {
       return res.status(403).json({
         error: 'Access denied',
         message: 'Only the owner or collaborators can view collaborator information.'
       });
     }
     
-    // Return the collaborators list
+    // Populate collaborator user details
+    await notebook.populate('collaborators.userId', 'name email avatar');
+    
+    // Return the collaborators list with access levels
     return res.json({
       collaborators: notebook.collaborators.map(c => ({
-        id: c._id,
-        name: c.name,
-        email: c.email
+        id: c.userId?._id || c.userId,
+        name: c.userId?.name || 'Unknown',
+        email: c.userId?.email || '',
+        avatar: c.userId?.avatar || null,
+        access: c.access || 'read'
       }))
     });
     
@@ -2031,13 +2161,13 @@ router.get('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
  */
 router.put('/:id/collaborators/:userId', verifyToken, catchAsync(async (req, res) => {
   try {
-    const { permission } = req.body;
+    const { access } = req.body;
     const { id: notebookId, userId } = req.params;
     
-    if (!permission || !['read', 'write', 'admin'].includes(permission)) {
+    if (!access || !['read', 'write', 'admin'].includes(access)) {
       return res.status(400).json({
-        error: 'Invalid permission',
-        message: 'Permission must be one of: read, write, admin.'
+        error: 'Invalid access level',
+        message: 'Access must be one of: read, write, admin.'
       });
     }
     
@@ -2052,32 +2182,62 @@ router.put('/:id/collaborators/:userId', verifyToken, catchAsync(async (req, res
     }
     
     // Verify ownership - only the owner can update collaborator permissions
-    if (notebook.creatorID.toString() !== req.user.id) {
+    if (notebook.creatorID.toString() !== req.user.id.toString()) {
       return res.status(403).json({
         error: 'Access denied',
         message: 'Only the creator can update collaborator permissions.'
       });
     }
     
-    // Check if the user is already a collaborator
-    const isCollaborator = notebook.collaborators.some(collab => 
-      collab.toString() === userId || collab._id?.toString() === userId
+    // Find and update the collaborator
+    const collabIndex = notebook.collaborators.findIndex(collab => 
+      (collab.userId?.toString() || collab.toString()) === userId
     );
     
-    if (!isCollaborator) {
+    if (collabIndex === -1) {
       return res.status(404).json({
         error: 'Collaborator not found',
         message: 'This user is not a collaborator on this notebook.'
       });
     }
     
-    // In a more sophisticated system, we'd store permissions per collaborator
-    // For now, we'll just return success to maintain the API structure
+    // Update the access level
+    if (notebook.collaborators[collabIndex].access !== undefined) {
+      notebook.collaborators[collabIndex].access = access;
+    } else {
+      // Convert plain ObjectId to object with access
+      notebook.collaborators[collabIndex] = {
+        userId: notebook.collaborators[collabIndex],
+        access
+      };
+    }
+    
+    await notebook.save();
+    
+    // Populate user details for response
+    await notebook.populate('collaborators.userId', 'name email avatar');
+    const updatedCollab = notebook.collaborators[collabIndex];
+    
+    // Emit socket event
+    const io = getIO(req);
+    if (io) {
+      io.to(notebookId).emit('collaboratorUpdated', {
+        notebookId,
+        collaborator: {
+          id: updatedCollab.userId?._id || userId,
+          access
+        }
+      });
+    }
     
     return res.json({
       message: 'Collaborator permission updated successfully',
-      userId,
-      permission
+      collaborator: {
+        id: updatedCollab.userId?._id || userId,
+        name: updatedCollab.userId?.name || 'Unknown',
+        email: updatedCollab.userId?.email || '',
+        access
+      }
     });
     
   } catch (error) {
@@ -2105,19 +2265,30 @@ router.delete('/:id/collaborators/:userId', verifyToken, catchAsync(async (req, 
     }
     
     // Verify ownership - only the owner can remove collaborators
-    if (notebook.creatorID.toString() !== req.user.id) {
+    if (notebook.creatorID.toString() !== req.user.id.toString()) {
       return res.status(403).json({
         error: 'Access denied',
         message: 'Only the creator can remove collaborators.'
       });
     }
     
-    // Remove collaborator
-    notebook.collaborators = notebook.collaborators.filter(
-      collab => collab.toString() !== userId && collab._id?.toString() !== userId
-    );
+    // Remove collaborator - handle both object and ObjectId formats
+    const initialLength = notebook.collaborators.length;
+    notebook.collaborators = notebook.collaborators.filter(collab => {
+      const collabUserId = collab.userId?.toString() || collab.toString();
+      return collabUserId !== userId;
+    });
     
     await notebook.save();
+    
+    // Emit socket event
+    const io = getIO(req);
+    if (io && notebook.collaborators.length < initialLength) {
+      io.to(notebookId).emit('collaboratorRemoved', {
+        notebookId,
+        userId
+      });
+    }
     
     return res.json({
       message: 'Collaborator removed successfully'

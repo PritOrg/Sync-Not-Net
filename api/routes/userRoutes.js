@@ -42,6 +42,7 @@ router.get('/profile', verifyToken, catchAsync(async (req, res) => {
 }));
 
 // JWT configuration from environment
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-test-secret-key';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 
 // Register User with enhanced validation and security

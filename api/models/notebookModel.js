@@ -8,7 +8,7 @@ const notebookModel = new mongoose.Schema({
   permissions: { type: String, enum: ['everyone', 'private', 'collaborators'], default: 'everyone' },
   collaborators: [{ 
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    access: { type: String, enum: ['read', 'write'], default: 'read' } 
+    access: { type: String, enum: ['read', 'write', 'admin'], default: 'read' } 
   }],  // List of collaborators with access level
   password: { type: String }, // Optional password protection
   version: { type: Number, default: 1 },

@@ -167,7 +167,7 @@ router.put('/notebooks/:notebookId/comments/:commentId', optionalAuth, validateC
     
     // Check if user is authorized to edit the comment
     if (req.user) {
-      if (comment.author && comment.author.toString() !== req.user.id) {
+      if (comment.author && comment.author.toString() !== req.user.id.toString()) {
         return res.status(403).json({ message: 'You can only edit your own comments' });
       }
     } else if (comment.guestAuthor && (!req.body.guestAuthor || comment.guestAuthor.name !== req.body.guestAuthor.name)) {
