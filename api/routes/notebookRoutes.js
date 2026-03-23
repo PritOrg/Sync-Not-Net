@@ -668,6 +668,20 @@ router.post('/', verifyToken, validateNotebookCreation, catchAsync(async (req, r
 
   await newNotebook.save();
 
+  // Create initial version entry
+  try {
+    await NotebookVersion.create({
+      notebookId: newNotebook._id,
+      version: 1,
+      content: xmlContent,
+      createdBy: req.user.id,
+      changes: 'Initial version'
+    });
+  } catch (versionError) {
+    // Don't fail the creation if version creation fails
+    logger.error('Error creating initial version:', versionError);
+  }
+
   // Populate collaborators for response
   await newNotebook.populate('collaborators', 'name email');
 
@@ -1241,7 +1255,10 @@ router.put('/:id', optionalAuth, async (req, res) => {
     // Determine user permissions
     const isAuthenticated = !!req.user;
     const isCreator = isAuthenticated && notebook.creatorID.toString() === req.user.id.toString();
-    const isCollaborator = isAuthenticated && notebook.collaborators.some(collab => collab.toString() === req.user.id.toString());
+    const isCollaborator = isAuthenticated && notebook.collaborators.some(collab => {
+      const collabUserId = collab.userId?.toString() || collab.toString();
+      return collabUserId === req.user.id.toString();
+    });
     const isPublicNotebook = notebook.permissions.toString() === 'everyone' ;
 
     // Check if user has edit permissions
@@ -1367,6 +1384,21 @@ router.put('/:id', optionalAuth, async (req, res) => {
     notebook.updatedAt = new Date();
 
     await notebook.save();
+
+    // Create a version entry for version history
+    try {
+      const userId = req.user ? req.user.id : notebook.creatorID;
+      await NotebookVersion.create({
+        notebookId: notebook._id,
+        version: notebook.version,
+        content: notebook.content,
+        createdBy: userId,
+        changes: `Version ${notebook.version} saved`
+      });
+    } catch (versionError) {
+      // Don't fail the save if version creation fails
+      logger.error('Error creating version entry:', versionError);
+    }
 
     // Populate collaborators for response
     await notebook.populate('collaborators', 'name email');
