@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import {
   Box,
   Paper,
   Select,
   MenuItem,
   FormControl,
-  Toolbar,
   IconButton,
   Tooltip,
   Typography,
@@ -13,18 +12,42 @@ import {
   Chip,
   ToggleButton,
   ToggleButtonGroup,
-  useTheme
+  useTheme,
+  alpha,
+  Button,
+  Stack,
+  Menu,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import {
   Save as SaveIcon,
   Fullscreen as FullscreenIcon,
   FullscreenExit as FullscreenExitIcon,
   Code as CodeIcon,
-  Edit as EditIcon
+  Edit as EditIcon,
+  Undo as UndoIcon,
+  Redo as RedoIcon,
+  FormatBold as BoldIcon,
+  FormatItalic as ItalicIcon,
+  FormatUnderlined as UnderlineIcon,
+  FormatListBulleted as ListBulletIcon,
+  FormatListNumbered as ListNumberIcon,
+  FormatAlignLeft as AlignLeftIcon,
+  FormatAlignCenter as AlignCenterIcon,
+  FormatAlignRight as AlignRightIcon,
+  FormatQuote as QuoteIcon,
+  Image as ImageIcon,
+  Link as LinkIcon,
+  TableChart as TableIcon,
+  MoreHoriz as MoreIcon,
+  KeyboardArrowDown as ChevronDownIcon,
 } from '@mui/icons-material';
 import Editor from '@monaco-editor/react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { motion, AnimatePresence } from 'framer-motion';
+import RemoteCursorsOverlay from './RemoteCursorsOverlay';
 
 const SUPPORTED_LANGUAGES = [
   { value: 'javascript', label: 'JavaScript', icon: '🟨' },
@@ -49,324 +72,235 @@ const SUPPORTED_LANGUAGES = [
   { value: 'dockerfile', label: 'Dockerfile', icon: '🐳' },
 ];
 
-const FONT_SIZES = [10, 12, 14, 16, 18, 20, 22, 24];
+const FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32];
+
+// Modern toolbar button component
+const ToolbarBtn = ({ icon, label, onClick, active, disabled, small }) => (
+  <Tooltip title={label} arrow>
+    <span>
+      <IconButton
+        onClick={onClick}
+        disabled={disabled}
+        size={small ? 'small' : 'medium'}
+        sx={{
+          borderRadius: 1.5,
+          color: active ? 'primary.main' : 'text.secondary',
+          bgcolor: active ? alpha('#000', 0.04) : 'transparent',
+          '&:hover': {
+            bgcolor: alpha('#000', 0.08),
+          },
+          '&:disabled': {
+            color: 'text.disabled',
+          },
+          transition: 'all 0.15s ease',
+        }}
+      >
+        {icon}
+      </IconButton>
+    </span>
+  </Tooltip>
+);
+
+// Modern select component
+const ModernSelect = ({ value, onChange, options, disabled, renderValue }) => (
+  <FormControl size="small" disabled={disabled}>
+    <Select
+      value={value}
+      onChange={onChange}
+      renderValue={renderValue}
+      sx={{
+        borderRadius: 2,
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: alpha('#000', 0.1),
+        },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: alpha('#000', 0.2),
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: 'primary.main',
+        },
+        '& .MuiSelect-select': {
+          py: 0.75,
+          px: 1.5,
+        },
+      }}
+    >
+      {options.map((option) => (
+        <MenuItem key={option.value} value={option.value}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {option.icon && <span>{option.icon}</span>}
+            <Typography variant="body2">{option.label}</Typography>
+          </Box>
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+);
 
 const EnhancedEditor = ({
   content = '',
   onChange,
   onSave,
-// Export ToggleButton and ToggleButtonGroup for use in parent (after function definition)
-
-  editorMode = 'rich', // 'rich' or 'code'
-  onModeChange, // New prop to handle mode changes
+  editorMode = 'rich',
+  onModeChange,
   language = 'javascript',
-  onLanguageChange, // New prop to handle language changes
+  onLanguageChange,
   readOnly = false,
   autoSave = true,
   placeholder = 'Start writing...',
+  // Phase 4: Remote cursor props
+  remoteCursors = [],
+  currentUserId = null,
+  notebookId = null,
+  socketClient = null,
 }) => {
   const theme = useTheme();
   const [mode, setMode] = useState(editorMode);
   const [selectedLanguage, setSelectedLanguage] = useState(language);
-  const [fontSize, setFontSize] = useState(14);
+  const [fontSize, setFontSize] = useState(16);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+  const [wordCount, setWordCount] = useState(0);
+  const [charCount, setCharCount] = useState(0);
   const editorRef = useRef(null);
   const quillRef = useRef(null);
 
-  // Define functions before useEffect that uses them
+  // Strip HTML tags for code mode
+  const stripHtmlTags = useCallback((html) => {
+    if (!html) return '';
+    let text = html;
+    text = text.replace(/<br\s*\/?>/gi, '\n');
+    text = text.replace(/<p[^>]*>/gi, '');
+    text = text.replace(/<\/p>/gi, '\n');
+    text = text.replace(/<[^>]+>/g, '');
+    text = text.replace(/\n{2,}/g, '\n');
+    return text.trim();
+  }, []);
+
+  // Calculate word and character count
+  useEffect(() => {
+    const text = mode === 'code' ? stripHtmlTags(content) : content.replace(/<[^>]+>/g, '');
+    setCharCount(text.length);
+    setWordCount(text.trim() ? text.trim().split(/\s+/).length : 0);
+  }, [content, mode, stripHtmlTags]);
+
+  // Handle save
   const handleSave = useCallback(() => {
     if (onSave) {
-      onSave({}, true); // Pass empty settings and true for manual save
+      onSave({}, true);
       setLastSaved(new Date());
     }
   }, [onSave]);
 
+  // Toggle fullscreen
   const toggleFullscreen = useCallback(() => {
-    setIsFullscreen(prev => !prev);
+    setIsFullscreen((prev) => !prev);
   }, []);
 
-  // Handle keyboard shortcuts
+  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event) => {
-      // Save shortcut (Ctrl+S or Cmd+S)
       if ((event.ctrlKey || event.metaKey) && event.key === 's') {
         event.preventDefault();
         handleSave();
       }
-      
-      // Fullscreen shortcut (F11)
       if (event.key === 'F11') {
         event.preventDefault();
         toggleFullscreen();
       }
     };
-
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleSave, toggleFullscreen]);
 
-  // Utility to strip HTML tags (for code mode)
-  const stripHtmlTags = (html) => {
-    if (!html) return '';
-    let text = html;
-    // Convert <br> and <br/> to newlines
-    text = text.replace(/<br\s*\/?>/gi, '\n');
-    // Convert <p> and </p> to newlines (preserve paragraph breaks)
-    text = text.replace(/<p[^>]*>/gi, '');
-    text = text.replace(/<\/p>/gi, '\n');
-    // Remove all other tags
-    text = text.replace(/<[^>]+>/g, '');
-    // Replace multiple consecutive newlines with a single newline
-    text = text.replace(/\n{2,}/g, '\n');
-    // Remove leading/trailing whitespace/newlines
-    return text.trim();
-  }
-
-  // Sync mode with prop changes
+  // Sync mode with props
   useEffect(() => {
     setMode(editorMode);
   }, [editorMode]);
 
-  // Sync language with prop changes
+  // Sync language with props
   useEffect(() => {
     setSelectedLanguage(language);
   }, [language]);
 
-  // When switching to code mode, strip HTML tags from content
+  // Strip HTML when switching to code mode
   useEffect(() => {
     if (mode === 'code' && content && /<[^>]+>/.test(content)) {
-      // Only update if content contains HTML tags
       const plain = stripHtmlTags(content);
-      if (plain !== content) {
-        // Call onChange to update parent state
-        if (onChange) onChange(plain);
+      if (plain !== content && onChange) {
+        onChange(plain);
       }
     }
-  }, [mode, content, onChange]);
+  }, [mode, content, onChange, stripHtmlTags]);
 
-  // Note: Auto-save functionality is handled by the parent component (NotebookEditorPage)
-  // This component only handles manual saves when the user explicitly clicks save
-
+  // Handle mode change
   const handleModeChange = useCallback((event, newMode) => {
     if (newMode !== null && !readOnly) {
-      // We'll call the parent's onModeChange which should use handleEditorSwitch
       if (onModeChange) {
         onModeChange(newMode);
       } else {
-        // Fallback if no parent handler is provided
         setMode(newMode);
       }
     }
   }, [onModeChange, readOnly]);
 
+  // Handle language change
   const handleLanguageChange = useCallback((event) => {
     const newLanguage = event.target.value;
     setSelectedLanguage(newLanguage);
-    if (onLanguageChange) {
-      onLanguageChange(newLanguage);
-    }
+    if (onLanguageChange) onLanguageChange(newLanguage);
   }, [onLanguageChange]);
 
-  const handleFontSizeChange = useCallback((event) => {
-    setFontSize(event.target.value);
-  }, []);
-
-  // Setup language-specific features (separate function for reusability)
+  // Setup language features for Monaco
   const setupLanguageFeatures = useCallback((monaco) => {
     if (!monaco) return;
-
-    // JavaScript/TypeScript specific features
     if (selectedLanguage === 'javascript' || selectedLanguage === 'typescript') {
       monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-          target: monaco.languages.typescript.ScriptTarget.ESNext,
-          allowNonTsExtensions: true,
-          moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-          module: monaco.languages.typescript.ModuleKind.CommonJS,
-          noEmit: true,
-          esModuleInterop: true,
-          jsx: monaco.languages.typescript.JsxEmit.React,
-          reactNamespace: 'React',
-          allowJs: true,
-          typeRoots: ['node_modules/@types']
-        });
-
-        // Add common libraries
-        monaco.languages.typescript.javascriptDefaults.addExtraLib(`
-          declare var console: {
-            log(message?: any, ...optionalParams: any[]): void;
-            error(message?: any, ...optionalParams: any[]): void;
-            warn(message?: any, ...optionalParams: any[]): void;
-            info(message?: any, ...optionalParams: any[]): void;
-          };
-          declare var window: any;
-          declare var document: any;
-          declare var localStorage: any;
-          declare var sessionStorage: any;
-          declare var fetch: any;
-          declare var Promise: any;
-          declare var setTimeout: any;
-          declare var setInterval: any;
-          declare var clearTimeout: any;
-          declare var clearInterval: any;
-        `, 'global.d.ts');
-      }
-
-      // Python specific features
-      if (selectedLanguage === 'python') {
-        monaco.languages.registerCompletionItemProvider('python', {
-          provideCompletionItems: (model, position) => {
-            const suggestions = [
-              {
-                label: 'print',
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: 'print(${1:message})',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Print function'
-              },
-              {
-                label: 'len',
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: 'len(${1:object})',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Return the length of an object'
-              },
-              {
-                label: 'range',
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: 'range(${1:start}, ${2:stop})',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Range function'
-              },
-              {
-                label: 'for loop',
-                kind: monaco.languages.CompletionItemKind.Snippet,
-                insertText: 'for ${1:item} in ${2:iterable}:\n    ${3:pass}',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'For loop'
-              },
-              {
-                label: 'if statement',
-                kind: monaco.languages.CompletionItemKind.Snippet,
-                insertText: 'if ${1:condition}:\n    ${2:pass}',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'If statement'
-              },
-              {
-                label: 'def function',
-                kind: monaco.languages.CompletionItemKind.Snippet,
-                insertText: 'def ${1:function_name}(${2:parameters}):\n    ${3:pass}',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Function definition'
-              }
-            ];
-            return { suggestions };
-          }
-        });
-      }
-
-      // Java specific features
-      if (selectedLanguage === 'java') {
-        monaco.languages.registerCompletionItemProvider('java', {
-          provideCompletionItems: (model, position) => {
-            const suggestions = [
-              {
-                label: 'System.out.println',
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: 'System.out.println(${1:message});',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Print to console'
-              },
-              {
-                label: 'public class',
-                kind: monaco.languages.CompletionItemKind.Snippet,
-                insertText: 'public class ${1:ClassName} {\n    ${2:// code here}\n}',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Public class declaration'
-              },
-              {
-                label: 'main method',
-                kind: monaco.languages.CompletionItemKind.Snippet,
-                insertText: 'public static void main(String[] args) {\n    ${1:// code here}\n}',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Main method'
-              }
-            ];
-            return { suggestions };
-          }
-        });
-      }
-
-      // C++ specific features
-      if (selectedLanguage === 'cpp') {
-        monaco.languages.registerCompletionItemProvider('cpp', {
-          provideCompletionItems: (model, position) => {
-            const suggestions = [
-              {
-                label: 'iostream',
-                kind: monaco.languages.CompletionItemKind.Module,
-                insertText: '#include <iostream>',
-                documentation: 'Include iostream header'
-              },
-              {
-                label: 'cout',
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: 'std::cout << ${1:message} << std::endl;',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Output to console'
-              },
-              {
-                label: 'cin',
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: 'std::cin >> ${1:variable};',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Input from console'
-              },
-              {
-                label: 'main function',
-                kind: monaco.languages.CompletionItemKind.Snippet,
-                insertText: 'int main() {\n    ${1:// code here}\n    return 0;\n}',
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: 'Main function'
-              }
-            ];
-            return { suggestions };
-          }
-        });
-      }
+        target: monaco.languages.typescript.ScriptTarget.ESNext,
+        allowNonTsExtensions: true,
+        moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+        module: monaco.languages.typescript.ModuleKind.CommonJS,
+        noEmit: true,
+        esModuleInterop: true,
+        jsx: monaco.languages.typescript.JsxEmit.React,
+        allowJs: true,
+      });
+    }
   }, [selectedLanguage]);
 
   // Handle editor mount
   const handleEditorDidMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
-
-    // Configure Monaco editor for light theme only
-    monaco.editor.defineTheme('custom-light', {
+    monaco.editor.defineTheme('sync-light', {
       base: 'vs',
       inherit: true,
-      rules: [],
+      rules: [
+        { token: 'comment', foreground: '6b7280', fontStyle: 'italic' },
+        { token: 'keyword', foreground: '8b5cf6' },
+        { token: 'string', foreground: '059669' },
+        { token: 'number', foreground: 'd97706' },
+      ],
       colors: {
         'editor.background': '#ffffff',
         'editor.foreground': '#1e293b',
-        'editorLineNumber.foreground': '#64748b',
-        'editor.selectionBackground': '#e2e8f0',
-        'editor.inactiveSelectionBackground': '#f1f5f9',
-      }
+        'editorLineNumber.foreground': '#94a3b8',
+        'editorLineNumber.activeForeground': '#64748b',
+        'editor.selectionBackground': '#c7d2fe',
+        'editor.inactiveSelectionBackground': '#e0e7ff',
+        'editor.lineHighlightBackground': '#f8fafc',
+        'editorCursor.foreground': '#4f46e5',
+        'editor.findMatchBackground': '#fef08a',
+        'editor.findMatchHighlightBackground': '#fef9c3',
+      },
     });
-
-    // Always use light theme
-    monaco.editor.setTheme('custom-light');
-
-    // Setup language features
+    monaco.editor.setTheme('sync-light');
     setupLanguageFeatures(monaco);
   }, [setupLanguageFeatures]);
 
-  // Effect to re-setup language features when language changes
+  // Update language in Monaco editor
   useEffect(() => {
     if (editorRef.current && window.monaco) {
       setupLanguageFeatures(window.monaco);
-      
-      // Also update the editor language if it exists
       const model = editorRef.current.getModel();
       if (model) {
         window.monaco.editor.setModelLanguage(model, selectedLanguage);
@@ -375,24 +309,25 @@ const EnhancedEditor = ({
   }, [selectedLanguage, setupLanguageFeatures]);
 
   // Quill modules configuration
-  const quillModules = {
+  const quillModules = useMemo(() => ({
     toolbar: [
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ header: [1, 2, 3, 4, false] }],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'indent': '-1'}, { 'indent': '+1' }],
-      [{ 'align': [] }],
-      ['link', 'image', 'video'],
+      [{ color: [] }, { background: [] }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+      ['link', 'image'],
       ['blockquote', 'code-block'],
-      ['clean']
+      ['clean'],
     ],
-  };
+    clipboard: { matchVisual: false },
+  }), []);
 
   const quillFormats = [
     'header', 'bold', 'italic', 'underline', 'strike',
     'color', 'background', 'list', 'bullet', 'indent',
-    'align', 'link', 'image', 'video', 'blockquote', 'code-block'
+    'align', 'link', 'image', 'blockquote', 'code-block',
   ];
 
   return (
@@ -407,22 +342,26 @@ const EnhancedEditor = ({
         top: isFullscreen ? 0 : 'auto',
         left: isFullscreen ? 0 : 'auto',
         zIndex: isFullscreen ? 9999 : 'auto',
-        backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.divider}`,
+        bgcolor: '#ffffff',
         borderRadius: isFullscreen ? 0 : 2,
+        overflow: 'hidden',
       }}
     >
-      {/* Toolbar */}
-      <Toolbar
-        variant="dense"
+      {/* Modern Toolbar */}
+      <Box
         sx={{
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.palette.background.default,
-          minHeight: '48px !important',
-          gap: 2,
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 0.5,
+          px: 2,
+          py: 1,
+          borderBottom: '1px solid',
+          borderColor: alpha('#000', 0.08),
+          bgcolor: alpha('#f8fafc', 0.8),
         }}
       >
-        {/* Editor Mode Toggle */}
+        {/* Mode Toggle */}
         <ToggleButtonGroup
           value={mode}
           exclusive
@@ -430,109 +369,177 @@ const EnhancedEditor = ({
           size="small"
           disabled={readOnly}
           sx={{
+            mr: 1,
             '& .MuiToggleButton-root': {
               px: 2,
-              py: 0.5,
-              fontSize: '0.75rem',
-              fontWeight: 500,
-            }
+              py: 0.75,
+              borderRadius: '8px !important',
+              border: 'none',
+              '&.Mui-selected': {
+                bgcolor: 'primary.main',
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'primary.dark',
+                },
+              },
+            },
           }}
         >
-          <ToggleButton value="rich" aria-label="rich text editor">
-            <EditIcon fontSize="small" sx={{ mr: 0.5 }} />
-            Rich
+          <ToggleButton value="rich">
+            <EditIcon sx={{ fontSize: 18, mr: 0.5 }} />
+            <Typography variant="body2" fontWeight={500}>Write</Typography>
           </ToggleButton>
-          <ToggleButton value="code" aria-label="code editor">
-            <CodeIcon fontSize="small" sx={{ mr: 0.5 }} />
-            Code
+          <ToggleButton value="code">
+            <CodeIcon sx={{ fontSize: 18, mr: 0.5 }} />
+            <Typography variant="body2" fontWeight={500}>Code</Typography>
           </ToggleButton>
         </ToggleButtonGroup>
 
-        <Divider orientation="vertical" flexItem />
+        <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
 
-        {/* Language Selector (Code Mode Only) */}
+        {/* Language Selector (Code mode only) */}
         {mode === 'code' && (
-          <FormControl size="small" sx={{ minWidth: 120 }}>
-            <Select
-              value={selectedLanguage}
-              onChange={handleLanguageChange}
-              displayEmpty
-              disabled={readOnly}
-              renderValue={(value) => {
-                const lang = SUPPORTED_LANGUAGES.find(l => l.value === value);
-                return (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <span>{lang?.icon}</span>
-                    <Typography variant="body2">{lang?.label}</Typography>
-                  </Box>
-                );
-              }}
-              title="Select programming language for syntax highlighting and auto-formatting"
-            >
-              {SUPPORTED_LANGUAGES.map((lang) => (
-                <MenuItem key={lang.value} value={lang.value}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <span>{lang.icon}</span>
-                    <Typography variant="body2">{lang.label}</Typography>
-                  </Box>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-
-        {/* Font Size Selector */}
-        <FormControl size="small" sx={{ minWidth: 80 }}>
-          <Select
-            value={fontSize}
-            onChange={handleFontSizeChange}
-            displayEmpty
-          >
-            {FONT_SIZES.map((size) => (
-              <MenuItem key={size} value={size}>
-                {size}px
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Box sx={{ flexGrow: 1 }} />
-
-        {/* Helpful Tips */}
-        {mode === 'code' && (
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
-              💡 Alt+Shift+F to format • Ctrl+Z/Y for undo/redo
-            </Typography>
-          </Box>
-        )}
-
-        {/* Status */}
-        {lastSaved && (
-          <Chip
-            label={`Saved ${lastSaved.toLocaleTimeString()}`}
-            size="small"
-            color="success"
-            variant="outlined"
+          <ModernSelect
+            value={selectedLanguage}
+            onChange={handleLanguageChange}
+            disabled={readOnly}
+            options={SUPPORTED_LANGUAGES}
+            renderValue={(value) => {
+              const lang = SUPPORTED_LANGUAGES.find((l) => l.value === value);
+              return (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <span>{lang?.icon}</span>
+                  <Typography variant="body2">{lang?.label}</Typography>
+                </Box>
+              );
+            }}
           />
         )}
 
-        {/* Actions */}
-        <Tooltip title="Save your work (Ctrl+S)">
-          <IconButton onClick={handleSave} size="small">
-            <SaveIcon fontSize="small" />
-          </IconButton>
+        {/* Font Size */}
+        <ModernSelect
+          value={fontSize}
+          onChange={(e) => setFontSize(e.target.value)}
+          options={FONT_SIZES.map((s) => ({ value: s, label: `${s}px` }))}
+          renderValue={(value) => `${value}px`}
+        />
+
+        <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+
+        {/* Formatting Tools (Rich text mode only) */}
+        {mode === 'rich' && (
+          <Stack direction="row" spacing={0.25}>
+            <ToolbarBtn icon={<BoldIcon />} label="Bold (Ctrl+B)" small />
+            <ToolbarBtn icon={<ItalicIcon />} label="Italic (Ctrl+I)" small />
+            <ToolbarBtn icon={<UnderlineIcon />} label="Underline (Ctrl+U)" small />
+            <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+            <ToolbarBtn icon={<ListBulletIcon />} label="Bullet List" small />
+            <ToolbarBtn icon={<ListNumberIcon />} label="Numbered List" small />
+            <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+            <ToolbarBtn icon={<QuoteIcon />} label="Quote" small />
+            <ToolbarBtn icon={<LinkIcon />} label="Insert Link" small />
+          </Stack>
+        )}
+
+        {/* Spacer */}
+        <Box sx={{ flex: 1 }} />
+
+        {/* Status indicators */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mr: 1 }}>
+          <Chip
+            label={`${wordCount} words`}
+            size="small"
+            variant="outlined"
+            sx={{
+              borderRadius: 1.5,
+              borderColor: alpha('#000', 0.1),
+              fontSize: '0.75rem',
+              height: 24,
+            }}
+          />
+          <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', sm: 'block' } }}>
+            {charCount} chars
+          </Typography>
+        </Box>
+
+        {/* Save button */}
+        <Tooltip title="Save (Ctrl+S)" arrow>
+          <span>
+            <IconButton
+              onClick={handleSave}
+              disabled={readOnly}
+              size="small"
+              sx={{
+                borderRadius: 1.5,
+                color: 'text.secondary',
+                '&:hover': {
+                  bgcolor: alpha('#000', 0.08),
+                },
+              }}
+            >
+              <SaveIcon />
+            </IconButton>
+          </span>
         </Tooltip>
 
-        <Tooltip title={isFullscreen ? "Exit Fullscreen (F11)" : "Enter Fullscreen (F11)"}>
-          <IconButton onClick={toggleFullscreen} size="small">
-            {isFullscreen ? <FullscreenExitIcon fontSize="small" /> : <FullscreenIcon fontSize="small" />}
+        {/* Fullscreen button */}
+        <Tooltip title={isFullscreen ? 'Exit Fullscreen (F11)' : 'Fullscreen (F11)'} arrow>
+          <IconButton
+            onClick={toggleFullscreen}
+            size="small"
+            sx={{
+              borderRadius: 1.5,
+              color: 'text.secondary',
+              '&:hover': {
+                bgcolor: alpha('#000', 0.08),
+              },
+            }}
+          >
+            {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
           </IconButton>
         </Tooltip>
-      </Toolbar>
+      </Box>
 
       {/* Editor Content */}
-      <Box sx={{ flex: 1, overflow: 'hidden' }}>
+      <Box
+        sx={{
+          flex: 1,
+          overflow: 'hidden',
+          position: 'relative',
+          '& .ql-toolbar': {
+            border: 'none',
+            borderBottom: `1px solid ${alpha('#000', 0.08)}`,
+            bgcolor: alpha('#fafafa', 0.5),
+            fontFamily: 'inherit',
+          },
+          '& .ql-container': {
+            border: 'none',
+            fontFamily: 'inherit',
+            fontSize: `${fontSize}px`,
+          },
+          '& .ql-editor': {
+            px: { xs: 2, md: 4 },
+            py: 3,
+            lineHeight: 1.8,
+            '&.ql-blank::before': {
+              fontStyle: 'normal',
+              color: 'text.disabled',
+            },
+          },
+          '& .ql-editor p, & .ql-editor h1, & .ql-editor h2, & .ql-editor h3': {
+            marginBottom: '0.5em',
+          },
+          '& .ql-snow .ql-stroke': {
+            stroke: theme.palette.text.secondary,
+          },
+          '& .ql-snow .ql-fill': {
+            fill: theme.palette.text.secondary,
+          },
+          '& .ql-snow .ql-picker': {
+            color: theme.palette.text.secondary,
+          },
+        }}
+      >
         {mode === 'rich' ? (
           <ReactQuill
             ref={quillRef}
@@ -543,19 +550,16 @@ const EnhancedEditor = ({
             formats={quillFormats}
             placeholder={placeholder}
             readOnly={readOnly}
-            style={{
-              height: '100%',
-              fontSize: `${fontSize}px`,
-            }}
+            style={{ height: '100%' }}
           />
         ) : (
           <Editor
             height="100%"
             language={selectedLanguage}
-            value={mode === 'code' ? stripHtmlTags(content) : content}
+            value={stripHtmlTags(content)}
             onChange={onChange}
             onMount={handleEditorDidMount}
-            theme="custom-light"
+            theme="sync-light"
             options={{
               fontSize,
               readOnly,
@@ -565,32 +569,76 @@ const EnhancedEditor = ({
               lineNumbers: 'on',
               folding: true,
               bracketMatching: 'always',
-              autoIndent: 'full',
+              autoIndent: 'advanced',
               formatOnPaste: true,
               formatOnType: true,
               tabSize: 2,
               insertSpaces: true,
               suggestOnTriggerCharacters: true,
               quickSuggestions: true,
-              wordBasedSuggestions: true,
+              wordBasedSuggestions: 'currentDocument',
               snippetSuggestions: 'inline',
-              parameterHints: true,
+              parameterHints: { enabled: true },
               suggestSelection: 'first',
               acceptSuggestionOnEnter: 'on',
               tabCompletion: 'on',
+              padding: { top: 16, bottom: 16 },
+              renderLineHighlight: 'line',
+              cursorBlinking: 'smooth',
+              cursorSmoothCaretAnimation: 'on',
+              smoothScrolling: true,
+              scrollbar: {
+                verticalScrollbarSize: 8,
+                horizontalScrollbarSize: 8,
+                useShadows: false,
+              },
             }}
           />
         )}
+
+        {/* Phase 4: Remote Cursors Overlay */}
+        <RemoteCursorsOverlay
+          cursors={remoteCursors}
+          editorRef={editorRef}
+          currentUserId={currentUserId}
+          mode={mode}
+        />
+      </Box>
+
+      {/* Status Bar */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: 2,
+          py: 0.5,
+          borderTop: '1px solid',
+          borderColor: alpha('#000', 0.08),
+          bgcolor: alpha('#f8fafc', 0.8),
+          fontSize: '0.75rem',
+          color: 'text.secondary',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Typography variant="caption">
+            {mode === 'code' ? selectedLanguage.toUpperCase() : 'Rich Text'}
+          </Typography>
+          {readOnly && (
+            <Chip label="Read Only" size="small" color="warning" sx={{ height: 18, fontSize: '0.65rem' }} />
+          )}
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {mode === 'code' && (
+            <Typography variant="caption">UTF-8 • LF</Typography>
+          )}
+          <Typography variant="caption">
+            Ln {1}, Col {1}
+          </Typography>
+        </Box>
       </Box>
     </Paper>
   );
-}
+};
 
-// Export ToggleButton and ToggleButtonGroup for use in parent
-EnhancedEditor.ToggleButton = ToggleButton;
-EnhancedEditor.ToggleButtonGroup = ToggleButtonGroup;
-
-
-EnhancedEditor.ToggleButton = ToggleButton;
-EnhancedEditor.ToggleButtonGroup = ToggleButtonGroup;
 export default EnhancedEditor;

@@ -98,8 +98,72 @@ class SocketClient {
     // Notebook-specific events with improved error handling
     this.socket.on('joinedNotebook', (data) => {
       console.log('Joined notebook:', data);
-      this.currentNotebook = data.notebookId;
+      this.currentNotebook = data?.notebookId || this.currentNotebook;
+      this.connectionLock = false;
       this.emit('joinedNotebook', data);
+    });
+
+    this.socket.on('notebookUpdated', (data) => {
+      this.emit('notebookUpdated', data);
+    });
+
+    this.socket.on('updateConfirmed', (data) => {
+      this.emit('updateConfirmed', data);
+    });
+
+    this.socket.on('conflictDetected', (data) => {
+      this.emit('conflictDetected', data);
+    });
+
+    this.socket.on('userJoined', (data) => {
+      this.emit('userJoined', data);
+    });
+
+    this.socket.on('userLeft', (data) => {
+      this.emit('userLeft', data);
+    });
+
+    this.socket.on('activeUsers', (data) => {
+      this.emit('activeUsers', data);
+    });
+
+    this.socket.on('userTyping', (data) => {
+      this.emit('userTyping', data);
+    });
+
+    this.socket.on('userStoppedTyping', (data) => {
+      this.emit('userStoppedTyping', data);
+    });
+
+    this.socket.on('userCursorPosition', (data) => {
+      this.emit('userCursorPosition', data);
+    });
+
+    // Comment events
+    this.socket.on('commentAdded', (data) => {
+      this.emit('commentAdded', data);
+    });
+
+    this.socket.on('commentUpdated', (data) => {
+      this.emit('commentUpdated', data);
+    });
+
+    this.socket.on('commentDeleted', (data) => {
+      this.emit('commentDeleted', data);
+    });
+
+    // Collaborator events
+    this.socket.on('collaboratorUpdated', (data) => {
+      this.emit('collaboratorUpdated', data);
+    });
+
+    this.socket.on('collaboratorRemoved', (data) => {
+      this.emit('collaboratorRemoved', data);
+    });
+
+    this.socket.on('connectionError', (data) => {
+      this.connectionLock = false;
+      this.emit('connectionError', data);
     });
 
     this.socket.on('userJoined', (data) => {

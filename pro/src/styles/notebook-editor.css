@@ -1,0 +1,335 @@
+/* Notebook Editor Modern Styles */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Quill editor custom styles */
+.ql-container.ql-snow {
+  border: none !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.ql-toolbar.ql-snow {
+  border: none !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background: rgba(248, 250, 252, 0.8) !important;
+  padding: 8px 16px !important;
+}
+
+.ql-editor {
+  font-size: 16px !important;
+  line-height: 1.8 !important;
+  padding: 24px 32px !important;
+  color: #1e293b !important;
+}
+
+.ql-editor h1 {
+  font-size: 2em !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.5em !important;
+  color: #0f172a !important;
+}
+
+.ql-editor h2 {
+  font-size: 1.5em !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5em !important;
+  color: #1e293b !important;
+}
+
+.ql-editor h3 {
+  font-size: 1.25em !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5em !important;
+  color: #334155 !important;
+}
+
+.ql-editor p {
+  margin-bottom: 0.75em !important;
+}
+
+.ql-editor blockquote {
+  border-left: 4px solid #6366f1 !important;
+  padding-left: 16px !important;
+  color: #64748b !important;
+  font-style: italic !important;
+  margin: 16px 0 !important;
+}
+
+.ql-editor pre.ql-syntax {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  font-size: 14px !important;
+  overflow-x: auto !important;
+}
+
+.ql-editor code {
+  background: rgba(99, 102, 241, 0.1) !important;
+  color: #6366f1 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  font-size: 0.9em !important;
+}
+
+.ql-editor a {
+  color: #6366f1 !important;
+  text-decoration: underline !important;
+}
+
+.ql-editor a:hover {
+  color: #4f46e5 !important;
+}
+
+.ql-editor img {
+  max-width: 100% !important;
+  border-radius: 8px !important;
+  margin: 16px 0 !important;
+}
+
+.ql-editor ul,
+.ql-editor ol {
+  padding-left: 24px !important;
+  margin: 8px 0 !important;
+}
+
+.ql-editor li {
+  margin: 4px 0 !important;
+}
+
+/* Placeholder styles */
+.ql-editor.ql-blank::before {
+  font-style: normal !important;
+  color: #94a3b8 !important;
+}
+
+/* Toolbar button styles */
+.ql-snow .ql-stroke {
+  stroke: #64748b !important;
+  transition: stroke 0.15s ease !important;
+}
+
+.ql-snow .ql-fill {
+  fill: #64748b !important;
+  transition: fill 0.15s ease !important;
+}
+
+.ql-snow .ql-picker {
+  color: #64748b !important;
+}
+
+.ql-snow button:hover .ql-stroke,
+.ql-snow .ql-picker-label:hover .ql-stroke {
+  stroke: #6366f1 !important;
+}
+
+.ql-snow button:hover .ql-fill,
+.ql-snow .ql-picker-label:hover .ql-fill {
+  fill: #6366f1 !important;
+}
+
+.ql-snow button.ql-active .ql-stroke {
+  stroke: #6366f1 !important;
+}
+
+.ql-snow button.ql-active .ql-fill {
+  fill: #6366f1 !important;
+}
+
+/* Tooltip styles */
+.ql-snow .ql-tooltip {
+  background: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+  padding: 8px 12px !important;
+}
+
+/* Monaco editor custom styles */
+.monaco-editor {
+  border-radius: 0 !important;
+}
+
+.monaco-editor .margin {
+  background: #ffffff !important;
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Glassmorphism effects */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Custom button styles */
+.btn-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Card styles */
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Skeleton loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 25%,
+    #e2e8f0 50%,
+    #f1f5f9 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* Focus ring styles */
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background: rgba(99, 102, 241, 0.2);
+  color: inherit;
+}
+
+/* Transition utilities */
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+.transition-colors {
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.transition-transform {
+  transition: transform 0.2s ease;
+}
+
+/* Responsive text */
+@media (max-width: 768px) {
+  .ql-editor {
+    padding: 16px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .ql-toolbar,
+  .no-print {
+    display: none !important;
+  }
+
+  .ql-editor {
+    padding: 0 !important;
+  }
+}
