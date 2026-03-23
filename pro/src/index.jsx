@@ -1,41 +1,96 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import './styles/notebook-editor.css';
 import reportWebVitals from './reportWebVitals';
 import ModernLandingPage from './LandingPage/ModernLandingPage';
-import NotebookEditor from './NotebookEditorPage/NotebookEditorPage';
+import EnhancedNotebookEditor from './NotebookEditorPage/EnhancedNotebookEditor';
 import EnhancedNotebookCreator from './NotebookEditorPage/EnhancedNotebookCreator';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ModernSignInPage from './SigninSignup/ModernSignInPage';
-import NotebooksPage from './NotebooksPage/NotebooksPage';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import ModernAuthPage from './SigninSignup/ModernAuthPage';
+import NotebooksDashboard from './NotebooksPage/NotebooksDashboard';
 import ProfilePage from './Profile/ProfilePage';
 import ThemeProvider from './contexts/ThemeContext';
 import ErrorBoundary from './Components/ErrorBoundary';
+import ToastProvider from './Components/ToastProvider';
 import SharedNotebooksPage from './SharedNotebooksPage/SharedNotebooksPage';
 import PresenceProvider from './contexts/PresenceContext';
+
+// Protected route component
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return <Navigate to="/auth?mode=login" replace />;
+  }
+  return children;
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <ErrorBoundary>
     <ThemeProvider>
-      <PresenceProvider>
-        <Router>
-          <Routes>
-            <Route >
+      <ToastProvider>
+        <PresenceProvider>
+          <Router>
+            <Routes>
+              {/* Public routes */}
               <Route index element={<ModernLandingPage />} />
-              <Route path='/create-notebook' element={<NotebookEditor mode="new" />} />
-              <Route path='/create-enhanced' element={<EnhancedNotebookCreator />} />
-              <Route path='/Notebook/:urlIdentifier' element={<NotebookEditor />} />
-              <Route path='/auth' element={<ModernSignInPage />} />
-              <Route path='/SigninSignup' element={<ModernSignInPage />} />
-              <Route path='/notebooks' element={<NotebooksPage />} />
-              <Route path='/profile' element={<ProfilePage />} />
-              <Route path='/shared' element={<SharedNotebooksPage />} />
-            </Route>
-          </Routes>
-        </Router>
-      </PresenceProvider>
+              <Route path="/auth" element={<ModernAuthPage />} />
+              <Route path="/SigninSignup" element={<ModernAuthPage />} />
+              
+              {/* Protected routes */}
+              <Route
+                path="/notebooks"
+                element={
+                  <ProtectedRoute>
+                    <NotebooksDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/create-notebook"
+                element={
+                  <ProtectedRoute>
+                    <EnhancedNotebookEditor mode="new" />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/create-enhanced"
+                element={
+                  <ProtectedRoute>
+                    <EnhancedNotebookCreator />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Notebook/:urlIdentifier"
+                element={<EnhancedNotebookEditor />}
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/shared"
+                element={
+                  <ProtectedRoute>
+                    <SharedNotebooksPage />
+                  </ProtectedRoute>
+                }
+              />
+              
+              {/* Catch all */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Router>
+        </PresenceProvider>
+      </ToastProvider>
     </ThemeProvider>
   </ErrorBoundary>
 );
