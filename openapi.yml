@@ -1,0 +1,1048 @@
+openapi: 3.0.0
+info:
+  title: Sync Note Net API
+  description: Collaborative real-time notebook application with password protection, permissions management, and guest access
+  version: 1.0.0
+  contact:
+    name: SyncNoteNet Support
+    url: https://github.com/PritOrg/Sync-Not-Net
+
+servers:
+  - url: http://localhost:5000/api
+    description: Development server
+  - url: https://api.syncnotenet.com/api
+    description: Production server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: MongoDB ObjectId
+        name:
+          type: string
+          minLength: 2
+        email:
+          type: string
+          format: email
+        avatar:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [user, admin]
+          default: user
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Notebook:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        format:
+          type: string
+          enum: [plaintext, markdown, html, rich-text]
+        owner:
+          type: string
+        collaborators:
+          type: array
+          items:
+            type: object
+            properties:
+              userId:
+                type: string
+              permission:
+                type: string
+                enum: [view, edit, admin]
+        isPasswordProtected:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+        notebookId:
+          type: string
+        author:
+          type: string
+        content:
+          type: string
+        parentId:
+          type: string
+          nullable: true
+          description: If set, this is a reply to another comment
+        isGuestAuthor:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code/type
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          nullable: true
+          description: Additional error context
+
+security:
+  - BearerAuth: []
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      operationId: healthCheck
+      security: []
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Server is operational
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  # User Routes
+  /users/register:
+    post:
+      summary: Register new user
+      operationId: registerUser
+      tags:
+        - Users
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  minLength: 6
+                  example: securePassword123
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token
+                  user:
+                    $ref: '#/components/schemas/User'
+                  message:
+                    type: string
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/login:
+    post:
+      summary: User login
+      operationId: loginUser
+      tags:
+        - Users
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  example: securePassword123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+                  message:
+                    type: string
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/profile:
+    get:
+      summary: Get current user profile
+      operationId: getUserProfile
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+
+    put:
+      summary: Update user profile
+      operationId: updateUserProfile
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                avatar:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/password:
+    put:
+      summary: Change user password
+      operationId: changePassword
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [currentPassword, newPassword]
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 6
+      responses:
+        '200':
+          description: Password changed successfully
+        '401':
+          description: Current password incorrect
+        '400':
+          description: Validation error
+
+  /users/stats:
+    get:
+      summary: Get user statistics
+      operationId: getUserStats
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalNotebooks:
+                    type: integer
+                  totalCollaborations:
+                    type: integer
+                  totalComments:
+                    type: integer
+                  joinDate:
+                    type: string
+                    format: date-time
+
+  /users/search:
+    get:
+      summary: Search for users by name or email
+      operationId: searchUsers
+      tags:
+        - Users
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+          description: Search query (minimum 2 characters)
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            maximum: 50
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    avatar:
+                      type: string
+                      nullable: true
+        '400':
+          description: Invalid search query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # Notebook Routes
+  /notebooks:
+    post:
+      summary: Create new notebook
+      operationId: createNotebook
+      tags:
+        - Notebooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                content:
+                  type: string
+                  default: ""
+                format:
+                  type: string
+                  enum: [plaintext, markdown, html, rich-text]
+                  default: markdown
+                tags:
+                  type: array
+                  items:
+                    type: string
+                password:
+                  type: string
+                  nullable: true
+      responses:
+        '201':
+          description: Notebook created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notebook'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /notebooks/my-notebooks:
+    get:
+      summary: Get user's notebooks with pagination
+      operationId: getMyNotebooks
+      tags:
+        - Notebooks
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            maximum: 100
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [date, title, updated]
+            default: date
+          description: Sort field
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search notebook titles/content
+      responses:
+        '200':
+          description: User's notebooks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notebooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notebook'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  pages:
+                    type: integer
+
+  /notebooks/shared:
+    get:
+      summary: Get notebooks shared with user
+      operationId: getSharedNotebooks
+      tags:
+        - Notebooks
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Shared notebooks list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notebooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notebook'
+                  total:
+                    type: integer
+
+  /notebooks/{id}:
+    get:
+      summary: Get notebook details by ID
+      operationId: getNotebook
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Notebook details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notebook'
+        '404':
+          description: Notebook not found
+        '403':
+          description: Access denied
+
+    put:
+      summary: Update notebook
+      operationId: updateNotebook
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                format:
+                  type: string
+                  enum: [plaintext, markdown, html, rich-text]
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Notebook updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notebook'
+        '400':
+          description: Validation error
+        '403':
+          description: Access denied
+        '404':
+          description: Notebook not found
+
+    delete:
+      summary: Delete notebook
+      operationId: deleteNotebook
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Notebook deleted
+        '403':
+          description: Access denied
+        '404':
+          description: Notebook not found
+
+  /notebooks/{id}/password:
+    put:
+      summary: Set or update notebook password protection
+      operationId: setNotebookPassword
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  nullable: true
+                  description: Password to set, or null to remove protection
+      responses:
+        '200':
+          description: Password protection updated
+        '400':
+          description: Validation error
+        '403':
+          description: Access denied
+
+  /notebooks/{urlIdentifier}/verify-password:
+    post:
+      summary: Verify password for protected notebook access
+      operationId: verifyNotebookPassword
+      tags:
+        - Notebooks
+      security: []
+      parameters:
+        - name: urlIdentifier
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Password verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verified:
+                    type: boolean
+        '401':
+          description: Invalid password
+        '404':
+          description: Notebook not found
+
+  /notebooks/{id}/collaborators:
+    get:
+      summary: Get notebook collaborators
+      operationId: getCollaborators
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Collaborators list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: string
+                    userName:
+                      type: string
+                    email:
+                      type: string
+                    permission:
+                      type: string
+                      enum: [view, edit, admin]
+                    addedAt:
+                      type: string
+                      format: date-time
+
+    put:
+      summary: Add or update collaborator permissions
+      operationId: updateCollaborator
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, permission]
+              properties:
+                userId:
+                  type: string
+                permission:
+                  type: string
+                  enum: [view, edit, admin]
+      responses:
+        '200':
+          description: Collaborator updated
+        '400':
+          description: Validation error
+        '403':
+          description: Access denied
+
+  /notebooks/{id}/collaborators/{userId}:
+    delete:
+      summary: Remove collaborator from notebook
+      operationId: removeCollaborator
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Collaborator removed
+        '403':
+          description: Access denied
+
+  /notebooks/{id}/versions:
+    get:
+      summary: Get notebook version history
+      operationId: getVersionHistory
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Version history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    content:
+                      type: string
+                    author:
+                      type: string
+                    createdAt:
+                      type: string
+                      format: date-time
+
+  /notebooks/{id}/versions/{versionId}/restore:
+    post:
+      summary: Restore specific notebook version
+      operationId: restoreVersion
+      tags:
+        - Notebooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: versionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Version restored
+        '403':
+          description: Access denied
+
+  /notebooks/{id}/comments:
+    get:
+      summary: Get all comments for notebook
+      operationId: getComments
+      tags:
+        - Comments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Comments list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+
+    post:
+      summary: Add comment to notebook
+      operationId: addComment
+      tags:
+        - Comments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+                parentId:
+                  type: string
+                  nullable: true
+                  description: For replies to other comments
+                author:
+                  type: string
+                  nullable: true
+                  description: Optional guest author name
+      responses:
+        '201':
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Validation error
+
+  /notebooks/{id}/comments/{commentId}:
+    put:
+      summary: Update comment
+      operationId: updateComment
+      tags:
+        - Comments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Comment updated
+        '403':
+          description: Access denied
+
+    delete:
+      summary: Delete comment
+      operationId: deleteComment
+      tags:
+        - Comments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comment deleted
+        '403':
+          description: Access denied
+
+  /tags:
+    get:
+      summary: Get all user's tags
+      operationId: getTags
+      tags:
+        - Tags
+      responses:
+        '200':
+          description: User's tags list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    color:
+                      type: string
+                    createdAt:
+                      type: string
+                      format: date-time
+
+    post:
+      summary: Create new tag
+      operationId: createTag
+      tags:
+        - Tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                color:
+                  type: string
+                  pattern: '^#[0-9A-F]{6}$'
+      responses:
+        '201':
+          description: Tag created
+        '400':
+          description: Validation error
+
+  /tags/{tagId}:
+    put:
+      summary: Update tag
+      operationId: updateTag
+      tags:
+        - Tags
+      parameters:
+        - name: tagId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                color:
+                  type: string
+                  pattern: '^#[0-9A-F]{6}$'
+      responses:
+        '200':
+          description: Tag updated
+        '404':
+          description: Tag not found
+
+    delete:
+      summary: Delete tag
+      operationId: deleteTag
+      tags:
+        - Tags
+      parameters:
+        - name: tagId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tag deleted
+        '404':
+          description: Tag not found
