@@ -1067,109 +1067,9 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
   });
 }));
 
-// Verify notebook password
-// router.post('/:urlIdentifier/verify-password', validateNotebookAccess, catchAsync(async (req, res) => {
-//   const { password, guestId, guestName } = req.body;
-
-//   if (!password) {
-//     return res.status(400).json({
-//       error: 'Password required',
-//       message: 'Please provide a password'
-//     });
-//   }
-
-//   const notebook = await Notebook.findOne({ urlIdentifier: req.params.urlIdentifier });
-
-//   if (!notebook) {
-//     return res.status(404).json({
-//       error: 'Notebook not found',
-//       message: 'The requested notebook does not exist'
-//     });
-//   }
-
-//   if (!notebook.password) {
-//     return res.status(400).json({
-//       error: 'No password required',
-//       message: 'This notebook is not password protected'
-//     });
-//   }
-
-//   const isPasswordValid = await bcrypt.compare(password, notebook.password);
-
-//   if (!isPasswordValid) {
-//     logger.warn(`Invalid password attempt for notebook ${notebook.urlIdentifier}`);
-//     return res.status(401).json({
-//       error: 'Invalid password',
-//       message: 'The password you entered is incorrect'
-//     });
-//   }
-
-//   // Password is valid - return notebook content
-//   await notebook.populate('creatorID', 'name email');
-//   await notebook.populate('collaborators', 'name email');
-
-//   // If guest credentials are present, return guest info and set accessLevel/userRole accordingly
-//   if (guestId && guestName) {
-//     return res.json({
-//       _id: notebook._id,
-//       title: notebook.title,
-//       content: notebook.content,
-//       urlIdentifier: notebook.urlIdentifier,
-//       permissions: notebook.permissions,
-//       editorMode: notebook.editorMode,
-//       autoSave: notebook.autoSave,
-//       tags: notebook.tags,
-//       version: notebook.version,
-//       creator: {
-//         id: notebook.creatorID._id,
-//         name: notebook.creatorID.name,
-//         email: notebook.creatorID.email
-//       },
-//       collaborators: notebook.collaborators.map(collab => ({
-//         id: collab._id,
-//         name: collab.name,
-//         email: collab.email
-//       })),
-//       hasAccess: true,
-//       accessLevel: 'edit',
-//       userRole: 'guest',
-//       guestUser: {
-//         id: guestId,
-//         name: guestName,
-//         role: 'guest'
-//       },
-//       message: 'Password verified successfully (guest)'
-//     });
-//   }
-
-//   // Otherwise, treat as authenticated user
-//   res.json({
-//     _id: notebook._id,
-//     title: notebook.title,
-//     content: notebook.content,
-//     urlIdentifier: notebook.urlIdentifier,
-//     permissions: notebook.permissions,
-//     editorMode: notebook.editorMode,
-//     autoSave: notebook.autoSave,
-//     tags: notebook.tags,
-//     version: notebook.version,
-//     creator: {
-//       id: notebook.creatorID._id,
-//       name: notebook.creatorID.name,
-//       email: notebook.creatorID.email
-//     },
-//     collaborators: notebook.collaborators.map(collab => ({
-//       id: collab._id,
-//       name: collab.name,
-//       email: collab.email
-//     })),
-//     hasAccess: true,
-//     accessLevel: 'edit',
-//     userRole: 'owner', // fallback, frontend should set this based on auth
-//     message: 'Password verified successfully'
-//   });
-// }));
-// Register guest user for public collaboration
+/**
+ * Register guest user for public collaboration
+ */
 router.post('/:urlIdentifier/register-guest', catchAsync(async (req, res) => {
   const { guestName } = req.body;
 
@@ -1547,6 +1447,15 @@ router.delete('/:id', async (req, res) => {
 
 // ==== DEDICATED SETTINGS ROUTES ====
 
+/**
+ * Update notebook password protection
+ * @route PUT /:id/password
+ * @param {string} req.params.id - Notebook ID
+ * @param {string} req.body.password - New password (empty string to remove)
+ * @param {boolean} req.body.requiresPassword - Whether password protection is enabled
+ * @returns {object} Success message and password status
+ * @access Private (creator only)
+ */
 // Update notebook password
 router.put('/:id/password', verifyToken, catchAsync(async (req, res) => {
   const { password, requiresPassword } = req.body;
@@ -1639,6 +1548,14 @@ router.put('/:id/password', verifyToken, catchAsync(async (req, res) => {
   });
 }));
 
+/**
+ * Update notebook permissions level
+ * @route PUT /:id/permissions
+ * @param {string} req.params.id - Notebook ID
+ * @param {string} req.body.permissions - New permission level (everyone, collaborators, private)
+ * @returns {object} Updated permissions
+ * @access Private (creator only)
+ */
 // Update notebook permissions (single route)
 router.put('/:id/permissions', verifyToken, catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -1698,6 +1615,14 @@ router.put('/:id/permissions', verifyToken, catchAsync(async (req, res) => {
   });
 }));
 
+/**
+ * Add/update notebook collaborators
+ * @route PUT /:id/collaborators
+ * @param {string} req.params.id - Notebook ID
+ * @param {array} req.body.collaborators - Array of collaborators with userId and access level
+ * @returns {object} Updated collaborators list
+ * @access Private (creator only)
+ */
 // Update notebook collaborators
 router.put('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
   const { collaborators } = req.body;
@@ -2054,60 +1979,9 @@ router.put('/:id/tags', verifyToken, catchAsync(async (req, res) => {
   }
 }));
 
-// Set/update notebook password
-router.put('/:id/password', verifyToken, catchAsync(async (req, res) => {
-  try {
-    const { password, requiresPassword } = req.body;
-    const notebookId = req.params.id;
-    
-    // Find the notebook
-    const notebook = await Notebook.findById(notebookId);
-    
-    if (!notebook) {
-      return res.status(404).json({
-        error: 'Notebook not found',
-        message: 'The notebook you are trying to update does not exist.'
-      });
-    }
-    
-    // Verify ownership - only the owner can set a password
-    if (notebook.creatorID.toString() !== req.user.id) {
-      return res.status(403).json({
-        error: 'Access denied',
-        message: 'Only the creator can update password settings.'
-      });
-    }
-    
-    // Update password settings
-    if (requiresPassword && password) {
-      // Hash the password before storing
-      const salt = await bcrypt.genSalt(10);
-      notebook.password = await bcrypt.hash(password, salt);
-      notebook.requiresPassword = true;
-    } else {
-      // Remove password protection
-      notebook.password = null;
-      notebook.requiresPassword = false;
-    }
-    
-    await notebook.save();
-    
-    // Return success message (but don't return the password)
-    return res.json({
-      message: 'Password settings updated successfully',
-      requiresPassword: notebook.requiresPassword
-    });
-    
-  } catch (error) {
-    logger.error('Error updating notebook password:', error);
-    return res.status(500).json({
-      error: 'Server error',
-      message: 'Failed to update password settings. Please try again.'
-    });
-  }
-}));
-
-// Get collaborators for a notebook
+/**
+ * Get collaborators for a notebook
+ */
 router.get('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
   try {
     const notebookId = req.params.id;
@@ -2152,57 +2026,9 @@ router.get('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
   }
 }));
 
-// Update collaborators list for a notebook
-router.put('/:id/collaborators', verifyToken, catchAsync(async (req, res) => {
-  try {
-    const { collaborators } = req.body;
-    const notebookId = req.params.id;
-    
-    if (!collaborators || !Array.isArray(collaborators)) {
-      return res.status(400).json({
-        error: 'Invalid collaborators data',
-        message: 'Collaborators must be provided as an array of user IDs.'
-      });
-    }
-    
-    // Find the notebook
-    const notebook = await Notebook.findById(notebookId);
-    
-    if (!notebook) {
-      return res.status(404).json({
-        error: 'Notebook not found',
-        message: 'The notebook you are trying to update does not exist.'
-      });
-    }
-    
-    // Verify ownership - only the owner can update collaborators
-    if (notebook.creatorID.toString() !== req.user.id) {
-      return res.status(403).json({
-        error: 'Access denied',
-        message: 'Only the creator can update collaborators.'
-      });
-    }
-    
-    // Update collaborators
-    notebook.collaborators = collaborators;
-    await notebook.save();
-    
-    // Return updated list (but don't populate to avoid potential circular dependencies)
-    return res.json({
-      message: 'Collaborators updated successfully',
-      collaborators: notebook.collaborators
-    });
-    
-  } catch (error) {
-    logger.error('Error updating notebook collaborators:', error);
-    return res.status(500).json({
-      error: 'Server error',
-      message: 'Failed to update collaborators. Please try again.'
-    });
-  }
-}));
-
-// Update a specific collaborator's permissions
+/**
+ * Update a specific collaborator's permissions
+ */
 router.put('/:id/collaborators/:userId', verifyToken, catchAsync(async (req, res) => {
   try {
     const { permission } = req.body;
