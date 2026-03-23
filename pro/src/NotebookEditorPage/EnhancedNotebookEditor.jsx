@@ -1106,6 +1106,16 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           onClose={() => setIsPasswordSettingsOpen(false)}
           notebookId={notebookData?._id || ''}
           hasPassword={!!notebookData?.hasPassword}
+          onSave={async (settings) => {
+            const token = localStorage.getItem('token');
+            const response = await axios.put(
+              `${API_BASE_URL}/api/notebooks/${notebookData?._id}/password`,
+              { password: settings.password || '' },
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            await fetchNotebookData();
+            return response.data;
+          }}
         />
 
         {/* Permissions Dialog */}
@@ -1114,6 +1124,15 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           onClose={() => setIsPermissionsSettingsOpen(false)}
           notebookId={notebookData?._id || ''}
           currentPermissions={notebookData?.permissions || 'everyone'}
+          onSave={async (settings) => {
+            const token = localStorage.getItem('token');
+            await axios.put(
+              `${API_BASE_URL}/api/notebooks/${notebookData?._id}`,
+              settings,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            await fetchNotebookData();
+          }}
         />
 
         {/* Delete Dialog */}

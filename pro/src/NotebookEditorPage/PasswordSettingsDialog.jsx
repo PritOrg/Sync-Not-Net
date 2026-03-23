@@ -25,7 +25,7 @@ import {
 
 // API endpoint is handled by parent component via onSave
 
-const PasswordSettingsDialog = ({ open, onClose, notebookId, initialSettings = {}, onSave }) => {
+const PasswordSettingsDialog = ({ open, onClose, notebookId, hasPassword = false, onSave }) => {
   const [password, setPassword] = useState('');
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -36,10 +36,10 @@ const PasswordSettingsDialog = ({ open, onClose, notebookId, initialSettings = {
   // Initialize state when dialog opens
   useEffect(() => {
     if (open) {
-      setIsPasswordEnabled(!!initialSettings.requiresPassword);
+      setIsPasswordEnabled(!!hasPassword);
       setPassword('');
     }
-  }, [open]);
+  }, [open, hasPassword]);
 
   const handleTogglePasswordProtection = (event) => {
     setIsPasswordEnabled(event.target.checked);

@@ -22,7 +22,7 @@ import {
   Lock as LockIcon,
 } from '@mui/icons-material';
 
-const PermissionsSettingsDialog = ({ open, onClose, notebookId, initialSettings = {}, onSave }) => {
+const PermissionsSettingsDialog = ({ open, onClose, notebookId, currentPermissions = 'everyone', onSave }) => {
   const [permissions, setPermissions] = useState('everyone');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,9 +31,9 @@ const PermissionsSettingsDialog = ({ open, onClose, notebookId, initialSettings 
   // Initialize state when dialog opens
   useEffect(() => {
     if (open) {
-      setPermissions(initialSettings.permissions || 'everyone');
+      setPermissions(currentPermissions || 'everyone');
     }
-  }, [open]);
+  }, [open, currentPermissions]);
 
   const handlePermissionsChange = (event) => {
     setPermissions(event.target.value);
