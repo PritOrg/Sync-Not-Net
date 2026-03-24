@@ -57,17 +57,22 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
         access: c.access || 'write'
       }));
       setCollaborators(mappedCollaborators);
+      setAvailableUsers([]);
+      setError('');
     }
-  }, [open]);
+  }, [open, initialSettings]);
 
   const handleCollaboratorSearch = async (searchTerm) => {
-    if (searchTerm.length > 2) {
-      try {
-        const users = await searchCollaborators(searchTerm);
-        setAvailableUsers(users || []);
-      } catch (error) {
-        console.error('Error searching collaborators:', error);
-      }
+    if (!searchTerm || searchTerm.length < 3) {
+      setAvailableUsers([]);
+      return;
+    }
+    try {
+      const users = await searchCollaborators(searchTerm);
+      setAvailableUsers(users || []);
+    } catch (error) {
+      console.error('Error searching collaborators:', error);
+      setAvailableUsers([]);
     }
   };
 

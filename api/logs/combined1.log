@@ -9724,3 +9724,129 @@
   service: 'sync-not-net-api',
   timestamp: '2026-03-24 01:36:03'
 }
+{
+  message: '::1 - - [23/Mar/2026:20:13:53 +0000] "GET /api/users/search?q=pri HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:43:53'
+}
+{
+  message: '::1 - - [23/Mar/2026:20:13:53 +0000] "GET /api/users/search?q=prit HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:43:53'
+}
+{
+  message: 'User Beta tester disconnected from notebook 69c19bcb2889ba990eab2a00. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:05'
+}
+{
+  message: 'User Anonymous connected with socket vdUEdsguo7_zAkaHAAAK',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:09'
+}
+{
+  message: 'User Beta tester connected with socket gFOY0zAKdmsuV8zWAAAL',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:10'
+}
+{
+  message: '::1 - - [23/Mar/2026:20:14:10 +0000] "GET /api/notebooks/607883ba6cf86e70 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:10'
+}
+{
+  message: 'User Beta tester (editor) joined notebook 69c19bcb2889ba990eab2a00',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:10'
+}
+{
+  message: 'Password protection added/updated for notebook 69c19bcb2889ba990eab2a00',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:41'
+}
+{
+  message: '::1 - - [23/Mar/2026:20:14:42 +0000] "PUT /api/notebooks/69c19bcb2889ba990eab2a00/password HTTP/1.1" 200 133 "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:42'
+}
+{
+  message: '::1 - - [23/Mar/2026:20:14:42 +0000] "GET /api/notebooks/607883ba6cf86e70 HTTP/1.1" 200 246 "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:42'
+}
+{
+  message: 'User Beta tester disconnected from notebook 69c19bcb2889ba990eab2a00. Reason: transport close',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:47'
+}
+{
+  message: 'User Anonymous connected with socket Fa8E2s7qr8Q1S6IzAAAP',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:49'
+}
+{
+  message: 'User Beta tester connected with socket RCo6GX9JRQ0q2aq3AAAO',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:49'
+}
+{
+  message: '::1 - - [23/Mar/2026:20:14:49 +0000] "GET /api/notebooks/607883ba6cf86e70 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:49'
+}
+{
+  message: '::1 - - [23/Mar/2026:20:14:58 +0000] "GET /api/notebooks HTTP/1.1" 200 7920 "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:44:58'
+}
+{
+  message: '::1 - - [23/Mar/2026:20:15:00 +0000] "GET /api/notebooks/607883ba6cf86e70 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:45:00'
+}
+{
+  message: '::1 - - [23/Mar/2026:20:23:56 +0000] "GET /api/notebooks/607883ba6cf86e70 HTTP/1.1" 500 3660 "http://localhost:3000/" "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 01:53:56'
+}
+{
+  message: 'User Anonymous connected with socket _tJPiTc-hvNCuSasAAAT',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 08:22:32'
+}
+{
+  message: 'User Beta tester connected with socket L1c5kS10pA2SvZuEAAAR',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 08:22:33'
+}
+{
+  message: '::1 - - [24/Mar/2026:02:52:33 +0000] "GET /api/notebooks/607883ba6cf86e70 HTTP/1.1" 200 246 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 08:22:33'
+}
+{
+  message: '::1 - - [24/Mar/2026:02:52:34 +0000] "GET /api/notebooks/607883ba6cf86e70 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"',
+  level: 'info',
+  service: 'sync-not-net-api',
+  timestamp: '2026-03-24 08:22:34'
+}

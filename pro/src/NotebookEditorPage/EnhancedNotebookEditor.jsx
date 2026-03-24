@@ -702,6 +702,23 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
       }
 
       const data = await response.json();
+      
+      // Check if password is required (200 OK but needs password)
+      if (data.requiresPassword) {
+        setTitle(data.notebook?.title || 'Notebook');
+        setRequiresPassword(true);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Check if guest name is required (200 OK but needs guest name)
+      if (data.requiresGuestName) {
+        setTitle(data.notebook?.title || 'Notebook');
+        setRequiresGuestName(true);
+        setIsLoading(false);
+        return;
+      }
+      
       loadNotebookFromResponse(data);
     } catch (error) {
       console.error('Error fetching notebook:', error);
@@ -1089,7 +1106,8 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
             const response = await axios.get(`${API_BASE_URL}/api/users/search?q=${query}`, {
               headers: { Authorization: `Bearer ${token}` },
             });
-            return response.data.users || [];
+            // API returns array directly, not wrapped in { users: [] }
+            return Array.isArray(response.data) ? response.data : [];
           }}
           onSave={async (settings) => {
             const token = localStorage.getItem('token');
