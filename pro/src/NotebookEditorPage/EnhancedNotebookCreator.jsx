@@ -57,8 +57,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import config from '../config';
 
 const EnhancedNotebookCreator = () => {
   const theme = useTheme();
@@ -125,7 +124,7 @@ const EnhancedNotebookCreator = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_BASE_URL}/api/users/search`, {
+      const response = await axios.get(`${config.apiUrl}/api/users/search`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUsers(response.data.users || []);
@@ -228,7 +227,7 @@ const EnhancedNotebookCreator = () => {
         collaborators: formData.collaborators.map(c => c._id)
       };
 
-      const response = await axios.post(`${API_BASE_URL}/api/notebooks`, payload, {
+      const response = await axios.post(`${config.apiUrl}/api/notebooks`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

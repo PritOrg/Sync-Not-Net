@@ -396,7 +396,7 @@ export const useRemoteCursors = (socketClient, notebookId, currentUserId) => {
   }, []);
 
   return {
-    cursars: cursors,
+    cursors: cursors,
     sendCursorPosition,
     clearCursors: () => setCursors([])
   };

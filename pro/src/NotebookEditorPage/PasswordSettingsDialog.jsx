@@ -22,6 +22,7 @@ import {
   Save as SaveIcon,
   Lock as LockIcon,
 } from '@mui/icons-material';
+import apiErrorHandler from '../utils/errorHandler';
 
 // API endpoint is handled by parent component via onSave
 
@@ -92,7 +93,7 @@ const PasswordSettingsDialog = ({ open, onClose, notebookId, hasPassword = false
       }, 1500);
     } catch (error) {
       console.error('Password settings error:', error);
-      setError(error.message || 'Failed to update password settings');
+      setError(apiErrorHandler.getErrorMessage(error));
     } finally {
       setLoading(false);
     }

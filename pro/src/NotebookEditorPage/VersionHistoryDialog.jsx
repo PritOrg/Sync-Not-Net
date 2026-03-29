@@ -38,8 +38,8 @@ import axios from 'axios';
 import { formatDistanceToNow, format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import Swal from 'sweetalert2';
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import config from '../config';
+import apiErrorHandler from '../utils/errorHandler';
 
 // Version item component
 const VersionItem = ({ version, isSelected, isCurrent, onSelect, onRestore, restoring, isOwner }) => {
@@ -160,7 +160,7 @@ const VersionItem = ({ version, isSelected, isCurrent, onSelect, onRestore, rest
   );
 };
 
-const VersionHistoryDialog = ({ open, onClose, notebookId, onVersionRestore, onCompareVersions }) => {
+const VersionHistoryDialog = ({ open, onClose, notebookId, isOwner, onVersionRestore, onCompareVersions }) => {
   const theme = useTheme();
   const [versions, setVersions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -180,12 +180,12 @@ const VersionHistoryDialog = ({ open, onClose, notebookId, onVersionRestore, onC
       setLoading(true);
       setError(null);
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_BASE_URL}/api/notebooks/${notebookId}/versions`, {
+      const response = await axios.get(`${config.apiUrl}/api/notebooks/${notebookId}/versions`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setVersions(response.data.versions || []);
     } catch (err) {
-      setError('Failed to load version history');
+      setError(apiErrorHandler.getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -226,7 +226,7 @@ const VersionHistoryDialog = ({ open, onClose, notebookId, onVersionRestore, onC
       setRestoring(true);
       const token = localStorage.getItem('token');
       await axios.post(
-        `${API_BASE_URL}/api/notebooks/${notebookId}/versions/${versionId}/restore`,
+        `${config.apiUrl}/api/notebooks/${notebookId}/versions/${versionId}/restore`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -242,7 +242,7 @@ const VersionHistoryDialog = ({ open, onClose, notebookId, onVersionRestore, onC
     } catch (err) {
       Swal.fire({
         title: 'Error!',
-        text: 'Failed to restore version. Please try again.',
+        text: apiErrorHandler.getErrorMessage(err),
         icon: 'error',
       });
     } finally {
@@ -378,7 +378,7 @@ const VersionHistoryDialog = ({ open, onClose, notebookId, onVersionRestore, onC
                   onSelect={handleToggleVersion}
                   onRestore={handleRestore}
                   restoring={restoring}
-                  isOwner={true} // Should check actual ownership
+                  isOwner={isOwner}
                 />
               ))}
             </Box>

@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import config from '../config';
 
 class SocketClient {
   constructor() {
@@ -26,7 +27,7 @@ class SocketClient {
     }
 
     this.connectionLock = true;
-    const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+    const API_BASE_URL = config.socketUrl;
     
     // Clear any existing socket instance
     if (this.socket) {
@@ -152,6 +153,10 @@ class SocketClient {
       this.emit('commentDeleted', data);
     });
 
+    this.socket.on('commentLiked', (data) => {
+      this.emit('commentLiked', data);
+    });
+
     // Collaborator events
     this.socket.on('collaboratorUpdated', (data) => {
       this.emit('collaboratorUpdated', data);
@@ -236,13 +241,15 @@ class SocketClient {
     
     setTimeout(() => {
       if (!this.isConnected && this.socket) {
+        // Save token before nullifying socket
+        const token = this.socket?.auth?.token;
         // Clean up before attempting to reconnect
         this.socket.removeAllListeners();
         this.socket.close();
         this.socket = null;
         this.connectionLock = false;
         // Attempt a fresh connection
-        this.connect(this.socket?.auth?.token);
+        this.connect(token);
       }
     }, delay);
   }

@@ -32,8 +32,9 @@ import axios from 'axios';
 import { formatDistanceToNow } from 'date-fns';
 import { Diff, Hunk, parseDiff } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
-
-// Required for syntax highlighting
+import Swal from 'sweetalert2';
+import config from '../config';
+import apiErrorHandler from '../utils/errorHandler';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import javascript from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
@@ -45,8 +46,6 @@ SyntaxHighlighter.registerLanguage('javascript', javascript);
 SyntaxHighlighter.registerLanguage('json', json);
 SyntaxHighlighter.registerLanguage('markdown', markdown);
 SyntaxHighlighter.registerLanguage('html', html);
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const VersionComparisonDialog = ({ open, onClose, notebookId, oldVersionId, newVersionId, onVersionRestore }) => {
   const theme = useTheme();
@@ -72,10 +71,10 @@ const VersionComparisonDialog = ({ open, onClose, notebookId, oldVersionId, newV
       
       // Fetch both versions in parallel
       const [oldResponse, newResponse] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/notebooks/${notebookId}/versions/${oldVersionId}`, {
+        axios.get(`${config.apiUrl}/api/notebooks/${notebookId}/versions/${oldVersionId}`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get(`${API_BASE_URL}/api/notebooks/${notebookId}/versions/${newVersionId}`, {
+        axios.get(`${config.apiUrl}/api/notebooks/${notebookId}/versions/${newVersionId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
@@ -84,16 +83,57 @@ const VersionComparisonDialog = ({ open, onClose, notebookId, oldVersionId, newV
       setNewVersion(newResponse.data.version);
     } catch (error) {
       console.error('Error fetching versions:', error);
-      setError('Failed to load versions for comparison. Please try again.');
+      setError(apiErrorHandler.getErrorMessage(error));
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRestore = (versionId) => {
-    if (onVersionRestore) {
-      onVersionRestore(versionId);
+  const [restoring, setRestoring] = useState(false);
+
+  const handleRestore = async (versionId) => {
+    const version = versionId === oldVersionId ? oldVersion : newVersion;
+    const versionLabel = version ? `v${version.version}` : 'this version';
+
+    const result = await Swal.fire({
+      title: 'Restore Version?',
+      text: `Are you sure you want to restore to ${versionLabel}? Current content will be saved as a new version.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#6366f1',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, restore',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      setRestoring(true);
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${config.apiUrl}/api/notebooks/${notebookId}/versions/${versionId}/restore`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      Swal.fire({
+        title: 'Restored!',
+        text: `Successfully restored to ${versionLabel}.`,
+        icon: 'success',
+        confirmButtonColor: '#6366f1',
+      });
+
+      if (onVersionRestore) onVersionRestore(versionId);
       onClose();
+    } catch (err) {
+      Swal.fire({
+        title: 'Error!',
+        text: apiErrorHandler.getErrorMessage(err),
+        icon: 'error',
+      });
+    } finally {
+      setRestoring(false);
     }
   };
 
@@ -391,8 +431,9 @@ ${createUnifiedDiff(oldText, newText)}`;
             <Button 
               onClick={() => handleRestore(oldVersionId)}
               variant="outlined"
-              startIcon={<RestoreIcon />}
+              startIcon={restoring ? <CircularProgress size={18} /> : <RestoreIcon />}
               color="secondary"
+              disabled={restoring}
               sx={{ borderRadius: 1, mr: 1 }}
             >
               Restore Older Version
@@ -400,8 +441,9 @@ ${createUnifiedDiff(oldText, newText)}`;
             <Button 
               onClick={() => handleRestore(newVersionId)}
               variant="contained"
-              startIcon={<RestoreIcon />}
+              startIcon={restoring ? <CircularProgress size={18} /> : <RestoreIcon />}
               color="primary"
+              disabled={restoring}
               sx={{ borderRadius: 1 }}
             >
               Restore Newer Version

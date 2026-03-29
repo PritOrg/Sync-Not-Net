@@ -28,8 +28,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import config from '../config';
 
 const ModernSignInPage = () => {
   const theme = useTheme();
@@ -160,7 +159,7 @@ const ModernSignInPage = () => {
         ? { name: formData.name, email: formData.email, password: formData.password } 
         : { email: formData.email, password: formData.password };
       
-      const response = await axios.post(`${API_BASE_URL + endpoint}`, payload);
+      const response = await axios.post(`${config.apiUrl + endpoint}`, payload);
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);

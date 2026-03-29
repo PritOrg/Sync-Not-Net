@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -35,6 +35,11 @@ const UnifiedAccessPrompt = ({
   const [showPassword, setShowPassword] = useState(false);
   const [guestName, setGuestName] = useState('');
   const [passwordError, setPasswordError] = useState(error);
+
+  // Sync error prop to local state whenever it changes
+  useEffect(() => {
+    setPasswordError(error);
+  }, [error]);
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
@@ -287,9 +292,9 @@ const UnifiedAccessPrompt = ({
               </Button>
             </form>
 
-            {error && error.includes('password') && (
-              <Typography variant="caption" color="error" sx={{ mt: 2, display: 'block', textAlign: 'center' }}>
-                The password you entered is incorrect. Please try again.
+            {(passwordError || error) && (
+              <Typography variant="body2" color="error" sx={{ mt: 2, display: 'block', textAlign: 'center', fontWeight: 500 }}>
+                {passwordError || error}
               </Typography>
             )}
           </Paper>

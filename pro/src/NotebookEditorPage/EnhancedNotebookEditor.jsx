@@ -49,6 +49,7 @@ import {
   Download as DownloadIcon,
   ContentCopy as CopyIcon,
   Link as LinkIcon,
+  AutoFixHigh as PersonalizeIcon,
   Fullscreen as FullscreenIcon,
   FullscreenExit as FullscreenExitIcon,
   Undo as UndoIcon,
@@ -76,11 +77,11 @@ import ErrorBoundary from '../Components/ErrorBoundary';
 import socketClient from '../utils/socketClient';
 import { processContentFromBackend, prepareContentForBackend } from '../utils/contentUtils';
 import ShareDialog from './ShareDialog';
+import NotebookUrlSettingsDialog from './NotebookUrlSettingsDialog';
 import UnifiedAccessPrompt from './UnifiedAccessPrompt';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import config from '../config';
 
 // Animation variants
 const pageVariants = {
@@ -209,6 +210,7 @@ const EditorToolbar = ({
   onCollaborators,
   onPassword,
   onPermissions,
+  onUrlSettings,
   onDelete,
   onKeyboardShortcuts,
   onSave,
@@ -338,6 +340,7 @@ const SettingsDrawerContent = ({
   onCollaborators,
   onPassword,
   onPermissions,
+  onUrlSettings,
   onDelete,
   onKeyboardShortcuts,
   userRole,
@@ -362,6 +365,7 @@ const SettingsDrawerContent = ({
         { icon: <PeopleIcon />, label: 'Collaborators', onClick: onCollaborators },
         { icon: <LockIcon />, label: 'Password Protection', onClick: onPassword },
         { icon: <VisibilityIcon />, label: 'Permissions', onClick: onPermissions },
+        { icon: <PersonalizeIcon />, label: 'Personalize URL', onClick: onUrlSettings },
       ],
     },
     {
@@ -404,7 +408,7 @@ const SettingsDrawerContent = ({
               <Button
                 key={itemIdx}
                 startIcon={item.icon}
-                onClick={() => { item.onClick(); onClose(); }}
+                onClick={() => { if (typeof item.onClick === 'function') { item.onClick(); } if (typeof onClose === 'function') { onClose(); } }}
                 sx={{
                   justifyContent: 'flex-start',
                   py: 1.5,
@@ -472,6 +476,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isKeyboardShortcutsOpen, setIsKeyboardShortcutsOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isUrlSettingsOpen, setIsUrlSettingsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Access state
@@ -506,7 +511,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
   // Register as guest user
   const registerGuest = useCallback(async (guestName, urlId) => {
     if (!guestName || !urlId) throw new Error('Missing guest name or notebook identifier');
-    const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlId}/register-guest`, {
+    const response = await fetch(`${config.apiUrl}/api/notebooks/${urlId}/register-guest`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ guestName })
@@ -530,6 +535,12 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
       'Content-Type': 'application/json',
     };
     
+    // Include auth token so backend can identify the user
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     // Include guest info in request
     const body = { password };
     if (guestInfo) {
@@ -537,7 +548,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
       headers['X-Guest-Name'] = guestInfo.name;
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlId}/verify-password`, {
+    const response = await fetch(`${config.apiUrl}/api/notebooks/${urlId}/verify-password`, {
       method: 'POST',
       headers,
       body: JSON.stringify(body)
@@ -661,7 +672,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
         headers['X-Guest-Name'] = parsedGuestInfo.name;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/notebooks/${urlIdentifier_from_url}`, { headers });
+      const response = await fetch(`${config.apiUrl}/api/notebooks/${urlIdentifier_from_url}`, { headers });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -743,7 +754,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
         const newUrlIdentifier = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 
                                  `notebook-${Date.now()}`;
 
-        const response = await fetch(`${API_BASE_URL}/api/notebooks`, {
+        const response = await fetch(`${config.apiUrl}/api/notebooks`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -800,7 +811,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
       const token = localStorage.getItem('token');
       const preparedContent = prepareContentForBackend(content);
 
-      const response = await fetch(`${API_BASE_URL}/api/notebooks/${notebookData._id}`, {
+      const response = await fetch(`${config.apiUrl}/api/notebooks/${notebookData._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -876,7 +887,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
     });
 
     socketClient.on('userLeft', (data) => {
-      setActiveUsers(prev => prev.filter(u => u.id !== data.userId));
+      setActiveUsers(prev => prev.filter(u => u.id !== data.user?.id));
     });
 
     return () => {
@@ -966,6 +977,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           onCollaborators={() => setIsCollaboratorsSettingsOpen(true)}
           onPassword={() => setIsPasswordSettingsOpen(true)}
           onPermissions={() => setIsPermissionsSettingsOpen(true)}
+          onUrlSettings={() => setIsUrlSettingsOpen(true)}
           onDelete={() => setIsDeleteDialogOpen(true)}
           onKeyboardShortcuts={() => setIsKeyboardShortcutsOpen(true)}
           onSave={() => saveNotebook(true)}
@@ -1042,6 +1054,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
             onCollaborators={() => setIsCollaboratorsSettingsOpen(true)}
             onPassword={() => setIsPasswordSettingsOpen(true)}
             onPermissions={() => setIsPermissionsSettingsOpen(true)}
+            onUrlSettings={() => setIsUrlSettingsOpen(true)}
             onDelete={() => setIsDeleteDialogOpen(true)}
             onKeyboardShortcuts={() => setIsKeyboardShortcutsOpen(true)}
             userRole={userRole}
@@ -1060,6 +1073,28 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           notebookTitle={title || 'Untitled'}
           urlIdentifier={urlIdentifier || ''}
           permissions={notebookData?.permissions || 'everyone'}
+          isOwner={userRole === 'owner' || accessLevel === 'owner'}
+          onOpenUrlSettings={() => setIsUrlSettingsOpen(true)}
+          onUrlUpdated={(nextUrlIdentifier) => {
+            setUrlIdentifier(nextUrlIdentifier);
+            if (nextUrlIdentifier) {
+              navigate(`/Notebook/${nextUrlIdentifier}`, { replace: true });
+            }
+          }}
+        />
+
+        <NotebookUrlSettingsDialog
+          open={isUrlSettingsOpen}
+          onClose={() => setIsUrlSettingsOpen(false)}
+          notebookId={notebookData?._id || ''}
+          currentUrlIdentifier={urlIdentifier || ''}
+          isOwner={userRole === 'owner' || accessLevel === 'owner'}
+          onUpdated={(nextUrlIdentifier) => {
+            setUrlIdentifier(nextUrlIdentifier);
+            if (nextUrlIdentifier) {
+              navigate(`/Notebook/${nextUrlIdentifier}`, { replace: true });
+            }
+          }}
         />
 
         {/* Version History Dialog */}
@@ -1067,6 +1102,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           open={isVersionHistoryOpen}
           onClose={() => setIsVersionHistoryOpen(false)}
           notebookId={notebookData?._id || ''}
+          isOwner={userRole === 'owner'}
           onVersionRestore={async () => {
             await fetchNotebookData();
             setIsVersionHistoryOpen(false);
@@ -1091,7 +1127,6 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           onVersionRestore={async () => {
             await fetchNotebookData();
             setIsVersionComparisonOpen(false);
-            showNotification('Version restored', 'success');
           }}
         />
 
@@ -1103,7 +1138,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           initialSettings={{ collaborators: notebookData?.collaborators || [] }}
           searchCollaborators={async (query) => {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_BASE_URL}/api/users/search?q=${query}`, {
+            const response = await axios.get(`${config.apiUrl}/api/users/search?q=${query}`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             // API returns array directly, not wrapped in { users: [] }
@@ -1111,7 +1146,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           }}
           onSave={async (settings) => {
             const token = localStorage.getItem('token');
-            await axios.put(`${API_BASE_URL}/api/notebooks/${notebookData?._id}/collaborators`, settings, {
+            await axios.put(`${config.apiUrl}/api/notebooks/${notebookData?._id}/collaborators`, settings, {
               headers: { Authorization: `Bearer ${token}` },
             });
             await fetchNotebookData();
@@ -1127,7 +1162,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           onSave={async (settings) => {
             const token = localStorage.getItem('token');
             const response = await axios.put(
-              `${API_BASE_URL}/api/notebooks/${notebookData?._id}/password`,
+              `${config.apiUrl}/api/notebooks/${notebookData?._id}/password`,
               { password: settings.password || '' },
               { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -1145,7 +1180,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           onSave={async (settings) => {
             const token = localStorage.getItem('token');
             await axios.put(
-              `${API_BASE_URL}/api/notebooks/${notebookData?._id}`,
+              `${config.apiUrl}/api/notebooks/${notebookData?._id}`,
               settings,
               { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -1163,7 +1198,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
             try {
               setIsDeleting(true);
               const token = localStorage.getItem('token');
-              await axios.delete(`${API_BASE_URL}/api/notebooks/${notebookData?._id}`, {
+              await axios.delete(`${config.apiUrl}/api/notebooks/${notebookData?._id}`, {
                 headers: { Authorization: `Bearer ${token}` },
               });
               showNotification('Notebook deleted', 'success');

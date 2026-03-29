@@ -1,10 +1,9 @@
 import axios from 'axios';
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import config from '../config';
 
 // Create an axios instance with default config
 const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: config.apiUrl,
 });
 
 // Add a request interceptor

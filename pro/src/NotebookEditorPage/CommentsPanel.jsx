@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -24,6 +24,8 @@ import {
   Chip,
   Stack,
   InputAdornment,
+  Badge,
+  Skeleton,
 } from '@mui/material';
 import {
   Send as SendIcon,
@@ -36,13 +38,17 @@ import {
   ChatBubbleOutline as CommentIcon,
   Close as CloseIcon,
   ThumbUp as LikeIcon,
+  ThumbUpOutlined as LikeOutlineIcon,
+  Done as ResolveIcon,
+  DoneAll as ResolvedIcon,
+  Sort as SortIcon,
 } from '@mui/icons-material';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import socketClient from '../utils/socketClient';
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import config from '../config';
+import apiErrorHandler from '../utils/errorHandler';
 
 // Comment item component
 const CommentItem = ({
@@ -54,11 +60,13 @@ const CommentItem = ({
   onEdit,
   onDelete,
   onReply,
+  onLike,
   replyingTo,
   replyText,
   onReplyTextChange,
   onSubmitReply,
   submitting,
+  depth = 0,
 }) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
@@ -73,6 +81,20 @@ const CommentItem = ({
   const authorName = comment.author?.name || comment.guestAuthor?.name || 'Anonymous';
   const authorInitial = authorName[0]?.toUpperCase() || 'A';
   const hasReplies = comment.replies && comment.replies.length > 0;
+  const hasValidCommentId = Boolean(comment.id && comment.id !== 'undefined');
+
+  const getRelativeTime = (date) => {
+    const d = new Date(date);
+    const now = new Date();
+    const diffMs = now - d;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return format(d, 'MMM d, yyyy h:mm a');
+  };
 
   return (
     <motion.div
@@ -83,10 +105,10 @@ const CommentItem = ({
     >
       <Box
         sx={{
-          mb: isReply ? 0 : 2,
-          ml: isReply ? 4 : 0,
+          mb: isReply ? 1 : 2,
+          ml: isReply ? Math.min(depth * 4, 12) : 0,
           pl: isReply ? 2 : 0,
-          borderLeft: isReply ? `2px solid ${alpha(theme.palette.primary.main, 0.2)}` : 'none',
+          borderLeft: isReply ? `2px solid ${alpha(theme.palette.primary.main, 0.15 + depth * 0.05)}` : 'none',
         }}
       >
         <Paper
@@ -94,14 +116,41 @@ const CommentItem = ({
           sx={{
             p: 2,
             borderRadius: 2,
-            bgcolor: isReply ? alpha(theme.palette.background.default, 0.5) : alpha(theme.palette.background.paper, 0.8),
+            bgcolor: isReply 
+              ? alpha(theme.palette.background.default, 0.5) 
+              : comment.resolved 
+              ? alpha('#f0fdf4', 0.5)
+              : alpha(theme.palette.background.paper, 0.8),
             border: `1px solid ${alpha('#000', 0.06)}`,
             '&:hover': {
               borderColor: alpha('#000', 0.12),
             },
             transition: 'border-color 0.2s ease',
+            position: 'relative',
+            ...(comment.resolved && {
+              borderLeft: '3px solid #16a34a',
+            }),
           }}
         >
+          {/* Resolved indicator */}
+          {comment.resolved && (
+            <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+              <Chip
+                icon={<ResolvedIcon sx={{ fontSize: '14px !important' }} />}
+                label="Resolved"
+                size="small"
+                sx={{
+                  height: 22,
+                  fontSize: '0.65rem',
+                  bgcolor: '#f0fdf4',
+                  color: '#16a34a',
+                  fontWeight: 600,
+                  '& .MuiChip-icon': { color: '#16a34a' },
+                }}
+              />
+            </Box>
+          )}
+
           {/* Comment header */}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
             <Avatar
@@ -117,16 +166,27 @@ const CommentItem = ({
 
             <Box sx={{ flex: 1, minWidth: 0 }}>
               {/* Author and time */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5, flexWrap: 'wrap' }}>
                 <Typography variant="subtitle2" fontWeight={600} noWrap>
                   {authorName}
                 </Typography>
                 {isReply && (
-                  <Chip label="reply" size="small" sx={{ height: 18, fontSize: '0.65rem' }} />
+                  <Chip 
+                    label="reply" 
+                    size="small" 
+                    sx={{ 
+                      height: 18, 
+                      fontSize: '0.6rem',
+                      bgcolor: alpha(theme.palette.primary.main, 0.1),
+                      color: theme.palette.primary.main,
+                    }} 
+                  />
                 )}
-                <Typography variant="caption" color="text.secondary">
-                  {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
-                </Typography>
+                <Tooltip title={format(new Date(comment.createdAt), 'PPpp')}>
+                  <Typography variant="caption" color="text.secondary" sx={{ cursor: 'default' }}>
+                    {getRelativeTime(comment.createdAt)}
+                  </Typography>
+                </Tooltip>
                 {comment.edited && (
                   <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
                     (edited)
@@ -148,16 +208,19 @@ const CommentItem = ({
               </Typography>
 
               {/* Actions */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 1 }}>
                 {!isReply && (
                   <Button
                     size="small"
-                    startIcon={<ReplyIcon sx={{ fontSize: '16px !important' }} />}
+                    startIcon={<ReplyIcon sx={{ fontSize: '14px !important' }} />}
                     onClick={() => onReply(comment.id)}
+                    disabled={!hasValidCommentId}
                     sx={{
                       textTransform: 'none',
                       color: 'text.secondary',
-                      fontSize: '0.75rem',
+                      fontSize: '0.7rem',
+                      minWidth: 'auto',
+                      px: 1,
                       '&:hover': { bgcolor: alpha('#000', 0.04) },
                     }}
                   >
@@ -165,16 +228,42 @@ const CommentItem = ({
                   </Button>
                 )}
 
+                <Tooltip title={comment.likes?.includes(currentUser?.id) ? 'Unlike' : 'Like'}>
+                  <IconButton
+                    size="small"
+                    onClick={() => onLike?.(comment.id)}
+                    disabled={!hasValidCommentId}
+                    sx={{
+                      color: comment.likes?.includes(currentUser?.id) ? '#6366f1' : 'text.secondary',
+                      '&:hover': { bgcolor: alpha('#6366f1', 0.08) },
+                    }}
+                  >
+                    {comment.likes?.includes(currentUser?.id) ? (
+                      <LikeIcon sx={{ fontSize: 16 }} />
+                    ) : (
+                      <LikeOutlineIcon sx={{ fontSize: 16 }} />
+                    )}
+                  </IconButton>
+                </Tooltip>
+                {comment.likes?.length > 0 && (
+                  <Typography variant="caption" color="text.secondary">
+                    {comment.likes.length}
+                  </Typography>
+                )}
+
                 {canModify && (
                   <>
                     <Button
                       size="small"
-                      startIcon={<EditIcon sx={{ fontSize: '16px !important' }} />}
+                      startIcon={<EditIcon sx={{ fontSize: '14px !important' }} />}
                       onClick={() => onEdit(comment)}
+                      disabled={!hasValidCommentId}
                       sx={{
                         textTransform: 'none',
                         color: 'text.secondary',
-                        fontSize: '0.75rem',
+                        fontSize: '0.7rem',
+                        minWidth: 'auto',
+                        px: 1,
                         '&:hover': { bgcolor: alpha('#000', 0.04) },
                       }}
                     >
@@ -182,12 +271,15 @@ const CommentItem = ({
                     </Button>
                     <Button
                       size="small"
-                      startIcon={<DeleteIcon sx={{ fontSize: '16px !important' }} />}
+                      startIcon={<DeleteIcon sx={{ fontSize: '14px !important' }} />}
                       onClick={() => onDelete(comment.id, isReply, comment.parentId)}
+                      disabled={!hasValidCommentId}
                       sx={{
                         textTransform: 'none',
                         color: 'error.main',
-                        fontSize: '0.75rem',
+                        fontSize: '0.7rem',
+                        minWidth: 'auto',
+                        px: 1,
                         '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.08) },
                       }}
                     >
@@ -220,6 +312,7 @@ const CommentItem = ({
               </MenuItem>
               <MenuItem
                 onClick={() => { onDelete(comment.id, isReply, comment.parentId); setMenuAnchor(null); }}
+                disabled={!hasValidCommentId}
                 sx={{ color: 'error.main' }}
               >
                 <ListItemIcon><DeleteIcon fontSize="small" color="error" /></ListItemIcon>
@@ -231,11 +324,11 @@ const CommentItem = ({
 
         {/* Reply input */}
         <Collapse in={replyingTo === comment.id}>
-          <Box sx={{ mt: 1, ml: 6 }}>
+          <Box sx={{ mt: 1, ml: 4 }}>
             <TextField
               fullWidth
               size="small"
-              placeholder="Write a reply..."
+              placeholder={`Reply to ${authorName}...`}
               value={replyText || ''}
               onChange={(e) => onReplyTextChange(comment.id, e.target.value)}
               onKeyDown={(e) => {
@@ -253,7 +346,7 @@ const CommentItem = ({
                       disabled={!replyText?.trim() || submitting}
                       color="primary"
                     >
-                      {submitting ? <CircularProgress size={18} /> : <SendIcon fontSize="small" />}
+                      {submitting ? <CircularProgress size={16} /> : <SendIcon fontSize="small" />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -275,10 +368,15 @@ const CommentItem = ({
               <Button
                 size="small"
                 onClick={() => setIsExpanded(true)}
-                startIcon={<ExpandMoreIcon />}
-                sx={{ ml: 6, textTransform: 'none', fontSize: '0.75rem' }}
+                startIcon={<ExpandMoreIcon sx={{ fontSize: '14px !important' }} />}
+                sx={{ 
+                  ml: 2, 
+                  textTransform: 'none', 
+                  fontSize: '0.7rem',
+                  color: theme.palette.primary.main,
+                }}
               >
-                Show {comment.replies.length} {comment.replies.length === 1 ? 'reply' : 'replies'}
+                {comment.replies.length} {comment.replies.length === 1 ? 'reply' : 'replies'}
               </Button>
             )}
             <Collapse in={isExpanded}>
@@ -288,22 +386,34 @@ const CommentItem = ({
                     key={reply.id}
                     comment={reply}
                     isReply
+                    depth={depth + 1}
                     currentUser={currentUser}
                     userRole={userRole}
                     accessLevel={accessLevel}
                     onEdit={onEdit}
                     onDelete={onDelete}
                     onReply={onReply}
+                    onLike={onLike}
+                    replyingTo={replyingTo}
+                    replyText={replyText}
+                    onReplyTextChange={onReplyTextChange}
+                    onSubmitReply={onSubmitReply}
+                    submitting={submitting}
                   />
                 ))}
-                {hasReplies && (
+                {isExpanded && (
                   <Button
                     size="small"
                     onClick={() => setIsExpanded(false)}
-                    startIcon={<ExpandLessIcon />}
-                    sx={{ ml: 6, textTransform: 'none', fontSize: '0.75rem' }}
+                    startIcon={<ExpandLessIcon sx={{ fontSize: '14px !important' }} />}
+                    sx={{ 
+                      ml: 2, 
+                      textTransform: 'none', 
+                      fontSize: '0.7rem',
+                      color: 'text.secondary',
+                    }}
                   >
-                    Hide replies
+                    Hide
                   </Button>
                 )}
               </Box>
@@ -314,6 +424,29 @@ const CommentItem = ({
     </motion.div>
   );
 };
+
+// Comment skeleton loader
+const CommentSkeleton = () => (
+  <Box sx={{ mb: 2 }}>
+    <Paper elevation={0} sx={{ p: 2, borderRadius: 2, border: '1px solid', borderColor: alpha('#000', 0.06) }}>
+      <Box sx={{ display: 'flex', gap: 1.5 }}>
+        <Skeleton variant="circular" width={36} height={36} />
+        <Box sx={{ flex: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+            <Skeleton variant="text" width={80} height={20} />
+            <Skeleton variant="text" width={50} height={16} />
+          </Box>
+          <Skeleton variant="text" width="90%" height={16} />
+          <Skeleton variant="text" width="70%" height={16} />
+          <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+            <Skeleton variant="text" width={50} height={16} />
+            <Skeleton variant="text" width={40} height={16} />
+          </Box>
+        </Box>
+      </Box>
+    </Paper>
+  </Box>
+);
 
 // Main CommentsPanel component
 const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
@@ -327,29 +460,65 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
   const [editingComment, setEditingComment] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [sortBy, setSortBy] = useState('newest');
+
+  const normalizeComment = useCallback((comment) => {
+    if (!comment) return null;
+
+    const normalizedId = comment.id || comment._id;
+    const normalizedAuthor = comment.author
+      ? {
+          ...comment.author,
+          id: comment.author.id || comment.author._id,
+        }
+      : comment.author;
+
+    const normalizedReplies = (comment.replies || []).map((reply) => normalizeComment(reply)).filter(Boolean);
+
+    return {
+      ...comment,
+      id: normalizedId,
+      author: normalizedAuthor,
+      replies: normalizedReplies,
+    };
+  }, []);
+
+  const hasCommentId = useCallback((commentId) => Boolean(commentId && commentId !== 'undefined'), []);
+
+  // Count total comments including replies
+  const totalComments = comments.reduce((acc, c) => acc + 1 + (c.replies?.length || 0), 0);
 
   // Fetch comments
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_BASE_URL}/api/notebooks/${notebookId}/comments`, {
+      const response = await axios.get(`${config.apiUrl}/api/notebooks/${notebookId}/comments`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setComments(response.data.comments || []);
+      let fetchedComments = (response.data.comments || []).map((comment) => normalizeComment(comment)).filter(Boolean);
+      
+      // Sort comments
+      if (sortBy === 'oldest') {
+        fetchedComments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      } else {
+        fetchedComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }
+      
+      setComments(fetchedComments);
     } catch (err) {
-      setError('Failed to load comments');
+      setError(apiErrorHandler.getErrorMessage(err));
     } finally {
       setLoading(false);
     }
-  };
+  }, [notebookId, normalizeComment, sortBy]);
 
   // Fetch current user
   const fetchCurrentUser = async () => {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
+        const response = await axios.get(`${config.apiUrl}/api/users/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCurrentUser(response.data.user);
@@ -365,7 +534,7 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
       fetchComments();
       fetchCurrentUser();
     }
-  }, [notebookId]);
+  }, [notebookId, fetchComments]);
 
   // Socket.io listeners for real-time updates
   useEffect(() => {
@@ -373,42 +542,50 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
 
     const handleCommentAdded = (data) => {
       // Check if this comment is for this notebook
-      const commentNotebookId = data.notebookId?.toString() || data.notebookId;
+      const normalizedComment = normalizeComment(data);
+      if (!normalizedComment || !hasCommentId(normalizedComment.id)) return;
+
+      const commentNotebookId = normalizedComment.notebookId?.toString() || normalizedComment.notebookId;
       if (commentNotebookId !== notebookId.toString()) return;
 
       setComments((prev) => {
         // Check if we already have this comment (avoid duplicates from our own actions)
-        const exists = prev.some((c) => c.id === data.id) ||
-          prev.some((c) => c.replies?.some((r) => r.id === data.id));
+        const exists = prev.some((c) => c.id === normalizedComment.id) ||
+          prev.some((c) => c.replies?.some((r) => r.id === normalizedComment.id));
         if (exists) return prev;
 
         // If it's a reply, add to parent's replies
-        if (data.parentId) {
+        if (normalizedComment.parentId) {
           return prev.map((comment) => {
-            if (comment.id === data.parentId) {
-              const replyExists = comment.replies?.some((r) => r.id === data.id);
+            if (comment.id === normalizedComment.parentId) {
+              const replyExists = comment.replies?.some((r) => r.id === normalizedComment.id);
               if (replyExists) return comment;
-              return { ...comment, replies: [...(comment.replies || []), data] };
+              return { ...comment, replies: [...(comment.replies || []), normalizedComment] };
             }
             return comment;
           });
         }
         // Otherwise, add as top-level comment
-        return [...prev, data];
+        return [...prev, normalizedComment];
       });
     };
 
     const handleCommentUpdated = (data) => {
+      const normalizedComment = normalizeComment(data);
+      if (!normalizedComment || !hasCommentId(normalizedComment.id)) return;
+
       setComments((prev) =>
         prev.map((comment) => {
-          if (comment.id === data.id) {
-            return { ...comment, content: data.content, edited: true };
+          if (comment.id === normalizedComment.id) {
+            return { ...comment, content: normalizedComment.content, edited: true };
           }
           if (comment.replies) {
             return {
               ...comment,
               replies: comment.replies.map((reply) =>
-                reply.id === data.id ? { ...reply, content: data.content, edited: true } : reply
+                reply.id === normalizedComment.id
+                  ? { ...reply, content: normalizedComment.content, edited: true }
+                  : reply
               ),
             };
           }
@@ -419,6 +596,8 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
 
     const handleCommentDeleted = (data) => {
       const { commentId, parentId } = data;
+      if (!hasCommentId(commentId)) return;
+
       if (parentId) {
         setComments((prev) =>
           prev.map((comment) => {
@@ -436,17 +615,43 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
       }
     };
 
+    const handleCommentLiked = (data) => {
+      const { commentId, likes } = data || {};
+      if (!hasCommentId(commentId)) return;
+
+      setComments((prev) => prev.map((comment) => {
+        if (comment.id === commentId) {
+          return { ...comment, likes: likes || [] };
+        }
+
+        if (comment.replies) {
+          return {
+            ...comment,
+            replies: comment.replies.map((reply) => (
+              reply.id === commentId
+                ? { ...reply, likes: likes || [] }
+                : reply
+            )),
+          };
+        }
+
+        return comment;
+      }));
+    };
+
     socketClient.on('commentAdded', handleCommentAdded);
     socketClient.on('commentUpdated', handleCommentUpdated);
     socketClient.on('commentDeleted', handleCommentDeleted);
+    socketClient.on('commentLiked', handleCommentLiked);
 
     return () => {
       socketClient.off('commentAdded');
       socketClient.off('commentUpdated');
       socketClient.off('commentDeleted');
+      socketClient.off('commentLiked');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notebookId]);
+  }, [hasCommentId, normalizeComment, notebookId]);
 
   // Add comment
   const handleAddComment = async () => {
@@ -455,14 +660,21 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
       setSubmitting(true);
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${API_BASE_URL}/api/notebooks/${notebookId}/comments`,
+        `${config.apiUrl}/api/notebooks/${notebookId}/comments`,
         { content: newComment.trim() },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setComments((prev) => [...prev, response.data.comment]);
+      const normalizedComment = normalizeComment(response.data.comment);
+      if (normalizedComment && hasCommentId(normalizedComment.id)) {
+        setComments((prev) => {
+          const exists = prev.some((c) => c.id === normalizedComment.id) ||
+            prev.some((c) => c.replies?.some((r) => r.id === normalizedComment.id));
+          return exists ? prev : [...prev, normalizedComment];
+        });
+      }
       setNewComment('');
     } catch (err) {
-      setError('Failed to add comment');
+      setError(apiErrorHandler.getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -470,26 +682,31 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
 
   // Add reply
   const handleAddReply = async (parentId) => {
-    if (!replyText[parentId]?.trim() || submitting) return;
+    if (!hasCommentId(parentId) || !replyText[parentId]?.trim() || submitting) return;
     try {
       setSubmitting(true);
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${API_BASE_URL}/api/notebooks/${notebookId}/comments`,
+        `${config.apiUrl}/api/notebooks/${notebookId}/comments`,
         { content: replyText[parentId].trim(), parentId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setComments((prev) =>
-        prev.map((comment) =>
-          comment.id === parentId
-            ? { ...comment, replies: [...(comment.replies || []), response.data.comment] }
-            : comment
-        )
-      );
+      const normalizedReply = normalizeComment(response.data.comment);
+
+      if (normalizedReply && hasCommentId(normalizedReply.id)) {
+        setComments((prev) =>
+          prev.map((comment) => {
+            if (comment.id !== parentId) return comment;
+            const replyExists = (comment.replies || []).some((r) => r.id === normalizedReply.id);
+            if (replyExists) return comment;
+            return { ...comment, replies: [...(comment.replies || []), normalizedReply] };
+          })
+        );
+      }
       setReplyText((prev) => ({ ...prev, [parentId]: '' }));
       setReplyingTo(null);
     } catch (err) {
-      setError('Failed to add reply');
+      setError(apiErrorHandler.getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -497,9 +714,14 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
 
   // Delete comment
   const handleDeleteComment = async (commentId, isReply = false, parentId = null) => {
+    if (!hasCommentId(commentId)) {
+      setError('This comment is missing an ID. Please refresh and try again.');
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${API_BASE_URL}/api/notebooks/${notebookId}/comments/${commentId}`, {
+      await axios.delete(`${config.apiUrl}/api/notebooks/${notebookId}/comments/${commentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (isReply && parentId) {
@@ -514,7 +736,7 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
         setComments((prev) => prev.filter((c) => c.id !== commentId));
       }
     } catch (err) {
-      setError('Failed to delete comment');
+      setError(apiErrorHandler.getErrorMessage(err));
     }
   };
 
@@ -524,14 +746,59 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
     setNewComment(comment.content);
   };
 
+  // Like/unlike comment
+  const handleLikeComment = async (commentId) => {
+    if (!hasCommentId(commentId)) {
+      setError('This comment is missing an ID. Please refresh and try again.');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${config.apiUrl}/api/notebooks/${notebookId}/comments/${commentId}/like`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const nextLikes = response.data?.likes || [];
+      setComments(prev => prev.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            likes: nextLikes,
+          };
+        }
+        // Check replies too
+        if (comment.replies) {
+          return {
+            ...comment,
+            replies: comment.replies.map(reply => {
+              if (reply.id === commentId) {
+                return {
+                  ...reply,
+                  likes: nextLikes,
+                };
+              }
+              return reply;
+            }),
+          };
+        }
+        return comment;
+      }));
+    } catch (err) {
+      console.error('Error toggling like:', err);
+    }
+  };
+
   // Update comment
   const handleUpdateComment = async () => {
-    if (!editingComment || !newComment.trim() || submitting) return;
+    if (!editingComment || !hasCommentId(editingComment.id) || !newComment.trim() || submitting) return;
     try {
       setSubmitting(true);
       const token = localStorage.getItem('token');
       await axios.put(
-        `${API_BASE_URL}/api/notebooks/${notebookId}/comments/${editingComment.id}`,
+        `${config.apiUrl}/api/notebooks/${notebookId}/comments/${editingComment.id}`,
         { content: newComment.trim() },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -550,7 +817,7 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
       setEditingComment(null);
       setNewComment('');
     } catch (err) {
-      setError('Failed to update comment');
+      setError(apiErrorHandler.getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -585,12 +852,27 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
           <Typography variant="h6" fontWeight={600}>
             Comments
           </Typography>
-          <Chip
-            label={comments.length}
-            size="small"
-            sx={{ height: 20, fontSize: '0.7rem' }}
+          <Badge
+            badgeContent={totalComments}
+            color="primary"
+            sx={{
+              '& .MuiBadge-badge': {
+                fontSize: '0.65rem',
+                minWidth: 18,
+                height: 18,
+              },
+            }}
           />
         </Box>
+        <Tooltip title={sortBy === 'newest' ? 'Newest first' : 'Oldest first'}>
+          <IconButton
+            size="small"
+            onClick={() => setSortBy(prev => prev === 'newest' ? 'oldest' : 'newest')}
+            sx={{ color: 'text.secondary' }}
+          >
+            <SortIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       </Box>
 
       {/* Error alert */}
@@ -603,14 +885,33 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
       {/* Comments list */}
       <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-            <CircularProgress />
-          </Box>
+          <Stack spacing={0}>
+            {[1, 2, 3].map((i) => (
+              <CommentSkeleton key={i} />
+            ))}
+          </Stack>
         ) : comments.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 6 }}>
-            <CommentIcon sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }} />
-            <Typography color="text.secondary">
-              No comments yet. Be the first to comment!
+            <Box
+              sx={{
+                width: 64,
+                height: 64,
+                borderRadius: '50%',
+                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mx: 'auto',
+                mb: 2,
+              }}
+            >
+              <CommentIcon sx={{ fontSize: 28, color: theme.palette.primary.main }} />
+            </Box>
+            <Typography variant="subtitle1" fontWeight={600} color="text.primary" gutterBottom>
+              No comments yet
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Be the first to share your thoughts!
             </Typography>
           </Box>
         ) : (
@@ -625,6 +926,7 @@ const CommentsPanel = ({ notebookId, userRole, accessLevel, isGuest }) => {
                 onEdit={handleEditComment}
                 onDelete={handleDeleteComment}
                 onReply={(id) => setReplyingTo(replyingTo === id ? null : id)}
+                onLike={handleLikeComment}
                 replyingTo={replyingTo}
                 replyText={replyText[comment.id]}
                 onReplyTextChange={handleReplyTextChange}

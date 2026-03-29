@@ -21,6 +21,7 @@ import {
   People as PeopleIcon,
   Lock as LockIcon,
 } from '@mui/icons-material';
+import apiErrorHandler from '../utils/errorHandler';
 
 const PermissionsSettingsDialog = ({ open, onClose, notebookId, currentPermissions = 'everyone', onSave }) => {
   const [permissions, setPermissions] = useState('everyone');
@@ -62,7 +63,7 @@ const PermissionsSettingsDialog = ({ open, onClose, notebookId, currentPermissio
         setSuccess('');
       }, 1500);
     } catch (error) {
-      setError(error.message || 'Failed to update access settings');
+      setError(apiErrorHandler.getErrorMessage(error));
     } finally {
       setLoading(false);
     }

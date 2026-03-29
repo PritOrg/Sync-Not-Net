@@ -45,6 +45,7 @@ import {
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme as useCustomTheme } from '../contexts/ThemeContext';
+import api from '../utils/apiRoutes';
 
 const DRAWER_WIDTH = 280;
 
@@ -80,7 +81,7 @@ const ModernLayout = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/profile`, {
+        const response = await fetch(api.profile(), {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

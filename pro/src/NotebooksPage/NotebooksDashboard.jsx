@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -27,9 +27,11 @@ import {
   CardContent,
   CardActions,
   Badge,
+  ListItemIcon,
 } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import apiErrorHandler from '../utils/errorHandler';
 import {
   Search,
   Add,
@@ -54,14 +56,16 @@ import {
   Star,
   StarBorder,
   Code,
+  Group,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import DeleteNotebookDialog from '../Components/DeleteNotebookDialog';
+import ShareDialog from '../NotebookEditorPage/ShareDialog';
+import NotebookUrlSettingsDialog from '../NotebookEditorPage/NotebookUrlSettingsDialog';
+import config from '../config';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
-
-// Notebook card component
-const NotebookCard = ({ notebook, onEdit, onDelete, onShare, onToggleFavorite, index }) => {
+// Notebook card component - supports both grid and list views
+const NotebookCard = ({ notebook, onEdit, onDelete, onShare, onToggleFavorite, index, viewMode = 'grid', isFavorite }) => {
   const theme = useTheme();
   const [menuAnchor, setMenuAnchor] = useState(null);
 
@@ -76,6 +80,127 @@ const NotebookCard = ({ notebook, onEdit, onDelete, onShare, onToggleFavorite, i
     collaborators: theme.palette.warning.main,
     private: theme.palette.error.main,
   };
+
+  const favorite = isFavorite !== undefined ? isFavorite : notebook.isFavorite;
+
+  if (viewMode === 'list') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.2, delay: index * 0.03 }}
+      >
+        <Card
+          sx={{
+            borderRadius: 2,
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            mb: 1.5,
+            '&:hover': {
+              borderColor: theme.palette.primary.main,
+              boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.08)}`,
+            },
+          }}
+          onClick={() => onEdit(notebook)}
+        >
+          <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 2,
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <BookOutlined sx={{ fontSize: 18, color: theme.palette.primary.main }} />
+              </Box>
+
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography variant="subtitle1" fontWeight={600} noWrap>
+                  {notebook.title || 'Untitled'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  {notebook.content?.replace(/<[^>]+>/g, '').slice(0, 80) || 'No content'}
+                </Typography>
+              </Box>
+
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
+                <Chip
+                  icon={permissionIcons[notebook.permissions] || <Public sx={{ fontSize: 14 }} />}
+                  label={notebook.permissions || 'public'}
+                  size="small"
+                  sx={{
+                    height: 24,
+                    fontSize: '0.7rem',
+                    borderRadius: 1.5,
+                    color: permissionColors[notebook.permissions],
+                    borderColor: permissionColors[notebook.permissions],
+                    '& .MuiChip-icon': { color: permissionColors[notebook.permissions] },
+                  }}
+                  variant="outlined"
+                />
+                <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
+                  {new Date(notebook.updatedAt || notebook.createdAt).toLocaleDateString()}
+                </Typography>
+                <Tooltip title={favorite ? 'Remove from favorites' : 'Add to favorites'}>
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleFavorite(notebook._id);
+                    }}
+                  >
+                    {favorite ? (
+                      <Star sx={{ fontSize: 18, color: theme.palette.warning.main }} />
+                    ) : (
+                      <StarBorder sx={{ fontSize: 18 }} />
+                    )}
+                  </IconButton>
+                </Tooltip>
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuAnchor(e.currentTarget);
+                  }}
+                >
+                  <MoreVert sx={{ fontSize: 18 }} />
+                </IconButton>
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+
+        {/* Context menu for list view */}
+        <Menu
+          anchorEl={menuAnchor}
+          open={Boolean(menuAnchor)}
+          onClose={() => setMenuAnchor(null)}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MenuItem onClick={() => { onEdit(notebook); setMenuAnchor(null); }}>
+            <Edit sx={{ mr: 1, fontSize: 18 }} /> Edit
+          </MenuItem>
+          <MenuItem onClick={() => { onShare(notebook); setMenuAnchor(null); }}>
+            <Share sx={{ mr: 1, fontSize: 18 }} /> Share
+          </MenuItem>
+          <Divider />
+          <MenuItem
+            onClick={() => { onDelete(notebook); setMenuAnchor(null); }}
+            sx={{ color: 'error.main' }}
+          >
+            <Delete sx={{ mr: 1, fontSize: 18 }} /> Delete
+          </MenuItem>
+        </Menu>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -115,7 +240,7 @@ const NotebookCard = ({ notebook, onEdit, onDelete, onShare, onToggleFavorite, i
               <BookOutlined sx={{ color: theme.palette.primary.main }} />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Tooltip title={notebook.isFavorite ? 'Remove from favorites' : 'Add to favorites'}>
+              <Tooltip title={favorite ? 'Remove from favorites' : 'Add to favorites'}>
                 <IconButton
                   size="small"
                   onClick={(e) => {
@@ -123,7 +248,7 @@ const NotebookCard = ({ notebook, onEdit, onDelete, onShare, onToggleFavorite, i
                     onToggleFavorite(notebook._id);
                   }}
                 >
-                  {notebook.isFavorite ? (
+                  {favorite ? (
                     <Star sx={{ fontSize: 18, color: theme.palette.warning.main }} />
                   ) : (
                     <StarBorder sx={{ fontSize: 18 }} />
@@ -249,20 +374,42 @@ const NotebookCard = ({ notebook, onEdit, onDelete, onShare, onToggleFavorite, i
   );
 };
 
-// Skeleton loader
-const NotebookCardSkeleton = () => (
-  <Card sx={{ height: '100%', borderRadius: 3 }}>
-    <CardContent sx={{ p: 2.5 }}>
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1.5 }}>
-        <Skeleton variant="rounded" width={40} height={40} sx={{ borderRadius: 2 }} />
-        <Skeleton variant="circular" width={24} height={24} />
-      </Box>
-      <Skeleton variant="text" width="70%" height={28} />
-      <Skeleton variant="text" width="100%" height={20} />
-      <Skeleton variant="text" width="80%" height={20} />
-    </CardContent>
-  </Card>
-);
+// Skeleton loader - supports both grid and list views
+const NotebookCardSkeleton = ({ viewMode = 'grid' }) => {
+  if (viewMode === 'list') {
+    return (
+      <Card sx={{ borderRadius: 2, mb: 1.5 }}>
+        <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Skeleton variant="rounded" width={36} height={36} sx={{ borderRadius: 2 }} />
+            <Box sx={{ flex: 1 }}>
+              <Skeleton variant="text" width="50%" height={24} />
+              <Skeleton variant="text" width="80%" height={18} />
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Skeleton variant="rounded" width={60} height={24} sx={{ borderRadius: 1.5 }} />
+              <Skeleton variant="circular" width={28} height={28} />
+              <Skeleton variant="circular" width={28} height={28} />
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+    );
+  }
+  return (
+    <Card sx={{ height: '100%', borderRadius: 3 }}>
+      <CardContent sx={{ p: 2.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1.5 }}>
+          <Skeleton variant="rounded" width={40} height={40} sx={{ borderRadius: 2 }} />
+          <Skeleton variant="circular" width={24} height={24} />
+        </Box>
+        <Skeleton variant="text" width="70%" height={28} />
+        <Skeleton variant="text" width="100%" height={20} />
+        <Skeleton variant="text" width="80%" height={20} />
+      </CardContent>
+    </Card>
+  );
+};
 
 const NotebooksDashboard = () => {
   const theme = useTheme();
@@ -281,9 +428,20 @@ const NotebooksDashboard = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [notebookToDelete, setNotebookToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [favorites, setFavorites] = useState([]);
+  const [favoriteIds, setFavoriteIds] = useState(new Set());
+  const [selectedNotebookForShare, setSelectedNotebookForShare] = useState(null);
+  const [isUrlSettingsOpen, setIsUrlSettingsOpen] = useState(false);
 
-  // Fetch notebooks based on current filter
+  const currentUserId = useMemo(() => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return null;
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.id;
+    } catch { return null; }
+  }, []);
+
+  // Fetch notebooks based on current filter with parallel favorites loading
   const fetchNotebooks = useCallback(async () => {
     try {
       setLoading(true);
@@ -294,21 +452,32 @@ const NotebooksDashboard = () => {
       }
 
       const headers = { Authorization: `Bearer ${token}` };
-      let response;
+      let notebooksResponse;
 
-      if (currentFilter === 'favorites') {
-        response = await axios.get(`${API_BASE_URL}/api/notebooks/favorites`, { headers });
-        setNotebooks(response.data.notebooks || []);
-      } else if (currentFilter === 'shared') {
-        response = await axios.get(`${API_BASE_URL}/api/notebooks/shared`, { headers });
-        setNotebooks(response.data.notebooks || []);
-      } else {
-        response = await axios.get(`${API_BASE_URL}/api/notebooks`, { headers });
-        setNotebooks(response.data.notebooks || []);
+      // Parallel fetch: notebooks + favorites IDs
+      const [nbRes, favRes] = await Promise.allSettled([
+        currentFilter === 'favorites'
+          ? axios.get(`${config.apiUrl}/api/notebooks/favorites`, { headers })
+          : currentFilter === 'shared'
+          ? axios.get(`${config.apiUrl}/api/notebooks/shared`, { headers })
+          : currentFilter === 'collaborators'
+          ? axios.get(`${config.apiUrl}/api/notebooks/shared`, { headers })
+          : axios.get(`${config.apiUrl}/api/notebooks`, { headers }),
+        axios.get(`${config.apiUrl}/api/notebooks/favorites`, { headers }),
+      ]);
+
+      if (nbRes.status === 'fulfilled') {
+        notebooksResponse = nbRes.value;
+        setNotebooks(notebooksResponse.data.notebooks || []);
+      }
+
+      if (favRes.status === 'fulfilled') {
+        const favNotebooks = favRes.value.data.notebooks || [];
+        setFavoriteIds(new Set(favNotebooks.map(n => n._id)));
       }
     } catch (err) {
       console.error('Error fetching notebooks:', err);
-      setError('Failed to load notebooks');
+      setError(apiErrorHandler.getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -318,18 +487,64 @@ const NotebooksDashboard = () => {
     fetchNotebooks();
   }, [fetchNotebooks]);
 
-  // Filter notebooks by search
-  const filteredNotebooks = notebooks.filter((nb) => {
-    return nb.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      nb.content?.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  // Filter notebooks by search and optionally by collaborator status
+  const filteredNotebooks = useMemo(() => {
+    let result = notebooks;
+
+    // Apply search filter
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((nb) =>
+        nb.title?.toLowerCase().includes(q) ||
+        nb.content?.toLowerCase().includes(q)
+      );
+    }
+
+    // Apply collaborator filter: notebooks where user is collaborator but not owner
+    if (currentFilter === 'collaborators' && currentUserId) {
+      result = result.filter((nb) => {
+        const isOwner = nb.creatorID?._id === currentUserId || nb.creatorID === currentUserId;
+        return !isOwner;
+      });
+    }
+
+    return result;
+  }, [notebooks, searchQuery, currentFilter, currentUserId]);
+
+  const isOwnerOfNotebook = useCallback((notebook) => {
+    const creatorId = notebook?.creatorID?._id || notebook?.creatorID;
+    return creatorId?.toString() === currentUserId?.toString();
+  }, [currentUserId]);
+
+  const handleOpenShareDialog = useCallback((notebook) => {
+    setSelectedNotebookForShare(notebook);
+  }, []);
+
+  const handleCloseShareDialog = useCallback(() => {
+    setSelectedNotebookForShare(null);
+    setIsUrlSettingsOpen(false);
+  }, []);
+
+  const handleUrlUpdated = useCallback((nextUrlIdentifier) => {
+    if (!selectedNotebookForShare || !nextUrlIdentifier) return;
+
+    setNotebooks((prev) => prev.map((nb) => (
+      nb._id === selectedNotebookForShare._id
+        ? { ...nb, urlIdentifier: nextUrlIdentifier }
+        : nb
+    )));
+
+    setSelectedNotebookForShare((prev) => (
+      prev ? { ...prev, urlIdentifier: nextUrlIdentifier } : prev
+    ));
+  }, [selectedNotebookForShare]);
 
   // Handle create notebook
   const handleCreateNotebook = async (editorMode = 'quill') => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${API_BASE_URL}/api/notebooks`,
+        `${config.apiUrl}/api/notebooks`,
         {
           title: 'Untitled Notebook',
           content: '',
@@ -343,7 +558,7 @@ const NotebooksDashboard = () => {
       navigate(`/Notebook/${notebook.urlIdentifier}`);
     } catch (err) {
       console.error('Error creating notebook:', err);
-      setSnackbar({ open: true, message: 'Failed to create notebook', severity: 'error' });
+      setSnackbar({ open: true, message: apiErrorHandler.getErrorMessage(err), severity: 'error' });
     }
   };
 
@@ -354,14 +569,14 @@ const NotebooksDashboard = () => {
     try {
       setIsDeleting(true);
       const token = localStorage.getItem('token');
-      await axios.delete(`${API_BASE_URL}/api/notebooks/${notebookToDelete._id}`, {
+      await axios.delete(`${config.apiUrl}/api/notebooks/${notebookToDelete._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       setNotebooks((prev) => prev.filter((nb) => nb._id !== notebookToDelete._id));
       setSnackbar({ open: true, message: 'Notebook deleted', severity: 'success' });
     } catch (err) {
-      setSnackbar({ open: true, message: 'Failed to delete', severity: 'error' });
+      setSnackbar({ open: true, message: apiErrorHandler.getErrorMessage(err), severity: 'error' });
     } finally {
       setIsDeleting(false);
       setDeleteDialogOpen(false);
@@ -374,26 +589,30 @@ const NotebooksDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${API_BASE_URL}/api/notebooks/${id}/favorite`,
+        `${config.apiUrl}/api/notebooks/${id}/favorite`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       if (response.data.isFavorite) {
-        setFavorites((prev) => [...prev, id]);
+        setFavoriteIds((prev) => new Set([...prev, id]));
         setSnackbar({ open: true, message: 'Added to favorites', severity: 'success' });
       } else {
-        setFavorites((prev) => prev.filter((f) => f !== id));
+        setFavoriteIds((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
         setSnackbar({ open: true, message: 'Removed from favorites', severity: 'info' });
       }
-      
+
       // Refresh notebooks if viewing favorites
       if (currentFilter === 'favorites') {
         fetchNotebooks();
       }
     } catch (err) {
       console.error('Error toggling favorite:', err);
-      setSnackbar({ open: true, message: 'Failed to update favorites', severity: 'error' });
+      setSnackbar({ open: true, message: apiErrorHandler.getErrorMessage(err), severity: 'error' });
     }
   };
 
@@ -513,7 +732,7 @@ const NotebooksDashboard = () => {
               endIcon={<KeyboardArrowDown />}
               sx={{ borderRadius: 2, textTransform: 'none' }}
             >
-              {currentFilter === 'all' ? 'All' : currentFilter === 'favorites' ? 'Favorites' : 'Shared'}
+              {currentFilter === 'all' ? 'All' : currentFilter === 'favorites' ? 'Favorites' : currentFilter === 'collaborators' ? 'Collaborators' : 'Shared'}
             </Button>
             <Menu
               anchorEl={filterAnchor}
@@ -521,13 +740,20 @@ const NotebooksDashboard = () => {
               onClose={() => setFilterAnchor(null)}
             >
               <MenuItem onClick={() => { setCurrentFilter('all'); setFilterAnchor(null); }}>
+                <ListItemIcon><BookOutlined sx={{ fontSize: 18 }} /></ListItemIcon>
                 All Notebooks
               </MenuItem>
               <MenuItem onClick={() => { setCurrentFilter('favorites'); setFilterAnchor(null); }}>
-                <Star sx={{ mr: 1, fontSize: 18, color: theme.palette.warning.main }} /> Favorites
+                <ListItemIcon><Star sx={{ fontSize: 18, color: theme.palette.warning.main }} /></ListItemIcon>
+                Favorites
               </MenuItem>
               <MenuItem onClick={() => { setCurrentFilter('shared'); setFilterAnchor(null); }}>
-                <People sx={{ mr: 1, fontSize: 18 }} /> Shared with me
+                <ListItemIcon><People sx={{ fontSize: 18 }} /></ListItemIcon>
+                Shared with me
+              </MenuItem>
+              <MenuItem onClick={() => { setCurrentFilter('collaborators'); setFilterAnchor(null); }}>
+                <ListItemIcon><Group sx={{ fontSize: 18, color: theme.palette.info.main }} /></ListItemIcon>
+                Collaborators
               </MenuItem>
             </Menu>
           </Box>
@@ -564,15 +790,23 @@ const NotebooksDashboard = () => {
           </Alert>
         )}
 
-        {/* Notebooks grid */}
+        {/* Notebooks grid or list */}
         {loading ? (
-          <Grid container spacing={3}>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Grid item xs={12} sm={6} md={4} key={i}>
-                <NotebookCardSkeleton />
-              </Grid>
-            ))}
-          </Grid>
+          viewMode === 'list' ? (
+            <Box>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <NotebookCardSkeleton key={i} viewMode="list" />
+              ))}
+            </Box>
+          ) : (
+            <Grid container spacing={3}>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Grid item xs={12} sm={6} md={4} key={i}>
+                  <NotebookCardSkeleton viewMode="grid" />
+                </Grid>
+              ))}
+            </Grid>
+          )
         ) : filteredNotebooks.length === 0 ? (
           <Box
             sx={{
@@ -590,9 +824,15 @@ const NotebooksDashboard = () => {
             <Typography color="text.secondary" sx={{ mb: 3 }}>
               {searchQuery
                 ? 'Try a different search term'
+                : currentFilter === 'favorites'
+                ? 'Star notebooks to add them to favorites'
+                : currentFilter === 'shared'
+                ? 'No notebooks have been shared with you yet'
+                : currentFilter === 'collaborators'
+                ? 'You are not a collaborator on any notebooks yet'
                 : 'Create your first notebook to get started'}
             </Typography>
-            {!searchQuery && (
+            {!searchQuery && currentFilter === 'all' && (
               <Button
                 variant="contained"
                 startIcon={<Add />}
@@ -607,6 +847,24 @@ const NotebooksDashboard = () => {
               </Button>
             )}
           </Box>
+        ) : viewMode === 'list' ? (
+          <Box>
+            <AnimatePresence>
+              {filteredNotebooks.map((notebook, index) => (
+                <NotebookCard
+                  key={notebook._id}
+                  notebook={notebook}
+                  onEdit={(nb) => navigate(`/Notebook/${nb.urlIdentifier}`)}
+                  onDelete={(nb) => { setNotebookToDelete(nb); setDeleteDialogOpen(true); }}
+                  onShare={handleOpenShareDialog}
+                  onToggleFavorite={toggleFavorite}
+                  index={index}
+                  viewMode="list"
+                  isFavorite={favoriteIds.has(notebook._id)}
+                />
+              ))}
+            </AnimatePresence>
+          </Box>
         ) : (
           <Grid container spacing={3}>
             <AnimatePresence>
@@ -616,9 +874,11 @@ const NotebooksDashboard = () => {
                     notebook={notebook}
                     onEdit={(nb) => navigate(`/Notebook/${nb.urlIdentifier}`)}
                     onDelete={(nb) => { setNotebookToDelete(nb); setDeleteDialogOpen(true); }}
-                    onShare={(nb) => navigate(`/Notebook/${nb.urlIdentifier}`)}
+                    onShare={handleOpenShareDialog}
                     onToggleFavorite={toggleFavorite}
                     index={index}
+                    viewMode="grid"
+                    isFavorite={favoriteIds.has(notebook._id)}
                   />
                 </Grid>
               ))}
@@ -664,6 +924,27 @@ const NotebooksDashboard = () => {
         notebookTitle={notebookToDelete?.title || 'Untitled'}
         isDeleting={isDeleting}
         onConfirm={handleDelete}
+      />
+
+      <ShareDialog
+        open={Boolean(selectedNotebookForShare)}
+        onClose={handleCloseShareDialog}
+        notebookId={selectedNotebookForShare?._id || ''}
+        notebookTitle={selectedNotebookForShare?.title || 'Untitled Notebook'}
+        urlIdentifier={selectedNotebookForShare?.urlIdentifier || ''}
+        permissions={selectedNotebookForShare?.permissions || 'everyone'}
+        isOwner={isOwnerOfNotebook(selectedNotebookForShare)}
+        onOpenUrlSettings={() => setIsUrlSettingsOpen(true)}
+        onUrlUpdated={handleUrlUpdated}
+      />
+
+      <NotebookUrlSettingsDialog
+        open={Boolean(selectedNotebookForShare) && isUrlSettingsOpen}
+        onClose={() => setIsUrlSettingsOpen(false)}
+        notebookId={selectedNotebookForShare?._id || ''}
+        currentUrlIdentifier={selectedNotebookForShare?.urlIdentifier || ''}
+        isOwner={isOwnerOfNotebook(selectedNotebookForShare)}
+        onUpdated={handleUrlUpdated}
       />
 
       {/* Snackbar */}

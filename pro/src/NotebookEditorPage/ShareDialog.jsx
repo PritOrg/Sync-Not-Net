@@ -8,7 +8,7 @@
  * - Permission preview
  * - Social share options placeholder
  */
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -34,6 +34,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListItemButton,
+  CircularProgress,
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -51,9 +52,13 @@ import {
   LinkedIn as LinkedInIcon,
   Email as EmailIcon,
   WhatsApp as WhatsAppIcon,
+  Send as SendIcon,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
+import axios from 'axios';
+import config from '../config';
+import apiErrorHandler from '../utils/errorHandler';
 
 // Permission info component
 const PermissionBadge = ({ permission }) => {
@@ -90,17 +95,64 @@ const ShareDialog = ({
   notebookTitle = 'Untitled Notebook',
   urlIdentifier,
   permissions = 'everyone',
+  isOwner = true,
+  onOpenUrlSettings,
+  onUrlUpdated,
 }) => {
   const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
   const [copied, setCopied] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [requesting, setRequesting] = useState(false);
+  const [requestMessage, setRequestMessage] = useState('');
+  const [requestedAccess, setRequestedAccess] = useState('write');
+  const [hasRequested, setHasRequested] = useState(false);
+  const [urlDraft, setUrlDraft] = useState(urlIdentifier || notebookId || '');
+  const [urlSaving, setUrlSaving] = useState(false);
+
+  useEffect(() => {
+    setUrlDraft(urlIdentifier || notebookId || '');
+  }, [urlIdentifier, notebookId, open]);
+
+  const effectiveUrlIdentifier = useMemo(
+    () => (urlDraft || urlIdentifier || notebookId || '').trim(),
+    [urlDraft, urlIdentifier, notebookId]
+  );
 
   // Generate share URL
   const shareUrl = useMemo(() => {
     const baseUrl = window.location.origin;
-    return `${baseUrl}/Notebook/${urlIdentifier}`;
-  }, [urlIdentifier]);
+    return `${baseUrl}/Notebook/${effectiveUrlIdentifier}`;
+  }, [effectiveUrlIdentifier]);
+
+  const handleUpdateUrlQuick = useCallback(async () => {
+    if (!isOwner || !notebookId) return;
+
+    const trimmedIdentifier = (urlDraft || '').trim();
+    if (!trimmedIdentifier) {
+      setSnackbar({ open: true, message: 'URL identifier is required', severity: 'error' });
+      return;
+    }
+
+    try {
+      setUrlSaving(true);
+      const token = localStorage.getItem('token');
+      const response = await axios.put(
+        `${config.apiUrl}/api/notebooks/${notebookId}/url`,
+        { urlIdentifier: trimmedIdentifier },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const updatedIdentifier = response.data?.urlIdentifier || trimmedIdentifier;
+      setUrlDraft(updatedIdentifier);
+      onUrlUpdated?.(updatedIdentifier);
+      setSnackbar({ open: true, message: 'URL updated successfully', severity: 'success' });
+    } catch (err) {
+      setSnackbar({ open: true, message: apiErrorHandler.getErrorMessage(err), severity: 'error' });
+    } finally {
+      setUrlSaving(false);
+    }
+  }, [isOwner, notebookId, onUrlUpdated, urlDraft]);
 
   // Handle copy to clipboard
   const handleCopyLink = useCallback(async () => {
@@ -130,6 +182,36 @@ const ShareDialog = ({
       window.open(urls[platform], '_blank', 'noopener,noreferrer');
     }
   }, [shareUrl, notebookTitle]);
+
+  // Handle collaboration request
+  const handleRequestCollaboration = useCallback(async () => {
+    if (!notebookId) return;
+    try {
+      setRequesting(true);
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${config.apiUrl}/api/collaboration-requests/send`,
+        {
+          notebookId,
+          message: requestMessage,
+          requestedAccess,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setHasRequested(true);
+      setSnackbar({ open: true, message: 'Collaboration request sent!', severity: 'success' });
+    } catch (err) {
+      const errorMsg = apiErrorHandler.getErrorMessage(err);
+      if (errorMsg.includes('already sent') || errorMsg.includes('Already')) {
+        setHasRequested(true);
+        setSnackbar({ open: true, message: 'Request already sent', severity: 'info' });
+      } else {
+        setSnackbar({ open: true, message: errorMsg, severity: 'error' });
+      }
+    } finally {
+      setRequesting(false);
+    }
+  }, [notebookId, requestMessage, requestedAccess]);
 
   return (
     <>
@@ -186,233 +268,370 @@ const ShareDialog = ({
         {/* Tabs */}
         <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
           <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)}>
-            <Tab
-              icon={<QrCodeIcon sx={{ fontSize: 18 }} />}
-              iconPosition="start"
-              label="QR Code"
-              sx={{ textTransform: 'none', minHeight: 48 }}
-            />
-            <Tab
-              icon={<LinkIcon sx={{ fontSize: 18 }} />}
-              iconPosition="start"
-              label="Link"
-              sx={{ textTransform: 'none', minHeight: 48 }}
-            />
-            <Tab
-              icon={<ShareIcon sx={{ fontSize: 18 }} />}
-              iconPosition="start"
-              label="Social"
-              sx={{ textTransform: 'none', minHeight: 48 }}
-            />
+            {isOwner ? (
+              <>
+                <Tab
+                  icon={<QrCodeIcon sx={{ fontSize: 18 }} />}
+                  iconPosition="start"
+                  label="QR Code"
+                  sx={{ textTransform: 'none', minHeight: 48 }}
+                />
+                <Tab
+                  icon={<LinkIcon sx={{ fontSize: 18 }} />}
+                  iconPosition="start"
+                  label="Link"
+                  sx={{ textTransform: 'none', minHeight: 48 }}
+                />
+                <Tab
+                  icon={<ShareIcon sx={{ fontSize: 18 }} />}
+                  iconPosition="start"
+                  label="Social"
+                  sx={{ textTransform: 'none', minHeight: 48 }}
+                />
+              </>
+            ) : (
+              <Tab
+                icon={<SendIcon sx={{ fontSize: 18 }} />}
+                iconPosition="start"
+                label="Request Access"
+                sx={{ textTransform: 'none', minHeight: 48 }}
+              />
+            )}
           </Tabs>
         </Box>
 
         <DialogContent sx={{ pt: 2 }}>
-          {/* QR Code Tab */}
-          <TabPanel value={tabValue} index={0}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                py: 2,
-              }}
-            >
-              <Paper
-                elevation={0}
+          {isOwner ? (
+            <>
+              {/* QR Code Tab */}
+              <TabPanel value={tabValue} index={0}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    py: 2,
+                  }}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      borderRadius: 3,
+                      border: `1px solid ${alpha('#000', 0.08)}`,
+                      bgcolor: '#fff',
+                    }}
+                  >
+                    <QRCodeSVG
+                      value={shareUrl}
+                      size={200}
+                      level="H"
+                      includeMargin
+                      bgColor="#ffffff"
+                      fgColor="#1e293b"
+                    />
+                  </Paper>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
+                    Scan this QR code with your phone to open the notebook
+                  </Typography>
+                </Box>
+              </TabPanel>
+
+              {/* Link Tab */}
+              <TabPanel value={tabValue} index={1}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Share Link
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <TextField
+                      fullWidth
+                      value={shareUrl}
+                      InputProps={{
+                        readOnly: true,
+                        sx: { borderRadius: 2, bgcolor: alpha('#f8fafc', 0.8) },
+                      }}
+                      size="small"
+                    />
+
+                  <Box
+                    sx={{
+                      p: 2,
+                      borderRadius: 2,
+                      border: `1px solid ${alpha('#000', 0.08)}`,
+                      mb: 3,
+                    }}
+                  >
+                    <Typography variant="subtitle2" gutterBottom>
+                      Personalize URL
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                      Make your notebook link easier to remember.
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        value={urlDraft}
+                        onChange={(e) => setUrlDraft(e.target.value)}
+                        disabled={!isOwner || urlSaving}
+                        placeholder="my-team-notes"
+                        helperText="3-50 chars, letters/numbers/hyphen/underscore"
+                      />
+                      <Button
+                        variant="outlined"
+                        onClick={handleUpdateUrlQuick}
+                        disabled={!isOwner || urlSaving || !notebookId}
+                        sx={{ minWidth: 110 }}
+                      >
+                        {urlSaving ? 'Saving...' : 'Update'}
+                      </Button>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                      <Button
+                        size="small"
+                        startIcon={<EditIcon fontSize="small" />}
+                        onClick={() => onOpenUrlSettings?.()}
+                        disabled={!isOwner || !onOpenUrlSettings}
+                      >
+                        Advanced URL settings
+                      </Button>
+                    </Box>
+                  </Box>
+                    <Tooltip title={copied ? 'Copied!' : 'Copy link'}>
+                      <Button
+                        variant="contained"
+                        onClick={handleCopyLink}
+                        startIcon={copied ? <CheckIcon /> : <CopyIcon />}
+                        sx={{ borderRadius: 2, minWidth: 100 }}
+                      >
+                        {copied ? 'Copied' : 'Copy'}
+                      </Button>
+                    </Tooltip>
+                  </Box>
+                </Box>
+
+                {/* Permission info */}
+                <Box
+                  sx={{
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: alpha(theme.palette.background.default, 0.5),
+                    border: `1px solid ${alpha('#000', 0.06)}`,
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="subtitle2">Access Level</Typography>
+                    <PermissionBadge permission={permissions} />
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {permissions === 'everyone' && 'Anyone with this link can view this notebook'}
+                    {permissions === 'collaborators' && 'Only collaborators can access this notebook'}
+                    {permissions === 'private' && 'Only you can access this notebook'}
+                  </Typography>
+                </Box>
+              </TabPanel>
+
+              {/* Social Tab */}
+              <TabPanel value={tabValue} index={2}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Share via
+                </Typography>
+                <List sx={{ bgcolor: 'transparent' }}>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleSocialShare('twitter')}
+                      sx={{ borderRadius: 2, mb: 1 }}
+                    >
+                      <ListItemIcon>
+                        <Box
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 2,
+                            bgcolor: '#1DA1F2',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                          }}
+                        >
+                          <TwitterIcon />
+                        </Box>
+                      </ListItemIcon>
+                      <ListItemText primary="Twitter" secondary="Share on Twitter" />
+                    </ListItemButton>
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleSocialShare('linkedin')}
+                      sx={{ borderRadius: 2, mb: 1 }}
+                    >
+                      <ListItemIcon>
+                        <Box
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 2,
+                            bgcolor: '#0077B5',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                          }}
+                        >
+                          <LinkedInIcon />
+                        </Box>
+                      </ListItemIcon>
+                      <ListItemText primary="LinkedIn" secondary="Share on LinkedIn" />
+                    </ListItemButton>
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleSocialShare('whatsapp')}
+                      sx={{ borderRadius: 2, mb: 1 }}
+                    >
+                      <ListItemIcon>
+                        <Box
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 2,
+                            bgcolor: '#25D366',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                          }}
+                        >
+                          <WhatsAppIcon />
+                        </Box>
+                      </ListItemIcon>
+                      <ListItemText primary="WhatsApp" secondary="Share via WhatsApp" />
+                    </ListItemButton>
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleSocialShare('email')}
+                      sx={{ borderRadius: 2 }}
+                    >
+                      <ListItemIcon>
+                        <Box
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 2,
+                            bgcolor: '#6366f1',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                          }}
+                        >
+                          <EmailIcon />
+                        </Box>
+                      </ListItemIcon>
+                      <ListItemText primary="Email" secondary="Share via email" />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              </TabPanel>
+            </>
+          ) : (
+            /* Non-owner: Request to Collaborate */
+            <Box sx={{ py: 2 }}>
+              <Box sx={{ textAlign: 'center', mb: 3 }}>
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: '50%',
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mx: 'auto',
+                    mb: 2,
+                  }}
+                >
+                  <PeopleIcon sx={{ fontSize: 32, color: theme.palette.primary.main }} />
+                </Box>
+                <Typography variant="h6" fontWeight={600} gutterBottom>
+                  Request to Collaborate
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Send a request to the owner of "{notebookTitle}" to become a collaborator.
+                </Typography>
+              </Box>
+
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Requested Access Level
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  {['read', 'write', 'admin'].map((level) => (
+                    <Chip
+                      key={level}
+                      label={level === 'read' ? 'View Only' : level === 'write' ? 'Can Edit' : 'Admin'}
+                      onClick={() => setRequestedAccess(level)}
+                      color={requestedAccess === level ? 'primary' : 'default'}
+                      variant={requestedAccess === level ? 'filled' : 'outlined'}
+                      sx={{ textTransform: 'capitalize' }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                placeholder="Add a message (optional)..."
+                value={requestMessage}
+                onChange={(e) => setRequestMessage(e.target.value)}
+                sx={{ mb: 2 }}
+                InputProps={{ sx: { borderRadius: 2 } }}
+              />
+
+              <Button
+                fullWidth
+                variant="contained"
+                startIcon={requesting ? <CircularProgress size={20} color="inherit" /> : (hasRequested ? <CheckIcon /> : <SendIcon />)}
+                onClick={handleRequestCollaboration}
+                disabled={requesting || hasRequested}
                 sx={{
-                  p: 3,
-                  borderRadius: 3,
-                  border: `1px solid ${alpha('#000', 0.08)}`,
-                  bgcolor: '#fff',
+                  borderRadius: 2,
+                  py: 1.5,
+                  background: hasRequested
+                    ? 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)'
+                    : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                 }}
               >
-                <QRCodeSVG
-                  value={shareUrl}
-                  size={200}
-                  level="H"
-                  includeMargin
-                  bgColor="#ffffff"
-                  fgColor="#1e293b"
-                />
-              </Paper>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
-                Scan this QR code with your phone to open the notebook
-              </Typography>
+                {requesting ? 'Sending...' : hasRequested ? 'Request Sent' : 'Send Request'}
+              </Button>
             </Box>
-          </TabPanel>
-
-          {/* Link Tab */}
-          <TabPanel value={tabValue} index={1}>
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" gutterBottom>
-                Share Link
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <TextField
-                  fullWidth
-                  value={shareUrl}
-                  InputProps={{
-                    readOnly: true,
-                    sx: { borderRadius: 2, bgcolor: alpha('#f8fafc', 0.8) },
-                  }}
-                  size="small"
-                />
-                <Tooltip title={copied ? 'Copied!' : 'Copy link'}>
-                  <Button
-                    variant="contained"
-                    onClick={handleCopyLink}
-                    startIcon={copied ? <CheckIcon /> : <CopyIcon />}
-                    sx={{ borderRadius: 2, minWidth: 100 }}
-                  >
-                    {copied ? 'Copied' : 'Copy'}
-                  </Button>
-                </Tooltip>
-              </Box>
-            </Box>
-
-            {/* Permission info */}
-            <Box
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                bgcolor: alpha(theme.palette.background.default, 0.5),
-                border: `1px solid ${alpha('#000', 0.06)}`,
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="subtitle2">Access Level</Typography>
-                <PermissionBadge permission={permissions} />
-              </Box>
-              <Typography variant="body2" color="text.secondary">
-                {permissions === 'everyone' && 'Anyone with this link can view this notebook'}
-                {permissions === 'collaborators' && 'Only collaborators can access this notebook'}
-                {permissions === 'private' && 'Only you can access this notebook'}
-              </Typography>
-            </Box>
-          </TabPanel>
-
-          {/* Social Tab */}
-          <TabPanel value={tabValue} index={2}>
-            <Typography variant="subtitle2" gutterBottom>
-              Share via
-            </Typography>
-            <List sx={{ bgcolor: 'transparent' }}>
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => handleSocialShare('twitter')}
-                  sx={{ borderRadius: 2, mb: 1 }}
-                >
-                  <ListItemIcon>
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 2,
-                        bgcolor: '#1DA1F2',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                      }}
-                    >
-                      <TwitterIcon />
-                    </Box>
-                  </ListItemIcon>
-                  <ListItemText primary="Twitter" secondary="Share on Twitter" />
-                </ListItemButton>
-              </ListItem>
-
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => handleSocialShare('linkedin')}
-                  sx={{ borderRadius: 2, mb: 1 }}
-                >
-                  <ListItemIcon>
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 2,
-                        bgcolor: '#0077B5',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                      }}
-                    >
-                      <LinkedInIcon />
-                    </Box>
-                  </ListItemIcon>
-                  <ListItemText primary="LinkedIn" secondary="Share on LinkedIn" />
-                </ListItemButton>
-              </ListItem>
-
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => handleSocialShare('whatsapp')}
-                  sx={{ borderRadius: 2, mb: 1 }}
-                >
-                  <ListItemIcon>
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 2,
-                        bgcolor: '#25D366',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                      }}
-                    >
-                      <WhatsAppIcon />
-                    </Box>
-                  </ListItemIcon>
-                  <ListItemText primary="WhatsApp" secondary="Share via WhatsApp" />
-                </ListItemButton>
-              </ListItem>
-
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => handleSocialShare('email')}
-                  sx={{ borderRadius: 2 }}
-                >
-                  <ListItemIcon>
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 2,
-                        bgcolor: '#6366f1',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                      }}
-                    >
-                      <EmailIcon />
-                    </Box>
-                  </ListItemIcon>
-                  <ListItemText primary="Email" secondary="Share via email" />
-                </ListItemButton>
-              </ListItem>
-            </List>
-          </TabPanel>
+          )}
         </DialogContent>
 
         <DialogActions sx={{ px: 3, py: 2, borderTop: `1px solid ${alpha('#000', 0.08)}` }}>
           <Button onClick={onClose} variant="outlined" sx={{ borderRadius: 2 }}>
             Close
           </Button>
-          <Button
-            onClick={handleCopyLink}
-            variant="contained"
-            startIcon={<CopyIcon />}
-            sx={{ borderRadius: 2 }}
-          >
-            Copy Link
-          </Button>
+          {isOwner && (
+            <Button
+              onClick={handleCopyLink}
+              variant="contained"
+              startIcon={<CopyIcon />}
+              sx={{ borderRadius: 2 }}
+            >
+              Copy Link
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
 

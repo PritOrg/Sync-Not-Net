@@ -10,8 +10,7 @@ import {
 } from '@mui/material';
 import { Tag as TagIcon } from '@mui/icons-material';
 import axios from 'axios';
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import config from '../config';
 
 const TagsInput = ({ value = [], onChange, disabled = false }) => {
   const theme = useTheme();
@@ -29,7 +28,7 @@ const TagsInput = ({ value = [], onChange, disabled = false }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_BASE_URL}/api/tags/search?q=${searchText}`, {
+      const response = await axios.get(`${config.apiUrl}/api/tags/search?q=${searchText}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuggestions(response.data.tags);

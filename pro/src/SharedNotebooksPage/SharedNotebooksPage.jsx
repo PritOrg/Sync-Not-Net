@@ -28,8 +28,8 @@ import {
   Folder as FolderIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+import config from '../config';
+import apiErrorHandler from '../utils/errorHandler';
 
 const SharedNotebooksPage = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const SharedNotebooksPage = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/notebooks/shared?page=${currentPage}&limit=12&search=${encodeURIComponent(search)}`,
+        `${config.apiUrl}/api/notebooks/shared?page=${currentPage}&limit=12&search=${encodeURIComponent(search)}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -71,7 +71,7 @@ const SharedNotebooksPage = () => {
       setError(null);
     } catch (error) {
       console.error('Error fetching shared notebooks:', error);
-      setError('Failed to load shared notebooks. Please try again.');
+      setError(apiErrorHandler.getErrorMessage(error));
     } finally {
       setLoading(false);
     }

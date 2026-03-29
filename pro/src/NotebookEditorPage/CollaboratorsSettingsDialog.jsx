@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -32,6 +32,7 @@ import {
   AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
 import Swal from 'sweetalert2';
+import apiErrorHandler from '../utils/errorHandler';
 
 const ACCESS_LEVELS = [
   { value: 'read', label: 'View Only', icon: <ViewIcon fontSize="small" />, color: '#6b7280' },
@@ -45,6 +46,9 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [searchLoading, setSearchLoading] = useState(false);
+  const debounceTimer = useRef(null);
 
   // Initialize state when dialog opens
   useEffect(() => {
@@ -58,21 +62,37 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
       }));
       setCollaborators(mappedCollaborators);
       setAvailableUsers([]);
+      setInputValue('');
       setError('');
     }
   }, [open, initialSettings]);
 
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+  }, []);
+
   const handleCollaboratorSearch = async (searchTerm) => {
     if (!searchTerm || searchTerm.length < 3) {
       setAvailableUsers([]);
+      setSearchLoading(false);
       return;
     }
+    setSearchLoading(true);
     try {
       const users = await searchCollaborators(searchTerm);
-      setAvailableUsers(users || []);
+      // Filter out users already added as collaborators
+      const filtered = (users || []).filter(
+        u => !collaborators.find(c => c._id === (u._id || u.id))
+      );
+      setAvailableUsers(filtered);
     } catch (error) {
       console.error('Error searching collaborators:', error);
       setAvailableUsers([]);
+    } finally {
+      setSearchLoading(false);
     }
   };
 
@@ -84,6 +104,9 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
         email: user.email,
         access: 'write' // Default to write access
       }]);
+      // Clear the search input and results after adding
+      setInputValue('');
+      setAvailableUsers([]);
     }
   };
 
@@ -103,6 +126,7 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
     
     if (result.isConfirmed) {
       setCollaborators(collaborators.filter(c => c._id !== userId));
+      // Don't need to re-add to availableUsers - they'll appear on next search
     }
   };
 
@@ -138,7 +162,7 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
         setSuccess('');
       }, 1500);
     } catch (error) {
-      setError(error.message || 'Failed to update collaborators');
+      setError(apiErrorHandler.getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -186,16 +210,32 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
           </Box>
 
           <Autocomplete
+            freeSolo
             options={availableUsers}
-            getOptionLabel={(option) => option.name || option.email || ''}
-            onInputChange={(event, newInputValue) => {
-              handleCollaboratorSearch(newInputValue);
+            getOptionLabel={(option) => {
+              if (typeof option === 'string') return option;
+              return option.name || option.email || '';
+            }}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue, reason) => {
+              setInputValue(newInputValue);
+              // Only search on user typing, not on selection or clear
+              if (reason === 'input') {
+                if (debounceTimer.current) clearTimeout(debounceTimer.current);
+                debounceTimer.current = setTimeout(() => {
+                  handleCollaboratorSearch(newInputValue);
+                }, 300);
+              } else if (reason === 'clear') {
+                setAvailableUsers([]);
+              }
             }}
             onChange={(event, newValue) => {
-              if (newValue) {
+              if (newValue && typeof newValue !== 'string') {
                 addCollaborator(newValue);
               }
             }}
+            loading={searchLoading}
+            noOptionsText={inputValue.length < 3 ? 'Type at least 3 characters' : 'No users found'}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -203,19 +243,31 @@ const CollaboratorsSettingsDialog = ({ open, onClose, notebookId, initialSetting
                 variant="outlined"
                 placeholder="Type at least 3 characters to search"
                 fullWidth
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {searchLoading ? <CircularProgress size={20} /> : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
               />
             )}
-            renderOption={(props, option) => (
-              <Box component="li" {...props} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Avatar sx={{ width: 24, height: 24, fontSize: '0.75rem' }}>
-                  {option.name ? option.name[0].toUpperCase() : 'U'}
-                </Avatar>
-                <Box>
-                  <Typography variant="body2">{option.name}</Typography>
-                  <Typography variant="caption" color="text.secondary">{option.email}</Typography>
+            renderOption={(props, option) => {
+              const { key, ...otherProps } = props;
+              return (
+                <Box component="li" key={key} {...otherProps} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Avatar sx={{ width: 24, height: 24, fontSize: '0.75rem' }}>
+                    {option.name ? option.name[0].toUpperCase() : 'U'}
+                  </Avatar>
+                  <Box>
+                    <Typography variant="body2">{option.name}</Typography>
+                    <Typography variant="caption" color="text.secondary">{option.email}</Typography>
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              );
+            }}
           />
 
           {collaborators.length > 0 ? (
