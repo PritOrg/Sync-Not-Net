@@ -653,6 +653,13 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
       setIsLoading(false);
       return;
     }
+    
+    // If we already have notebook data and aren't waiting for guest/password, skip refetch
+    if (notebookData && !requiresGuestName && !requiresPassword) {
+      setIsLoading(false);
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
