@@ -3,50 +3,46 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const { xss } = require('express-xss-sanitizer');
 const hpp = require('hpp');
+const config = require('../config');
 
-// Rate limiting configuration
 const createRateLimiter = (windowMs, max, message) => {
   return rateLimit({
     windowMs,
     max,
     message: {
-      error: message || 'Too many requests from this IP, please try again later.'
+      error: message || 'Too many requests, please try again later.',
     },
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {
       res.status(429).json({
-        error: 'Too many requests',
-        retryAfter: Math.round(windowMs / 1000)
+        error: 'RATE_LIMITED',
+        message: message || 'Too many requests, please try again later.',
+        retryAfter: Math.round(windowMs / 1000),
       });
-    }
+    },
   });
 };
 
-// General rate limiter - more lenient for development
 const generalLimiter = createRateLimiter(
-  parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-  parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 1000, // limit each IP to 1000 requests per windowMs
-  'Too many requests from this IP, please try again later.'
+  config.rateLimit.windowMs,
+  config.rateLimit.maxRequests,
+  'Too many requests, please try again later.'
 );
 
-// Strict rate limiter for auth endpoints
 const authLimiter = createRateLimiter(
-  15 * 60 * 1000, // 15 minutes
-  5, // limit each IP to 5 requests per windowMs
-  'Too many authentication attempts, please try again later.'
+  15 * 60 * 1000,
+  5,
+  'Too many authentication attempts. Please try again later.'
 );
 
-// Socket connection rate limiter
 const socketLimiter = createRateLimiter(
-  60 * 1000, // 1 minute
-  10, // limit each IP to 10 socket connections per minute
-  'Too many socket connections, please try again later.'
+  60 * 1000,
+  10,
+  'Too many socket connections. Please try again later.'
 );
 
-// Security middleware configuration
 const securityMiddleware = [
-  // Helmet for security headers
   helmet({
     contentSecurityPolicy: {
       directives: {
@@ -58,24 +54,18 @@ const securityMiddleware = [
         connectSrc: ["'self'", "ws:", "wss:"],
       },
     },
-    crossOriginEmbedderPolicy: false
+    crossOriginEmbedderPolicy: false,
   }),
-
-  // Data sanitization against NoSQL query injection
   mongoSanitize(),
-
-  // Data sanitization against XSS
   xss(),
-
-  // Prevent parameter pollution
   hpp({
-    whitelist: ['tags', 'collaborators'] // Allow arrays for these parameters
-  })
+    whitelist: ['tags', 'collaborators'],
+  }),
 ];
 
 module.exports = {
   generalLimiter,
   authLimiter,
   socketLimiter,
-  securityMiddleware
+  securityMiddleware,
 };

@@ -1,4 +1,5 @@
 require('dotenv').config();
+const config = require('./config');
 const validateEnv = require('./utils/validateEnv');
 const Sentry = require('@sentry/node');
 
@@ -6,11 +7,11 @@ const Sentry = require('@sentry/node');
 validateEnv();
 
 // Initialize Sentry if DSN is provided
-if (process.env.SENTRY_DSN) {
+if (config.sentry.dsn) {
   Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    environment: process.env.NODE_ENV,
-    tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0
+    dsn: config.sentry.dsn,
+    environment: config.env,
+    tracesSampleRate: config.sentry.tracesSampleRate
   });
 }
 
@@ -36,6 +37,7 @@ const Notebook = require('./models/notebookModel');
 const userRoutes = require('./routes/userRoutes');
 const notebookRoutes = require('./routes/notebookRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const collaborationRequestRoutes = require('./routes/collaborationRequestRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -43,7 +45,7 @@ const server = http.createServer(app);
 // Socket.io configuration
 const ioConfig = {
   cors: {
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: config.cors.origin,
     methods: ['GET', 'POST'],
     credentials: true
   },
@@ -51,9 +53,9 @@ const ioConfig = {
 };
 
 // Initialize Redis for Socket.IO in production
-if (process.env.NODE_ENV === 'production' && process.env.REDIS_URL) {
+if (config.env === 'production' && config.redis.url) {
   try {
-    const pubClient = new Redis(process.env.REDIS_URL);
+    const pubClient = new Redis(config.redis.url);
     const subClient = pubClient.duplicate();
 
     // Add error handlers
@@ -86,7 +88,7 @@ app.use(securityMiddleware);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+  origin: config.cors.origin,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -102,17 +104,13 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Rate limiting
 app.use('/api/', generalLimiter);
 // Enable stricter rate limiting for auth endpoints in production
-if (process.env.NODE_ENV === 'production') {
+if (config.env === 'production') {
   app.use('/api/users/login', authLimiter);
   app.use('/api/users/register', authLimiter);
 }
 
 // MongoDB connection with enhanced options
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/sync-not-net', {
-  maxPoolSize: 10, // Maintain up to 10 socket connections
-  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-}).then(() => {
+mongoose.connect(config.mongo.uri, config.mongo.options).then(() => {
   logger.info('MongoDB Connected successfully');
 }).catch(err => {
   logger.error('MongoDB connection error:', err);
@@ -125,7 +123,7 @@ app.get('/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: config.env
   });
 });
 
@@ -135,6 +133,7 @@ app.set('io', io);
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api', commentRoutes);
+app.use('/api/collaboration-requests', collaborationRequestRoutes);
 // All notebook routes with optional authentication - supports both public and authenticated access
 app.use('/api/notebooks', (req, res, next) => {
   // Allow unauthenticated GET access for /:urlIdentifier/access and /:urlIdentifier
@@ -169,7 +168,7 @@ const notebookUsers = new Map(); // notebookId -> Set of socketIds
 const typingUsers = new Map(); // notebookId -> Set of userIds
 // Track connections per IP to avoid socket DoS
 const ipConnections = new Map(); // ip -> count
-const MAX_CONNECTIONS_PER_IP = parseInt(process.env.SOCKET_MAX_CONNECTIONS_PER_IP || '10', 10);
+const MAX_CONNECTIONS_PER_IP = config.socket.maxConnectionsPerIp;
 
 // Socket authentication middleware
 io.use(async (socket, next) => {
@@ -211,7 +210,7 @@ io.use(async (socket, next) => {
 
     if (token) {
       // Handle authenticated user
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret-key-change-in-production');
+      const decoded = jwt.verify(token, config.jwt.secret);
       const user = await User.findById(decoded.id).select('-password');
 
       if (!user) {
@@ -524,11 +523,10 @@ process.on('SIGINT', () => {
 });
 
 // Server listening - only in non-test mode
-if (process.env.NODE_ENV !== 'test') {
-  const PORT = process.env.PORT || 5000;
-  server.listen(PORT, () => {
-    logger.info(`Server is running on http://localhost:${PORT}`);
-    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+if (config.env !== 'test') {
+  server.listen(config.port, () => {
+    logger.info(`Server is running on http://localhost:${config.port}`);
+    logger.info(`Environment: ${config.env}`);
   });
 }
 

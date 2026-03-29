@@ -26,10 +26,8 @@ const handleValidationErrors = (req, res, next) => {
 const validateUserRegistration = [
   body('name')
     .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name can only contain letters and spaces'),
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Name must be between 2 and 100 characters'),
   
   body('email')
     .isEmail()
@@ -37,10 +35,8 @@ const validateUserRegistration = [
     .withMessage('Please provide a valid email address'),
   
   body('password')
-    .isLength({ min: 8, max: 128 })
-    .withMessage('Password must be between 8 and 128 characters')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
-    .withMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
+    .isLength({ min: 6, max: 128 })
+    .withMessage('Password must be between 6 and 128 characters'),
   
   handleValidationErrors
 ];
@@ -72,8 +68,8 @@ const validateNotebookCreation = [
   
   body('permissions')
     .optional()
-    .isIn(['everyone', 'creator-only'])
-    .withMessage('Permissions must be either "everyone" or "creator-only"'),
+    .isIn(['everyone', 'private', 'collaborators'])
+    .withMessage('Permissions must be "everyone", "private", or "collaborators"'),
   
   body('collaborators')
     .optional()
@@ -126,8 +122,8 @@ const validateNotebookCreation = [
   
   body('editorMode')
     .optional()
-    .isIn(['quill', 'monaco'])
-    .withMessage('Editor mode must be either "quill" or "monaco"'),
+    .isIn(['quill', 'monaco', 'code'])
+    .withMessage('Editor mode must be "quill", "monaco", or "code"'),
   
   body('autoSave')
     .optional()
@@ -155,8 +151,8 @@ const validateNotebookUpdate = [
   
   body('permissions')
     .optional()
-    .isIn(['everyone', 'creator-only'])
-    .withMessage('Permissions must be either "everyone" or "creator-only"'),
+    .isIn(['everyone', 'private', 'collaborators'])
+    .withMessage('Permissions must be "everyone", "private", or "collaborators"'),
   
   body('collaborators')
     .optional()

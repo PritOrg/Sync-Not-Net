@@ -41,7 +41,7 @@ describe('User Routes Baseline', () => {
       .set('Authorization', `Bearer ${loginResponse.body.token}`);
 
     expect(profileResponse.status).toBe(200);
-    expect(profileResponse.body).toHaveProperty('email', email);
+    expect(profileResponse.body.user).toHaveProperty('email', email);
   });
 
   it('validates search query length', async () => {

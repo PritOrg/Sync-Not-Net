@@ -37,7 +37,7 @@ router.get('/tags', verifyToken, catchAsync(async (req, res) => {
     const query = {
       $or: [
         { creatorID: req.user.id },
-        { collaborators: req.user.id },
+      { 'collaborators.userId': req.user.id },
         { permissions: 'everyone' }
       ]
     };
@@ -120,11 +120,10 @@ router.get('/search', verifyToken, catchAsync(async (req, res) => {
     // Get notebooks with pagination
     const notebooks = await Notebook.find(searchQuery)
       .populate('creatorID', 'name email')
-      .populate('collaborators', 'name email')
+      .populate('collaborators.userId', 'name email')
       .sort(sortObj)
       .skip(skip)
       .limit(limitNum)
-      .select('-password')
       .exec();
 
     const totalPages = Math.ceil(total / limitNum);
@@ -190,7 +189,7 @@ router.get('/my-notebooks', verifyToken, catchAsync(async (req, res) => {
     // Get notebooks with pagination
     const notebooks = await Notebook.find(searchQuery)
       .populate('creatorID', 'name email')
-      .populate('collaborators', 'name email')
+      .populate('collaborators.userId', 'name email')
       .sort(sortObj)
       .skip(skip)
       .limit(limitNum)
@@ -234,7 +233,7 @@ router.get('/shared', verifyToken, catchAsync(async (req, res) => {
 
   // Build search query for notebooks where user is a collaborator
   const searchQuery = {
-    collaborators: req.user.id,
+    'collaborators.userId': req.user.id,
     creatorID: { $ne: req.user.id } // Exclude own notebooks
   };
 
@@ -257,7 +256,7 @@ router.get('/shared', verifyToken, catchAsync(async (req, res) => {
     // Get notebooks with pagination
     const notebooks = await Notebook.find(searchQuery)
       .populate('creatorID', 'name email')
-      .populate('collaborators', 'name email')
+      .populate('collaborators.userId', 'name email')
       .sort(sortObj)
       .skip(skip)
       .limit(limitNum)
@@ -360,7 +359,7 @@ router.post('/:id/favorite', verifyToken, catchAsync(async (req, res) => {
 router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
   const notebook = await Notebook.findOne({ urlIdentifier: req.params.urlIdentifier })
     .populate('creatorID', 'name email')
-    .populate('collaborators', 'name email')
+    .populate('collaborators.userId', 'name email')
     .exec();
 
   if (!notebook) {
@@ -401,6 +400,7 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
       // Private + password: require password even for owner
       return res.json({
         requiresPassword: true,
+        hasPassword: true,
         accessLevel: 'edit',
         userRole: 'owner',
         notebook: {
@@ -440,6 +440,7 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
         userRole: 'owner',
         hasAccess: true,
         requiresPassword: false,
+        hasPassword: !!notebook.password,
         message: 'Notebook accessed successfully'
       });
     }
@@ -460,6 +461,7 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
       // Collaborators + password: require password
       return res.json({
         requiresPassword: true,
+        hasPassword: true,
         accessLevel: 'edit',
         userRole,
         notebook: {
@@ -499,6 +501,7 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
         userRole,
         hasAccess: true,
         requiresPassword: false,
+        hasPassword: !!notebook.password,
         message: 'Notebook accessed successfully'
       });
     }
@@ -513,6 +516,7 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
         // Owner/collaborator with password protection
         return res.json({
           requiresPassword: true,
+        hasPassword: true,
           accessLevel: 'edit',
           userRole: isCreator ? 'owner' : 'collaborator',
           notebook: {
@@ -530,6 +534,7 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
         if (!isAuthenticated) {
           return res.json({
             requiresPassword: true,
+        hasPassword: true,
             requiresGuestName: true,
             accessLevel: 'read',
             userRole: 'viewer',
@@ -546,6 +551,7 @@ router.get('/:urlIdentifier', optionalAuth, catchAsync(async (req, res) => {
         } else {
           return res.json({
             requiresPassword: true,
+        hasPassword: true,
             accessLevel: 'read',
             userRole: 'public',
             notebook: {
@@ -632,7 +638,7 @@ router.post('/:urlIdentifier/verify-password', optionalAuth, catchAsync(async (r
 
   const notebook = await Notebook.findOne({ urlIdentifier: req.params.urlIdentifier })
     .populate('creatorID', 'name email')
-    .populate('collaborators', 'name email')
+    .populate('collaborators.userId', 'name email')
     .exec();
 
   if (!notebook) {
@@ -662,61 +668,30 @@ router.post('/:urlIdentifier/verify-password', optionalAuth, catchAsync(async (r
   const isCreator = isAuthenticated && notebook.creatorID._id.toString() === req.user.id.toString();
   const isCollaborator = isAuthenticated && notebook.collaborators.some(collab => collab._id.toString() === req.user.id.toString());
 
-  console.log('Password verification successful:', {
-    urlIdentifier: req.params.urlIdentifier,
-    permissions: notebook.permissions,
-    isAuthenticated,
-    isCreator,
-    isCollaborator
-  });
-
-  // Determine access level and user role based on permissions
-  let accessLevel = 'edit'; // Default for password-protected notebooks
+  // Password is correct — determine access level and user role
+  let accessLevel = 'edit';
   let userRole = 'viewer';
 
-  // First check if user is creator or collaborator regardless of permissions
   if (isCreator) {
     accessLevel = 'edit';
     userRole = 'owner';
   } else if (isCollaborator) {
     accessLevel = 'edit';
     userRole = 'collaborator';
+  } else if (notebook.permissions.toString() === 'private') {
+    // Private notebook: only owner can access (password alone is not enough)
+    return res.status(403).json({
+      error: 'Access denied',
+      message: 'This is a private notebook. Only the owner can access it.'
+    });
+  } else if (notebook.permissions.toString() === 'collaborators') {
+    // Collaborators-only: correct password grants read access even if not listed
+    accessLevel = 'read';
+    userRole = isAuthenticated ? 'public' : 'guest';
   } else {
-    // Then check notebook permissions
-    switch (notebook.permissions.toString()) {
-      case 'private':
-        // Private notebooks - only owner has access
-        if (!isCreator) {
-          return res.status(403).json({
-            error: 'Access denied',
-            message: 'This is a private notebook'
-          });
-        }
-        break;
-        
-      case 'collaborators':
-        // Collaborator notebooks - only owner and collaborators have access
-        if (!isCreator && !isCollaborator) {
-          return res.status(403).json({
-            error: 'Access denied',
-            message: 'This notebook is only accessible by collaborators'
-          });
-        }
-        break;
-        
-      case 'everyone':
-        // Public notebooks - everyone has access with correct password
-        accessLevel = 'edit';
-        userRole = isAuthenticated ? 'public' : 'guest';
-        break;
-        
-      default:
-        // Unknown permission type
-        return res.status(403).json({
-          error: 'Access denied',
-          message: 'Invalid notebook permissions'
-        });
-    }
+    // Everyone: correct password grants full access
+    accessLevel = 'edit';
+    userRole = isAuthenticated ? 'public' : 'guest';
   }
 
   // Password is valid - return notebook content
@@ -821,7 +796,7 @@ router.post('/', verifyToken, validateNotebookCreation, catchAsync(async (req, r
   }
 
   // Populate collaborators for response
-  await newNotebook.populate('collaborators', 'name email');
+  await newNotebook.populate('collaborators.userId', 'name email');
 
   logger.info(`New notebook created: ${title} by user ${req.user.email}`);
 
@@ -857,8 +832,7 @@ router.get('/', verifyToken, catchAsync(async (req, res) => {
   const query = {
     $or: [
       { creatorID: req.user.id },
-      { collaborators: req.user.id },
-      { permissions: 'everyone' }
+      { 'collaborators.userId': req.user.id }
     ]
   };
 
@@ -879,7 +853,7 @@ router.get('/', verifyToken, catchAsync(async (req, res) => {
   // Execute query with pagination
   const notebooks = await Notebook.find(query)
     .populate('creatorID', 'name email')
-    .populate('collaborators', 'name email')
+    .populate('collaborators.userId', 'name email')
     .select('-password') // Never return password hashes
     .sort({ [sortBy]: sortOrder })
     .skip(skip)
@@ -907,7 +881,7 @@ router.get('/', verifyToken, catchAsync(async (req, res) => {
 router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchAsync(async (req, res) => {
   const notebook = await Notebook.findOne({ urlIdentifier: req.params.urlIdentifier })
     .populate('creatorID', 'name email')
-    .populate('collaborators', 'name email')
+    .populate('collaborators.userId', 'name email')
     .exec();
 
   if (!notebook) {
@@ -967,6 +941,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
           email: collab.email
         })),
         requiresPassword: true,
+        hasPassword: true,
         hasAccess: false,
         accessLevel: 'edit',
         userRole: 'owner',
@@ -998,6 +973,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         })),
         content: extractContentFromXML(notebook.content), // Send plain content to frontend
         requiresPassword: false,
+        hasPassword: !!notebook.password,
         hasAccess: true,
         accessLevel: 'edit',
         userRole: 'owner'
@@ -1041,6 +1017,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
           email: collab.email
         })),
         requiresPassword: true,
+        hasPassword: true,
         hasAccess: false,
         accessLevel: 'edit',
         userRole,
@@ -1072,6 +1049,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         })),
         content: extractContentFromXML(notebook.content), // Send plain content to frontend
         requiresPassword: false,
+        hasPassword: !!notebook.password,
         hasAccess: true,
         accessLevel: 'edit',
         userRole
@@ -1108,6 +1086,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
           email: collab.email
         })),
         requiresPassword: true,
+        hasPassword: true,
         hasAccess: false,
         accessLevel: 'edit',
         userRole,
@@ -1139,6 +1118,7 @@ router.get('/:urlIdentifier/access', verifyToken, validateNotebookAccess, catchA
         })),
         content: extractContentFromXML(notebook.content), // Send plain content to frontend
         requiresPassword: false,
+        hasPassword: !!notebook.password,
         hasAccess: true,
         accessLevel: 'edit',
         userRole
@@ -1168,7 +1148,7 @@ router.post('/:urlIdentifier/register-guest', catchAsync(async (req, res) => {
 
   const notebook = await Notebook.findOne({ urlIdentifier: req.params.urlIdentifier })
     .populate('creatorID', 'name email')
-    .populate('collaborators', 'name email')
+    .populate('collaborators.userId', 'name email')
     .exec();
 
   if (!notebook) {
@@ -1239,6 +1219,7 @@ router.post('/:urlIdentifier/register-guest', catchAsync(async (req, res) => {
     userRole: 'public',
     hasAccess: true,
     requiresPassword: false,
+    hasPassword: !!notebook.password,
     guestUser: {
       id: guestId,
       name: sanitizedGuestName,
@@ -1472,12 +1453,12 @@ router.put('/:id', optionalAuth, async (req, res) => {
     }
 
     // Populate collaborators for response
-    await notebook.populate('collaborators', 'name email');
+    await notebook.populate('collaborators.userId', 'name email');
 
-    // Emit real-time update for all users
+    // Emit real-time update to notebook room
     const io = getIO(req);
     if (io) {
-      io.emit('notebookUpdated', {
+      io.to(notebook._id.toString()).emit('notebookUpdated', {
         id: notebook._id,
         title: notebook.title,
         content: extractContentFromXML(notebook.content), // Send plain content to frontend
@@ -1526,28 +1507,26 @@ router.put('/:id', optionalAuth, async (req, res) => {
 
 
 // Delete notebook
-router.delete('/:id', async (req, res) => {
-  try {
-    if (!req.user || !req.user.id) {
-      return res.status(401).json({ message: 'Unauthorized, user not found' });
-    }
+router.delete('/:id', verifyToken, catchAsync(async (req, res) => {
+  const notebook = await Notebook.findById(req.params.id);
 
-    const notebook = await Notebook.findById(req.params.id);
-
-    if (!notebook) {
-      return res.status(404).json({ message: 'Notebook not found' });
-    }
-
-    if (notebook.creatorID.toString() !== req.user.id.toString()) {
-      return res.status(403).json({ message: 'Only the creator can delete this notebook' });
-    }
-
-    await Notebook.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Notebook deleted' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  if (!notebook) {
+    return res.status(404).json({ message: 'Notebook not found' });
   }
-});
+
+  if (notebook.creatorID.toString() !== req.user.id.toString()) {
+    return res.status(403).json({ message: 'Only the creator can delete this notebook' });
+  }
+
+  // Clean up associated data
+  const NotebookVersion = require('../models/notebookVersionModel');
+  const Comment = require('../models/commentModel');
+  await NotebookVersion.deleteMany({ notebookId: req.params.id });
+  await Comment.deleteMany({ notebookId: req.params.id });
+  await Notebook.findByIdAndDelete(req.params.id);
+
+  res.json({ message: 'Notebook deleted' });
+}));
 
 // ==== DEDICATED SETTINGS ROUTES ====
 
@@ -2090,7 +2069,7 @@ router.put('/:id/settings', verifyToken, catchAsync(async (req, res) => {
 
   // Populate collaborator details for response
   if (collaborators) {
-    await notebook.populate('collaborators', 'name email');
+    await notebook.populate('collaborators.userId', 'name email');
   }
 
   // Notify collaborators in real-time

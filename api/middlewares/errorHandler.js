@@ -1,134 +1,129 @@
 const logger = require('../utils/logger');
-const Sentry = require('@sentry/node');
+const config = require('../config');
 
-// Custom error class
 class AppError extends Error {
-  constructor(message, statusCode, isOperational = true, extra = {}) {
+  constructor(message, statusCode, code) {
     super(message);
     this.statusCode = statusCode;
-    this.isOperational = isOperational;
-    this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
-    this.extra = extra;
-
+    this.code = code || 'ERROR';
+    this.isOperational = true;
     Error.captureStackTrace(this, this.constructor);
   }
 }
 
-// Generate unique request ID
-const generateRequestId = () => {
-  return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+const handleValidationError = (err) => {
+  const messages = Object.values(err.errors || {}).map((e) => e.message);
+  return new AppError(messages.join('. '), 400, 'VALIDATION_ERROR');
 };
 
-// Handle MongoDB cast errors
-const handleCastErrorDB = (err) => {
-  const message = `Invalid ${err.path}: ${err.value}`;
-  return new AppError(message, 400, true, {
-    errorType: 'CastError',
-    field: err.path,
-    value: err.value
-  });
+const handleDuplicateKeyError = (err) => {
+  const field = Object.keys(err.keyPattern || {})[0] || 'field';
+  return new AppError(`Duplicate value for ${field}`, 409, 'DUPLICATE_ERROR');
 };
 
-// Handle MongoDB duplicate field errors
-const handleDuplicateFieldsDB = (err) => {
-  const field = Object.keys(err.keyValue)[0];
-  const value = err.keyValue[field];
-  const message = `${field} '${value}' already exists. Please use another value.`;
-  return new AppError(message, 400, true, {
-    errorType: 'DuplicateField',
-    field,
-    value
-  });
+const handleCastError = (err) => {
+  return new AppError(`Invalid ${err.path}: ${err.value}`, 400, 'CAST_ERROR');
 };
 
-// Handle JWT errors
-const handleJWTError = (err) => {
-  return new AppError('Invalid token. Please log in again.', 401, true, {
-    errorType: 'JWTError'
-  });
-};
+const handleJWTError = () => new AppError('Invalid token. Please log in again.', 401, 'INVALID_TOKEN');
+const handleJWTExpiredError = () => new AppError('Token expired. Please log in again.', 401, 'TOKEN_EXPIRED');
 
-// Handle JWT expired error
-const handleJWTExpiredError = (err) => {
-  return new AppError('Your token has expired. Please log in again.', 401, true, {
-    errorType: 'TokenExpiredError'
-  });
-};
-
-// Handle MongoDB validation errors
-const handleValidationErrorDB = (err) => {
-  const errors = Object.values(err.errors).map(el => el.message);
-  const message = `Invalid input data. ${errors.join('. ')}`;
-  return new AppError(message, 400);
-};
-
-// Send error response in development
-const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack
-  });
-};
-
-// Send error response in production
-const sendErrorProd = (err, res) => {
-  // Operational, trusted error: send message to client
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message
-    });
-  } else {
-    // Programming or other unknown error: don't leak error details
-    logger.error('ERROR:', err);
-    
-    res.status(500).json({
-      status: 'error',
-      message: 'Something went wrong!'
-    });
-  }
-};
-
-// Global error handling middleware
 const globalErrorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
+  err.code = err.code || 'INTERNAL_ERROR';
 
-  if (process.env.NODE_ENV === 'development') {
-    sendErrorDev(err, res);
-  } else {
-    let error = { ...err };
-    error.message = err.message;
+  let error = { ...err, message: err.message };
 
-    // Handle specific MongoDB errors
-    if (error.name === 'CastError') error = handleCastErrorDB(error);
-    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    if (error.name === 'ValidationError') error = handleValidationErrorDB(error);
-    if (error.name === 'JsonWebTokenError') error = handleJWTError();
-    if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
+  if (err.name === 'ValidationError') error = handleValidationError(err);
+  if (err.code === 11000) error = handleDuplicateKeyError(err);
+  if (err.name === 'CastError') error = handleCastError(err);
+  if (err.name === 'JsonWebTokenError') error = handleJWTError();
+  if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
-    sendErrorProd(error, res);
-  }
+  logger.error(`${error.statusCode} - ${error.message}`, {
+    path: req.path,
+    method: req.method,
+    ...(config.env === 'development' && { stack: err.stack }),
+  });
+
+  res.status(error.statusCode).json({
+    error: error.code,
+    message: error.isOperational ? error.message : 'Something went wrong',
+    ...(config.env === 'development' && { stack: err.stack }),
+  });
 };
 
-// Async error wrapper
-const catchAsync = (fn) => {
-  return (req, res, next) => {
-    fn(req, res, next).catch(next);
-  };
-};
-
-// 404 handler
 const notFound = (req, res, next) => {
-  const err = new AppError(`Can't find ${req.originalUrl} on this server!`, 404);
-  next(err);
+  const error = new AppError(`Cannot find ${req.method} ${req.originalUrl}`, 404, 'NOT_FOUND');
+  next(error);
+};
+
+const catchAsync = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+const validateBody = (schema) => (req, res, next) => {
+  const errors = [];
+
+  for (const [field, rules] of Object.entries(schema)) {
+    const value = req.body[field];
+    for (const rule of rules) {
+      const error = rule(value, field);
+      if (error) {
+        errors.push({ field, message: error });
+        break;
+      }
+    }
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      error: 'VALIDATION_ERROR',
+      message: errors[0].message,
+      details: errors,
+    });
+  }
+
+  next();
+};
+
+const validationRules = {
+  required: (value, field) => {
+    if (value === undefined || value === null || (typeof value === 'string' && !value.trim())) {
+      return `${field} is required`;
+    }
+    return null;
+  },
+
+  email: (value) => {
+    if (!value) return null;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Please provide a valid email';
+    return null;
+  },
+
+  minLength: (min) => (value, field) => {
+    if (!value) return null;
+    if (value.length < min) return `${field} must be at least ${min} characters`;
+    return null;
+  },
+
+  maxLength: (max) => (value, field) => {
+    if (!value) return null;
+    if (value.length > max) return `${field} must be at most ${max} characters`;
+    return null;
+  },
+
+  string: (value, field) => {
+    if (value !== undefined && typeof value !== 'string') return `${field} must be a string`;
+    return null;
+  },
 };
 
 module.exports = {
   AppError,
   globalErrorHandler,
   catchAsync,
-  notFound
+  notFound,
+  validateBody,
+  validationRules,
 };

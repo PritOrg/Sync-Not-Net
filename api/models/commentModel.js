@@ -35,6 +35,10 @@ const commentSchema = new mongoose.Schema({
     ref: 'Comment',
     default: null // For nested comments/replies
   },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   createdAt: { 
     type: Date, 
     default: Date.now 
@@ -96,7 +100,19 @@ commentSchema.methods.isOwnedBy = function(userId) {
 
 commentSchema.methods.toJSON = function() {
   const obj = this.toObject();
-  obj.id = obj._id;
+  obj.id = obj._id?.toString();
+  obj.notebookId = obj.notebookId?.toString?.() || obj.notebookId;
+  obj.parentId = obj.parentId?.toString?.() || obj.parentId;
+  obj.likes = (obj.likes || []).map((id) => id?.toString?.() || id);
+
+  if (obj.author && obj.author._id) {
+    obj.author = {
+      ...obj.author,
+      id: obj.author._id.toString(),
+    };
+    delete obj.author._id;
+  }
+
   delete obj._id;
   delete obj.__v;
   

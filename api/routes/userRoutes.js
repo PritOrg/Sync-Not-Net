@@ -11,438 +11,365 @@ const {
 } = require('../middlewares/validation');
 const { verifyToken } = require('../middlewares/verifyToken');
 const logger = require('../utils/logger');
+const config = require('../config');
 
-// Get user profile (authenticated route)
-router.get('/profile', verifyToken, catchAsync(async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select('-password');
-
-    if (!user) {
-      return res.status(404).json({
-        error: 'User not found',
-        message: 'User profile not found'
-      });
-    }
-
-    res.json({
+const generateToken = (user) => {
+  return jwt.sign(
+    {
       id: user._id,
-      name: user.name,
       email: user.email,
-      avatar: user.avatar || null,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    });
-  } catch (error) {
-    logger.error('Error fetching user profile:', error);
-    res.status(500).json({
-      error: 'Server error',
-      message: 'Failed to fetch user profile'
-    });
+      role: user.role,
+      iat: Math.floor(Date.now() / 1000),
+    },
+    config.jwt.secret,
+    { expiresIn: config.jwt.expiresIn }
+  );
+};
+
+const sanitizeUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role || 'user',
+  profilePicture: user.profilePicture,
+  lastLogin: user.lastLogin,
+  createdAt: user.createdAt,
+  updatedAt: user.updatedAt,
+});
+
+// Get user profile
+router.get('/profile', verifyToken, catchAsync(async (req, res) => {
+  const user = await User.findById(req.user.id).select('-password');
+  if (!user) {
+    return res.status(404).json({ error: 'User not found', message: 'User profile not found' });
   }
+  res.json({ user: sanitizeUser(user) });
 }));
 
-// JWT configuration from environment
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-test-secret-key';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
-
-// Register User with enhanced validation and security
+// Register
 router.post('/register', validateUserRegistration, catchAsync(async (req, res) => {
   const { name, email, password } = req.body;
 
-  // Check if user already exists
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({ email: email.trim().toLowerCase() });
   if (existingUser) {
     return res.status(409).json({
       error: 'User already exists',
-      message: 'An account with this email already exists'
+      message: 'An account with this email already exists',
     });
   }
 
-  // Create new user (password will be hashed by the pre-save middleware)
-  const newUser = new User({ name, email, password });
+  const newUser = new User({
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    password,
+  });
   await newUser.save();
 
-  // Generate JWT token
-  const token = jwt.sign(
-    {
-      id: newUser._id,
-      email: newUser.email,
-      role: newUser.role
-    },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
-  );
+  const token = generateToken(newUser);
 
-  logger.info(`New user registered: ${email}`);
+  logger.info(`New user registered: ${newUser.email}`);
 
   res.status(201).json({
     token,
-    user: {
-      id: newUser._id,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role
-    },
-    message: 'User registered successfully'
+    user: sanitizeUser(newUser),
+    message: 'Account created successfully',
   });
 }));
-// Login User with enhanced security
+
+// Login
 router.post('/login', validateUserLogin, catchAsync(async (req, res) => {
   const { email, password } = req.body;
+  const normalizedEmail = email.trim().toLowerCase();
 
-  // Find the user by email
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email: normalizedEmail }).select('+password');
   if (!user) {
-    logger.warn(`Login attempt with non-existent email: ${email}`);
+    logger.warn(`Login attempt with non-existent email: ${normalizedEmail}`);
     return res.status(401).json({
       error: 'Authentication failed',
-      message: 'Invalid email or password'
+      message: 'Invalid email or password',
     });
   }
 
-  // Check if account is locked
-  if (user.isLocked()) {
-    const remainingTime = Math.ceil((user.lockoutUntil - new Date()) / 1000 / 60);
+  if (user.isLocked && user.isLocked()) {
+    const remainingMs = user.lockoutUntil - Date.now();
+    const remainingMinutes = Math.max(1, Math.ceil(remainingMs / 60000));
     return res.status(423).json({
       error: 'Account locked',
-      message: `Account is temporarily locked. Please try again in ${remainingTime} minutes.`
+      message: `Account temporarily locked. Try again in ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}.`,
     });
   }
 
-  // Compare the provided password with the hashed password
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    await user.handleFailedLogin();
-    logger.warn(`Failed login attempt for email: ${email}`);
-    
-    // If account just got locked, send specific message
-    if (user.isLocked()) {
-      const lockoutMinutes = Math.ceil((user.lockoutUntil - new Date()) / 1000 / 60);
+    if (user.handleFailedLogin) {
+      await user.handleFailedLogin();
+    }
+    logger.warn(`Failed login attempt for: ${normalizedEmail}`);
+
+    if (user.isLocked && user.isLocked()) {
+      const lockoutMinutes = Math.ceil((user.lockoutUntil - Date.now()) / 60000);
       return res.status(423).json({
         error: 'Account locked',
-        message: `Too many failed attempts. Account locked for ${lockoutMinutes} minutes.`
+        message: `Too many failed attempts. Account locked for ${lockoutMinutes} minute${lockoutMinutes > 1 ? 's' : ''}.`,
       });
     }
 
     return res.status(401).json({
       error: 'Authentication failed',
-      message: 'Invalid email or password'
+      message: 'Invalid email or password',
     });
   }
 
-  // Reset failed login attempts on successful login
-  await user.resetFailedLogins();
+  if (user.resetFailedLogins) {
+    await user.resetFailedLogins();
+  }
 
-  // Generate JWT token with additional claims
-  const token = jwt.sign(
-    {
-      id: user._id,
-      email: user.email,
-      role: user.role,
-      iat: Math.floor(Date.now() / 1000)
-    },
-    process.env.JWT_SECRET,
-    { 
-      expiresIn: JWT_EXPIRES_IN,
-      audience: process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : 'localhost'
-    }
-  );
+  const token = generateToken(user);
 
-  logger.info(`User logged in: ${email}`);
+  logger.info(`User logged in: ${normalizedEmail}`);
 
   res.json({
     token,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    },
-    message: 'Login successful'
+    user: sanitizeUser(user),
+    message: 'Login successful',
   });
 }));
 
-/**
- * Search for users by name or email
- * @route GET /api/users/search
- * @param {string} req.query.q - Search query (minimum 2 characters)
- * @param {number} req.query.limit - Results limit (default: 10, max: 50)
- * @returns {array} Array of matching users with id, name, email, avatar
- * @access Private
- */
-// Search users for collaboration
+// Search users
 router.get('/search', verifyToken, catchAsync(async (req, res) => {
-  try {
-    const { q } = req.query;
+  const { q } = req.query;
 
-    if (!q || q.length < 2) {
-      return res.status(400).json({
-        error: 'Invalid search query',
-        message: 'Search query must be at least 2 characters long'
-      });
-    }
+  if (!q || q.length < 2) {
+    return res.status(400).json({
+      error: 'Invalid search query',
+      message: 'Search query must be at least 2 characters',
+    });
+  }
 
-    // Search users by name or email (case-insensitive)
-    const users = await User.find({
-      $and: [
-        { _id: { $ne: req.user.id } }, // Exclude current user
-        {
-          $or: [
-            { name: { $regex: q, $options: 'i' } },
-            { email: { $regex: q, $options: 'i' } }
-          ]
-        }
-      ]
-    })
+  const users = await User.find({
+    $and: [
+      { _id: { $ne: req.user.id } },
+      {
+        $or: [
+          { name: { $regex: q, $options: 'i' } },
+          { email: { $regex: q, $options: 'i' } },
+        ],
+      },
+    ],
+  })
     .select('_id name email avatar')
     .limit(10);
 
-    res.json(users);
-  } catch (error) {
-    logger.error('Error searching users:', error);
-    res.status(500).json({
-      error: 'Server error',
-      message: 'Failed to search users'
-    });
-  }
+  res.json(users);
 }));
 
-// Get User by ID with enhanced security
+// Get user by ID
 router.get('/find/:id', verifyToken, validateObjectId, catchAsync(async (req, res) => {
   const user = await User.findById(req.params.id).select('-password');
-
   if (!user) {
     return res.status(404).json({
       error: 'User not found',
-      message: 'The requested user does not exist'
+      message: 'The requested user does not exist',
     });
   }
-
-  res.json({
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt
-    }
-  });
+  res.json({ user: sanitizeUser(user) });
 }));
 
-// Get current user profile
-router.get('/profile', verifyToken, catchAsync(async (req, res) => {
-  const user = await User.findById(req.userId).select('-password');
-
-  if (!user) {
-    return res.status(404).json({
-      error: 'User not found',
-      message: 'User profile not found'
-    });
-  }
-
-  res.json({
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    }
-  });
-}));
-
-// Update user profile (authenticated route)
+// Update profile
 router.put('/profile', verifyToken, catchAsync(async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    
-    // Validate required fields
-    if (!name || !email) {
-      return res.status(400).json({
-        error: 'Validation error',
-        message: 'Name and email are required'
-      });
-    }
+  const { name, email } = req.body;
 
-    // Check if email is already taken by another user
-    const existingUser = await User.findOne({ 
-      email, 
-      _id: { $ne: req.user.id } 
-    });
-    
-    if (existingUser) {
-      return res.status(400).json({
-        error: 'Email already exists',
-        message: 'This email is already registered to another account'
-      });
-    }
-
-    // Update user
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      { 
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        updatedAt: new Date()
-      },
-      { new: true, select: '-password' }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({
-        error: 'User not found',
-        message: 'User profile not found'
-      });
-    }
-
-    logger.info(`User profile updated: ${email}`);
-
-    res.json({
-      user: {
-        id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        role: updatedUser.role,
-        createdAt: updatedUser.createdAt,
-        updatedAt: updatedUser.updatedAt
-      },
-      message: 'Profile updated successfully'
-    });
-  } catch (error) {
-    logger.error('Error updating user profile:', error);
-    res.status(500).json({
-      error: 'Server error',
-      message: 'Failed to update user profile'
+  if (!name || !email) {
+    return res.status(400).json({
+      error: 'Validation error',
+      message: 'Name and email are required',
     });
   }
+
+  const trimmedName = name.trim();
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (trimmedName.length < 2) {
+    return res.status(400).json({
+      error: 'Validation error',
+      message: 'Name must be at least 2 characters',
+    });
+  }
+
+  const existingUser = await User.findOne({
+    email: normalizedEmail,
+    _id: { $ne: req.user.id },
+  });
+
+  if (existingUser) {
+    return res.status(409).json({
+      error: 'Email taken',
+      message: 'This email is already registered to another account',
+    });
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    { name: trimmedName, email: normalizedEmail, updatedAt: new Date() },
+    { new: true, select: '-password' }
+  );
+
+  if (!updatedUser) {
+    return res.status(404).json({
+      error: 'User not found',
+      message: 'User profile not found',
+    });
+  }
+
+  logger.info(`Profile updated: ${normalizedEmail}`);
+
+  res.json({
+    user: sanitizeUser(updatedUser),
+    message: 'Profile updated successfully',
+  });
 }));
 
-// Change password (authenticated route)
+// Change password
 router.put('/password', verifyToken, catchAsync(async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
-    
-    // Validate required fields
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({
-        error: 'Validation error',
-        message: 'Current password and new password are required'
-      });
-    }
+  const { currentPassword, newPassword } = req.body;
 
-    // Validate new password strength
-    if (newPassword.length < 6) {
-      return res.status(400).json({
-        error: 'Validation error',
-        message: 'New password must be at least 6 characters long'
-      });
-    }
-
-    // Get user with password
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({
-        error: 'User not found',
-        message: 'User account not found'
-      });
-    }
-
-    // Verify current password
-    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
-    if (!isCurrentPasswordValid) {
-      return res.status(400).json({
-        error: 'Invalid password',
-        message: 'Current password is incorrect'
-      });
-    }
-
-    // Hash new password
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-
-    // Update password
-    await User.findByIdAndUpdate(req.user.id, {
-      password: hashedPassword,
-      updatedAt: new Date()
-    });
-
-    logger.info(`Password changed for user: ${user.email}`);
-
-    res.json({
-      message: 'Password changed successfully'
-    });
-  } catch (error) {
-    logger.error('Error changing password:', error);
-    res.status(500).json({
-      error: 'Server error',
-      message: 'Failed to change password'
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({
+      error: 'Validation error',
+      message: 'Current password and new password are required',
     });
   }
+
+  if (newPassword.length < config.security.passwordMinLength) {
+    return res.status(400).json({
+      error: 'Validation error',
+      message: `New password must be at least ${config.security.passwordMinLength} characters`,
+    });
+  }
+
+  if (currentPassword === newPassword) {
+    return res.status(400).json({
+      error: 'Validation error',
+      message: 'New password must be different from current password',
+    });
+  }
+
+  const user = await User.findById(req.user.id).select('+password');
+  if (!user) {
+    return res.status(404).json({
+      error: 'User not found',
+      message: 'User account not found',
+    });
+  }
+
+  const isValid = await bcrypt.compare(currentPassword, user.password);
+  if (!isValid) {
+    return res.status(400).json({
+      error: 'Invalid password',
+      message: 'Current password is incorrect',
+    });
+  }
+
+  user.password = newPassword;
+  user.updatedAt = new Date();
+  await user.save();
+
+  logger.info(`Password changed for: ${user.email}`);
+
+  res.json({ message: 'Password changed successfully' });
 }));
 
-// Get user statistics (authenticated route)
+// Get user stats
 router.get('/stats', verifyToken, catchAsync(async (req, res) => {
-  try {
-    const Notebook = require('../models/notebookModel');
-    
-    // Get user's notebooks statistics
-    const totalNotebooks = await Notebook.countDocuments({ owner: req.user.id });
-    const sharedNotebooks = await Notebook.countDocuments({ 
-      'collaborators.user': req.user.id 
-    });
-    
-    // Get public notebooks created by user
-    const publicNotebooks = await Notebook.countDocuments({ 
-      owner: req.user.id,
-      'permissions.public': 'edit'
-    });
+  const Notebook = require('../models/notebookModel');
 
-    // Get total collaborators across all owned notebooks
-    const ownedNotebooks = await Notebook.find({ owner: req.user.id });
-    const totalCollaborators = ownedNotebooks.reduce((total, notebook) => {
-      return total + (notebook.collaborators ? notebook.collaborators.length : 0);
-    }, 0);
+  const totalNotebooks = await Notebook.countDocuments({ creatorID: req.user.id });
+  const sharedNotebooks = await Notebook.countDocuments({
+    'collaborators.userId': req.user.id,
+  });
+  const publicNotebooks = await Notebook.countDocuments({
+    creatorID: req.user.id,
+    permissions: 'everyone',
+  });
 
-    res.json({
-      stats: {
-        totalNotebooks,
-        sharedNotebooks,
-        publicNotebooks,
-        totalCollaborators,
-        memberSince: await User.findById(req.user.id).select('createdAt').then(u => u.createdAt)
+  const ownedNotebooks = await Notebook.find({ creatorID: req.user.id }).select('collaborators.userId');
+  const uniqueCollaboratorIds = new Set();
+
+  ownedNotebooks.forEach((nb) => {
+    (nb.collaborators || []).forEach((collab) => {
+      const collabId = collab?.userId?.toString();
+      if (collabId) {
+        uniqueCollaboratorIds.add(collabId);
       }
     });
-  } catch (error) {
-    logger.error('Error fetching user stats:', error);
-    res.status(500).json({
-      error: 'Server error',
-      message: 'Failed to fetch user statistics'
-    });
-  }
+  });
+
+  const totalCollaborators = uniqueCollaboratorIds.size;
+
+  const user = await User.findById(req.user.id).select('createdAt lastLogin profilePicture');
+
+  res.json({
+    stats: {
+      totalNotebooks,
+      sharedNotebooks,
+      publicNotebooks,
+      totalCollaborators,
+      memberSince: user?.createdAt,
+      lastLogin: user?.lastLogin,
+      profilePicture: user?.profilePicture,
+    },
+  });
 }));
 
-// Get all users (admin only - for future use)
+// Get user activity
+router.get('/activity', verifyToken, catchAsync(async (req, res) => {
+  const Notebook = require('../models/notebookModel');
+
+  const limit = parseInt(req.query.limit, 10) || 5;
+  
+  // Find notebooks where user is owner or collaborator, sorted by updatedAt descending
+  const notebooks = await Notebook.find({
+    $or: [
+      { creatorID: req.user.id },
+      { 'collaborators.userId': req.user.id },
+    ],
+  })
+    .select('title permissions updatedAt collaborators creatorID')
+    .sort({ updatedAt: -1 })
+    .limit(limit)
+    .lean();
+
+  const activity = notebooks.map(nb => ({
+    id: nb._id,
+    title: nb.title,
+    updatedAt: nb.updatedAt,
+    isOwner: nb.creatorID.toString() === req.user.id,
+    accessLevel: nb.creatorID.toString() === req.user.id 
+      ? 'owner' 
+      : nb.collaborators.find(c => c.userId.toString() === req.user.id)?.access || 'read',
+    isPublic: nb.permissions === 'everyone',
+  }));
+
+  res.json({ activity });
+}));
+
+// Get all users (admin only)
 router.get('/', verifyToken, catchAsync(async (req, res) => {
-  // Check if user is admin (for future role-based access)
   if (req.user.role !== 'admin') {
     return res.status(403).json({
       error: 'Access denied',
-      message: 'Admin access required'
+      message: 'Admin access required',
     });
   }
 
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit, 10) || 10));
   const skip = (page - 1) * limit;
 
-  const users = await User.find()
-    .select('-password')
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit);
-
-  const total = await User.countDocuments();
+  const [users, total] = await Promise.all([
+    User.find().select('-password').sort({ createdAt: -1 }).skip(skip).limit(limit),
+    User.countDocuments(),
+  ]);
 
   res.json({
     users,
@@ -450,10 +377,9 @@ router.get('/', verifyToken, catchAsync(async (req, res) => {
       page,
       limit,
       total,
-      pages: Math.ceil(total / limit)
-    }
+      pages: Math.ceil(total / limit),
+    },
   });
 }));
 
 module.exports = router;
-

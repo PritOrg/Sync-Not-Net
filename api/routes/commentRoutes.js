@@ -8,6 +8,35 @@ const { validateComment } = require('../middlewares/validation');
 const { catchAsync } = require('../middlewares/errorHandler');
 const logger = require('../utils/logger');
 
+const normalizeCommentPayload = (comment) => {
+  if (!comment) return null;
+
+  const source = typeof comment.toObject === 'function' ? comment.toObject() : comment;
+  const normalized = { ...source };
+
+  normalized.id = normalized._id?.toString?.() || normalized.id;
+  delete normalized._id;
+  delete normalized.__v;
+
+  normalized.notebookId = normalized.notebookId?.toString?.() || normalized.notebookId;
+  normalized.parentId = normalized.parentId?.toString?.() || normalized.parentId;
+  normalized.likes = (normalized.likes || []).map((id) => id?.toString?.() || id);
+
+  if (normalized.author && normalized.author._id) {
+    normalized.author = {
+      ...normalized.author,
+      id: normalized.author._id.toString(),
+    };
+    delete normalized.author._id;
+  }
+
+  if (Array.isArray(normalized.replies)) {
+    normalized.replies = normalized.replies.map((reply) => normalizeCommentPayload(reply));
+  }
+
+  return normalized;
+};
+
 // Get all comments for a notebook
 router.get('/notebooks/:notebookId/comments', optionalAuth, catchAsync(async (req, res) => {
   try {
@@ -48,11 +77,12 @@ router.get('/notebooks/:notebookId/comments', optionalAuth, catchAsync(async (re
         .populate('author', 'name email')
         .lean();
       
-      return {
-        ...comment,
-        replies,
-        replyCount: replies.length
-      };
+      // Transform main comment and replies
+      const mainComment = normalizeCommentPayload(comment);
+      mainComment.replies = replies.map((reply) => normalizeCommentPayload(reply));
+      mainComment.replyCount = replies.length;
+      
+      return mainComment;
     }));
     
     return res.status(200).json({
@@ -131,12 +161,12 @@ router.post('/notebooks/:notebookId/comments', optionalAuth, validateComment, ca
     // If socket.io is available, emit event
     const io = req.app.get('io');
     if (io) {
-      io.to(notebookId).emit('commentAdded', newComment.toJSON());
+      io.to(notebookId).emit('commentAdded', normalizeCommentPayload(newComment));
     }
     
     return res.status(201).json({
       message: 'Comment added successfully',
-      comment: newComment.toJSON()
+      comment: normalizeCommentPayload(newComment)
     });
   } catch (error) {
     logger.error(`Error adding comment: ${error.message}`);
@@ -191,15 +221,76 @@ router.put('/notebooks/:notebookId/comments/:commentId', optionalAuth, validateC
     // If socket.io is available, emit update event
     const io = req.app.get('io');
     if (io) {
-      io.to(notebookId).emit('commentUpdated', comment.toJSON());
+      io.to(notebookId).emit('commentUpdated', normalizeCommentPayload(comment));
     }
     
     return res.status(200).json({
       message: 'Comment updated successfully',
-      comment: comment.toJSON()
+      comment: normalizeCommentPayload(comment)
     });
   } catch (error) {
     logger.error(`Error updating comment: ${error.message}`);
+    return res.status(500).json({
+      message: 'Server error',
+      error: error.message
+    });
+  }
+}));
+
+// Like/unlike a comment
+router.post('/notebooks/:notebookId/comments/:commentId/like', optionalAuth, catchAsync(async (req, res) => {
+  try {
+    const { notebookId, commentId } = req.params;
+    const userId = req.user ? req.user.id : null;
+    
+    // Check if comment exists
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    
+    // Check if comment belongs to the specified notebook
+    if (comment.notebookId.toString() !== notebookId) {
+      return res.status(400).json({ message: 'Comment does not belong to this notebook' });
+    }
+    
+    if (!userId) {
+      return res.status(401).json({ message: 'Authentication required to like comments' });
+    }
+    
+    // Initialize likes array if it doesn't exist
+    if (!comment.likes) {
+      comment.likes = [];
+    }
+    
+    const alreadyLiked = comment.likes.some((id) => id.toString() === userId.toString());
+    
+    if (alreadyLiked) {
+      comment.likes = comment.likes.filter((id) => id.toString() !== userId.toString());
+    } else {
+      comment.likes.push(userId);
+    }
+    
+    await comment.save();
+    
+    // If socket.io is available, emit event
+    const io = req.app.get('io');
+    if (io) {
+      io.to(notebookId).emit('commentLiked', {
+        commentId,
+        liked: !alreadyLiked,
+        userId,
+        likes: (comment.likes || []).map((id) => id.toString())
+      });
+    }
+    
+    return res.status(200).json({
+      message: alreadyLiked ? 'Comment unliked' : 'Comment liked',
+      liked: !alreadyLiked,
+      likes: (comment.likes || []).map((id) => id.toString())
+    });
+  } catch (error) {
+    logger.error(`Error liking comment: ${error.message}`);
     return res.status(500).json({
       message: 'Server error',
       error: error.message
