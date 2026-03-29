@@ -694,6 +694,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
           }
           // Otherwise need to login
           showNotification('Please login to access this notebook', 'error');
+          setIsLoading(false);
           navigate('/auth?mode=login');
           return;
         }
@@ -706,12 +707,14 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
             return;
           }
           showNotification(errorData.message || 'Access denied', 'error');
+          setIsLoading(false);
           navigate('/notebooks');
           return;
         }
         
         if (response.status === 404) {
           showNotification('Notebook not found', 'error');
+          setIsLoading(false);
           navigate('/notebooks');
           return;
         }
@@ -741,6 +744,7 @@ const EnhancedNotebookEditor = ({ mode = 'view' }) => {
     } catch (error) {
       console.error('Error fetching notebook:', error);
       showNotification(error.message || 'Failed to load notebook', 'error');
+      setIsLoading(false);
     }
   }, [urlIdentifier_from_url, mode, navigate, showNotification, loadNotebookFromResponse]);
 
