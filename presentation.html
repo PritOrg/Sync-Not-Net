@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sync Note Net — Project Presentation</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --primary:#6366f1;--primary-light:#818cf8;--primary-dark:#4f46e5;
+    --bg:#0a0f1a;--surface:#1e293b;--surface2:#334155;
+    --text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;
+    --accent-green:#22c55e;--accent-amber:#f59e0b;--accent-red:#ef4444;--accent-cyan:#06b6d4;
+    --radius:16px;--transition:0.4s cubic-bezier(.4,0,.2,1);
+  }
+  html{font-size:16px;scroll-behavior:smooth}
+  body{
+    font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+    background: linear-gradient(135deg, #0a0f1a 0%, #1a1f36 100%);
+    color:var(--text);
+    overflow:hidden;
+    height:100vh;
+    width:100vw;
+  }
+
+  /* ── Slide Container ── */
+  .deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+  .slide{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:4rem 5rem;
+    opacity:0;
+    transform:scale(0.95) translateX(60px);
+    transition:opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1);
+    pointer-events:none;
+  }
+  .slide.active{opacity:1;transform:scale(1) translateX(0);pointer-events:auto}
+  .slide.exit{opacity:0;transform:scale(0.95) translateX(-60px)}
+
+  /* ── Navigation ── */
+  .nav{
+    position:fixed;
+    bottom:2rem;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:.75rem;
+    z-index:100;
+    align-items:center;
+    background: rgba(30,41,59,0.8);
+    backdrop-filter:blur(10px);
+    padding:.75rem 1.5rem;
+    border-radius:50px;
+    border:1px solid rgba(255,255,255,0.1);
+  }
+  .nav button{
+    background:var(--surface2);
+    color:var(--text);
+    border:none;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:1.1rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:var(--transition);
+  }
+  .nav button:hover{
+    background:var(--primary);
+    transform:scale(1.1);
+    box-shadow:0 0 20px rgba(99,102,241,0.4);
+  }
+  .nav .counter{
+    color:var(--text-muted);
+    font-size:.9rem;
+    font-weight:600;
+    margin:0 1rem;
+    min-width:70px;
+    text-align:center;
+  }
+
+  .progress{
+    position:fixed;
+    top:0;
+    left:0;
+    height:4px;
+    background:linear-gradient(90deg, var(--primary), var(--accent-cyan));
+    transition:width .4s ease;
+    z-index:100;
+  }
+
+  /* ── Typography ── */
+  h1{
+    font-size:clamp(2.5rem,6vw,4.2rem);
+    font-weight:800;
+    line-height:1.1;
+    letter-spacing:-0.03em;
+    background:linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  h2{
+    font-size:clamp(1.8rem,4vw,2.8rem);
+    font-weight:700;
+    line-height:1.15;
+    margin-bottom:1.2rem;
+    color:#fff;
+  }
+  h3{font-size:1.3rem;font-weight:600;margin-bottom:.75rem;color:#fff}
+  p{font-size:1.1rem;line-height:1.7;color:var(--text-muted)}
+  .lead{font-size:1.35rem;color:var(--text-muted);max-width:750px;text-align:center;line-height:1.8}
+  .highlight{color:var(--primary-light)}
+  .badge{
+    display:inline-block;
+    padding:.35rem .85rem;
+    border-radius:999px;
+    font-size:.8rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    background:rgba(99,102,241,0.15);
+    color:var(--primary-light);
+    border:1px solid rgba(99,102,241,0.3);
+  }
+
+  /* ── Layout Helpers ── */
+  .grid{display:grid;gap:2rem;width:100%;max-width:1200px}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  .grid-4{grid-template-columns:repeat(4,1fr)}
+  .flex{display:flex;gap:1.25rem;align-items:center}
+  .flex-col{flex-direction:column}
+  .center{text-align:center}
+  .w-full{width:100%}
+  .max-w{max-width:1200px;width:100%}
+
+  /* ── Cards ── */
+  .card{
+    background:rgba(30,41,59,0.6);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:var(--radius);
+    padding:2rem;
+    transition:var(--transition);
+  }
+  .card:hover{
+    border-color:var(--primary);
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(99,102,241,0.2);
+  }
+  .card .icon{font-size:2.5rem;margin-bottom:1rem}
+  .card h3{color:#fff}
+  .card p{font-size:.95rem;line-height:1.6}
+
+  /* ── Stats ── */
+  .stat{text-align:center}
+  .stat .num{font-size:3rem;font-weight:800;color:var(--primary-light);line-height:1}
+  .stat .label{font-size:.9rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.5rem;font-weight:600}
+
+  /* ── Table ── */
+  .table-wrap{width:100%;max-width:1000px;overflow-x:auto}
+  table{width:100%;border-collapse:separate;border-spacing:0;font-size:.95rem}
+  th{
+    text-align:left;
+    padding:1rem 1.25rem;
+    background:rgba(99,102,241,0.1);
+    color:var(--primary-light);
+    font-weight:600;
+    border-bottom:2px solid var(--surface2);
+  }
+  td{padding:.85rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text-muted)}
+  tr:hover td{background:rgba(99,102,241,0.05)}
+  .method{font-weight:700;font-size:.85rem;padding:.2rem .6rem;border-radius:6px;font-family:monospace}
+  .get{color:#22c55e;background:rgba(34,197,94,0.15)}
+  .post{color:#f59e0b;background:rgba(245,158,11,0.15)}
+  .put{color:#06b6d4;background:rgba(6,182,212,0.15)}
+  .delete{color:#ef4444;background:rgba(239,68,68,0.15)}
+
+  /* ── Code Block ── */
+  pre{
+    background:rgba(30,41,59,0.8);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:12px;
+    padding:1.5rem 1.75rem;
+    overflow-x:auto;
+    font-size:.9rem;
+    line-height:1.7;
+    color:var(--text-muted);
+    text-align:left;
+    max-width:800px;
+    width:100%;
+  }
+  code{font-family:'Fira Code','Cascadia Code','Consolas',monospace}
+  .kw{color:var(--primary-light)}
+  .str{color:var(--accent-green)}
+  .cm{color:var(--text-dim)}
+  .fn{color:var(--accent-cyan)}
+
+  /* ── Timeline ── */
+  .timeline{position:relative;padding-left:2.5rem;max-width:650px}
+  .timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--surface2)}
+  .timeline-item{position:relative;margin-bottom:2rem;padding-left:2rem}
+  .timeline-item::before{
+    content:'';
+    position:absolute;
+    left:-2.5rem;
+    top:.5rem;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--primary);
+    border:3px solid var(--bg);
+    transform:translateX(-6px);
+  }
+  .timeline-item.done::before{background:var(--accent-green)}
+  .timeline-item.pending::before{background:var(--accent-amber)}
+
+  /* ── Animation keyframes ── */
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+  .float{animation:float 4s ease-in-out infinite}
+  .stagger > *{opacity:0;animation:slideUp .6s ease forwards}
+  .stagger > *:nth-child(1){animation-delay:.1s}
+  .stagger > *:nth-child(2){animation-delay:.2s}
+  .stagger > *:nth-child(3){animation-delay:.3s}
+  .stagger > *:nth-child(4){animation-delay:.4s}
+  .stagger > *:nth-child(5){animation-delay:.5s}
+  .stagger > *:nth-child(6){animation-delay:.6s}
+  .stagger > *:nth-child(7){animation-delay:.7s}
+  .stagger > *:nth-child(8){animation-delay:.8s}
+  .stagger > *:nth-child(9){animation-delay:.9s}
+
+  /* ── Responsive ── */
+  @media(max-width:1024px){
+    .slide{padding:3rem 2.5rem}
+    .grid-3,.grid-4{grid-template-columns:repeat(2,1fr)}
+    .grid-2{grid-template-columns:1fr}
+  }
+  @media(max-width:768px){
+    .grid-3,.grid-4{grid-template-columns:1fr}
+    h1{font-size:2.5rem}
+    .nav{bottom:1rem;gap:.5rem;padding:.5rem 1rem}
+    .nav button{width:36px;height:36px;font-size:1rem}
+    .nav .counter{font-size:.8rem;margin:0 .5rem}
+  }
+
+  /* ── Keyboard hint ── */
+  .keys{position:fixed;bottom:2rem;right:2rem;font-size:.8rem;color:var(--text-dim);z-index:100}
+  .keys kbd{
+    background:rgba(255,255,255,0.1);
+    padding:.2rem .5rem;
+    border-radius:4px;
+    font-family:monospace;
+    margin:0 .15rem;
+    border:1px solid rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- ═══════════════ SLIDE 1: Title ═══════════════ -->
+<div class="slide active" data-slide="0">
+  <div style="font-size:4rem;margin-bottom:1rem" class="float">📝</div>
+  <h1>Sync <span class="highlight">Note</span> Net</h1>
+  <p class="lead" style="margin-top:1rem">
+    Collaborative note-taking platform with real-time editing,<br>
+    version control, and rich collaboration features.
+  </p>
+  <div class="flex" style="margin-top:2rem;flex-wrap:wrap;justify-content:center">
+    <span class="badge" style="background:rgba(34,197,94,.15);color:#22c55e">138 Tests Passing</span>
+    <span class="badge" style="background:rgba(99,102,241,.15);color:#818cf8">MERN Stack</span>
+    <span class="badge" style="background:rgba(6,182,212,.15);color:#06b6d4">Real-time Socket.io</span>
+    <span class="badge" style="background:rgba(245,158,11,.15);color:#f59e0b">Production Ready</span>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 2: Problem & Solution ═══════════════ -->
+<div class="slide" data-slide="1">
+  <h2>The Problem & Our Solution</h2>
+  <div class="grid grid-2" style="margin-top:1.5rem">
+    <div class="card">
+      <div class="icon">😫</div>
+      <h3>The Problem</h3>
+      <p>Teams need to collaborate on notes and code but juggle between disconnected tools — Google Docs for text, GitHub for code, Slack for comments. No single platform offers real-time co-editing with version history and granular permissions.</p>
+    </div>
+    <div class="card">
+      <div class="icon">✨</div>
+      <h3>Our Solution</h3>
+      <p>Sync Note Net combines rich text (Quill) and code editing (Monaco) with real-time Socket.io collaboration, threaded comments, version control, and flexible sharing — all in one platform.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 3: Features Overview ═══════════════ -->
+<div class="slide" data-slide="2">
+  <h2>Core Features</h2>
+  <div class="grid grid-3 stagger" style="margin-top:1.5rem">
+    <div class="card"><div class="icon">✍️</div><h3>Rich Text Editor</h3><p>Quill-based WYSIWYG for documents, notes, and formatted content.</p></div>
+    <div class="card"><div class="icon">💻</div><h3>Code Editor</h3><p>Monaco Editor (VS Code engine) with syntax highlighting and autocomplete.</p></div>
+    <div class="card"><div class="icon">🔄</div><h3>Real-time Sync</h3><p>Socket.io-powered live editing. See changes as they happen.</p></div>
+    <div class="card"><div class="icon">👥</div><h3>Collaborators</h3><p>Add users with read, write, or admin permission levels.</p></div>
+    <div class="card"><div class="icon">📜</div><h3>Version History</h3><p>Every save creates a snapshot. Restore any previous version.</p></div>
+    <div class="card"><div class="icon">💬</div><h3>Comments</h3><p>Threaded comments with real-time updates via Socket.io.</p></div>
+    <div class="card"><div class="icon">🔒</div><h3>Password Protection</h3><p>Bcrypt-hashed passwords protect notebooks from unauthorized access.</p></div>
+    <div class="card"><div class="icon">👤</div><h3>Guest Access</h3><p>Unauthenticated users register with a name and view public notebooks.</p></div>
+    <div class="card"><div class="icon">📱</div><h3>QR Sharing</h3><p>Generate QR codes for instant notebook sharing on mobile.</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 4: Tech Stack ═══════════════ -->
+<div class="slide" data-slide="3">
+  <h2>Tech Stack</h2>
+  <div class="grid grid-4 stagger" style="margin-top:2rem">
+    <div class="card center"><div class="icon">⚛️</div><h3>React 18</h3><p>Frontend UI</p></div>
+    <div class="card center"><div class="icon">🎨</div><h3>Material UI</h3><p>Component library</p></div>
+    <div class="card center"><div class="icon">🟢</div><h3>Node.js</h3><p>Backend runtime</p></div>
+    <div class="card center"><div class="icon">⚡</div><h3>Express</h3><p>API framework</p></div>
+    <div class="card center"><div class="icon">🍃</div><h3>MongoDB</h3><p>Database</p></div>
+    <div class="card center"><div class="icon">🔌</div><h3>Socket.io</h3><p>Real-time comms</p></div>
+    <div class="card center"><div class="icon">🔐</div><h3>JWT + bcrypt</h3><p>Authentication</p></div>
+    <div class="card center"><div class="icon">🐳</div><h3>Docker</h3><p>Deployment</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 5: Architecture ═══════════════ -->
+<div class="slide" data-slide="4">
+  <h2>System Architecture</h2>
+  <div class="max-w" style="margin-top:1.5rem">
+    <pre><code>
+┌─────────────────────────────────────────────────────────────┐
+│                     <span class="fn">React Frontend (pro/)</span>                    │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │ Editor   │  │ Dashboard│  │ Comments │  │ Auth     │    │
+│  │ Quill/   │  │ Card     │  │ Threaded │  │ Login/   │    │
+│  │ Monaco   │  │ Grid     │  │ Real-time│  │ Register │    │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘    │
+│       │              │              │              │          │
+│       └──────────────┴──────┬───────┴──────────────┘          │
+│                             │ <span class="cm">Axios + Socket.io Client</span>       │
+└─────────────────────────────┼─────────────────────────────────┘
+                              │
+┌─────────────────────────────┼─────────────────────────────────┐
+│                     <span class="fn">Express Backend (api/)</span>                   │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │ Routes   │  │ Socket.io│  │ Middleware│  │ Models   │    │
+│  │ REST API │  │ Events   │  │ Auth/CORS│  │ Mongoose │    │
+│  └────┬─────┘  └────┬─────┘  └──────────┘  └────┬─────┘    │
+│       │              │                            │          │
+└───────┼──────────────┼────────────────────────────┼──────────┘
+        │              │                            │
+   ┌────▼──────────────▼────┐              ┌────────▼────────┐
+   │    <span class="str">MongoDB</span>              │              │   <span class="str">Redis</span>          │
+   │  Notebooks, Users,     │              │  Socket.io      │
+   │  Comments, Versions    │              │  Adapter        │
+   └─────────────────────────┘              └─────────────────┘
+    </code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 6: Database Schema ═══════════════ -->
+<div class="slide" data-slide="5">
+  <h2>Database Schema</h2>
+  <div class="grid grid-2" style="margin-top:1.5rem;max-width:900px">
+    <div class="card">
+      <h3>📓 Notebook</h3>
+      <pre style="font-size:.8rem;padding:1rem;margin-top:.5rem"><code>title, content (XML), creatorID,
+permissions (everyone|private|
+  collaborators),
+collaborators [{userId, access}],
+password (bcrypt), version,
+tags, editorMode, language,
+urlIdentifier (unique), autoSave</code></pre>
+    </div>
+    <div class="card">
+      <h3>👤 User</h3>
+      <pre style="font-size:.8rem;padding:1rem;margin-top:.5rem"><code>name, email (unique),
+password (bcrypt), role,
+profilePicture,
+favorites [notebookIds],
+failedLoginAttempts,
+lockoutUntil, lastLogin</code></pre>
+    </div>
+    <div class="card">
+      <h3>💬 Comment</h3>
+      <pre style="font-size:.8rem;padding:1rem;margin-top:.5rem"><code>notebookId, content,
+author (user or guest),
+parentId (for replies),
+createdAt, updatedAt</code></pre>
+    </div>
+    <div class="card">
+      <h3>📸 NotebookVersion</h3>
+      <pre style="font-size:.8rem;padding:1rem;margin-top:.5rem"><code>notebookId, content (snapshot),
+version (number),
+createdBy (userId),
+changes (description),
+createdAt</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 7: API Endpoints ═══════════════ -->
+<div class="slide" data-slide="6">
+  <h2>API Endpoints</h2>
+  <div class="table-wrap" style="margin-top:1rem">
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method post">POST</span></td><td><code>/api/users/register</code></td><td>Register new user</td></tr>
+        <tr><td><span class="method post">POST</span></td><td><code>/api/users/login</code></td><td>Login, returns JWT</td></tr>
+        <tr><td><span class="method get">GET</span></td><td><code>/api/users/search?q=</code></td><td>Search users for collaboration</td></tr>
+        <tr><td><span class="method get">GET</span></td><td><code>/api/users/stats</code></td><td>Get user statistics (notebooks, collaborators, etc.)</td></tr>
+        <tr><td><span class="method get">GET</span></td><td><code>/api/users/activity</code></td><td>Get recent user activity (notebooks)</td></tr>
+        <tr><td><span class="method get">GET</span></td><td><code>/api/notebooks</code></td><td>List user's notebooks</td></tr>
+        <tr><td><span class="method post">POST</span></td><td><code>/api/notebooks</code></td><td>Create notebook</td></tr>
+        <tr><td><span class="method get">GET</span></td><td><code>/api/notebooks/:urlId</code></td><td>Get notebook (handles password/guest)</td></tr>
+        <tr><td><span class="method put">PUT</span></td><td><code>/api/notebooks/:id</code></td><td>Update (creates version snapshot)</td></tr>
+        <tr><td><span class="method delete">DELETE</span></td><td><code>/api/notebooks/:id</code></td><td>Delete + cleanup versions/comments</td></tr>
+        <tr><td><span class="method post">POST</span></td><td><code>/api/notebooks/:id/comments</code></td><td>Add threaded comment</td></tr>
+        <tr><td><span class="method post">POST</span></td><td><code>/api/notebooks/:id/versions/:vid/restore</code></td><td>Restore previous version</td></tr>
+        <tr><td><span class="method post">POST</span></td><td><code>/api/notebooks/:id/favorite</code></td><td>Toggle favorite</td></tr>
+        <tr><td><span class="method put">PUT</span></td><td><code>/api/notebooks/:id/collaborators</code></td><td>Manage collaborators</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 8: Real-time Flow ═══════════════ -->
+<div class="slide" data-slide="7">
+  <h2>Real-time Collaboration Flow</h2>
+  <div class="max-w" style="margin-top:1.5rem">
+    <pre><code>
+<span class="cm">// 1. User opens notebook</span>
+<span class="fn">socket.emit</span>(<span class="str">'joinNotebook'</span>, { notebookId, guestInfo })
+
+<span class="cm">// 2. User types in editor</span>
+<span class="fn">socket.emit</span>(<span class="str">'updateNotebook'</span>, { notebookId, content })
+
+<span class="cm">// 3. Server broadcasts to room</span>
+<span class="fn">socket.to(notebookId).emit</span>(<span class="str">'notebookUpdated'</span>, { content, updatedBy })
+
+<span class="cm">// 4. Other users receive update</span>
+<span class="fn">socket.on</span>(<span class="str">'notebookUpdated'</span>, (data) => {
+  <span class="kw">if</span> (data.updatedBy.id !== currentUser.id) {
+    setContent(processContent(data.content))
+  }
+})
+
+<span class="cm">// 5. Cursor positions (throttled 50ms)</span>
+<span class="fn">socket.emit</span>(<span class="str">'cursorPosition'</span>, { notebookId, position, selection })
+
+<span class="cm">// 6. Presence tracking</span>
+<span class="fn">socket.on</span>(<span class="str">'userJoined'</span>, (data) => setActiveUsers(...))
+<span class="fn">socket.on</span>(<span class="str">'userLeft'</span>, (data) => setActiveUsers(...))
+    </code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 9: Auth & Security ═══════════════ -->
+<div class="slide" data-slide="8">
+  <h2>Security Architecture</h2>
+  <div class="grid grid-3 stagger" style="margin-top:1.5rem">
+    <div class="card">
+      <div class="icon">🔐</div>
+      <h3>Authentication</h3>
+      <p>JWT tokens with configurable expiration. bcrypt password hashing with 10 salt rounds. Account lockout after 5 failed attempts with progressive delay.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🛡️</div>
+      <h3>Middleware Stack</h3>
+      <p>Helmet (security headers), express-rate-limit (100 req/15min), xss-sanitizer, mongo-sanitize, HPP (HTTP parameter pollution protection).</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔑</div>
+      <h3>Access Control</h3>
+      <p>Three permission levels: read, write, admin. Password protection with bcrypt. Guest access with name registration. Per-notebook permission model.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1.5rem;max-width:900px">
+    <h3>Permission Matrix</h3>
+    <div class="table-wrap" style="margin-top:.5rem">
+      <table>
+        <thead><tr><th>Role</th><th>View</th><th>Edit</th><th>Comment</th><th>Manage Collabs</th><th>Delete</th><th>Restore</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Owner</strong></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td><strong>Admin</strong></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td></tr>
+          <tr><td><strong>Writer</strong></td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+          <tr><td><strong>Reader</strong></td><td>✅</td><td>❌</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+          <tr><td><strong>Guest</strong></td><td>✅</td><td>❌</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 10: Testing ═══════════════ -->
+<div class="slide" data-slide="9">
+  <h2>Testing & Quality</h2>
+  <div class="flex" style="gap:3rem;margin-top:2rem;flex-wrap:wrap;justify-content:center">
+    <div class="stat"><div class="num">138</div><div class="label">Tests Passing</div></div>
+    <div class="stat"><div class="num">10</div><div class="label">Test Suites</div></div>
+    <div class="stat"><div class="num">0</div><div class="label">Failures</div></div>
+  </div>
+  <div class="grid grid-3 stagger" style="margin-top:2rem;max-width:900px">
+    <div class="card"><h3>Jest + Supertest</h3><p>API endpoint testing with MongoDB Memory Server for isolation.</p></div>
+    <div class="card"><h3>Socket.io Testing</h3><p>Real-time event testing for collaboration features.</p></div>
+    <div class="card"><h3>Coverage</h3><p>Auth, CRUD, versions, collaborators, cursors, sharing, management.</p></div>
+  </div>
+  <pre style="margin-top:1.5rem;font-size:.85rem"><code><span class="fn">cd</span> api && <span class="fn">npm</span> test              <span class="cm"># run all tests</span>
+<span class="fn">cd</span> api && <span class="fn">npm</span> run test:coverage  <span class="cm"># with coverage report</span></code></pre>
+</div>
+
+<!-- ═══════════════ SLIDE 11: Deployment ═══════════════ -->
+<div class="slide" data-slide="10">
+  <h2>Deployment Options</h2>
+  <div class="grid grid-2" style="margin-top:1.5rem;max-width:900px">
+    <div class="card">
+      <div class="icon">🐳</div>
+      <h3>Docker Compose</h3>
+      <p>Single command deployment with app, MongoDB, and Redis containers.</p>
+      <pre style="margin-top:.75rem;font-size:.8rem"><code><span class="fn">docker-compose</span> up -d</code></pre>
+    </div>
+    <div class="card">
+      <div class="icon">☸️</div>
+      <h3>Kubernetes</h3>
+      <p>Production-grade orchestration with manifests in <code>k8s/</code> directory.</p>
+      <pre style="margin-top:.75rem;font-size:.8rem"><code><span class="fn">kubectl</span> apply -f k8s/</code></pre>
+    </div>
+    <div class="card">
+      <div class="icon">🚀</div>
+      <h3>One-Command Start</h3>
+      <p>Local development with auto setup.</p>
+      <pre style="margin-top:.75rem;font-size:.8rem"><code><span class="fn">npm</span> run setup
+<span class="fn">npm</span> start</code></pre>
+    </div>
+    <div class="card">
+      <div class="icon">☁️</div>
+      <h3>Cloud Ready</h3>
+      <p>Supports AWS, GCP, Azure. nginx reverse proxy with SSL. Sentry error tracking.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 12: Project Status ═══════════════ -->
+<div class="slide" data-slide="11">
+  <h2>Project Status</h2>
+  <div class="grid grid-2" style="margin-top:1.5rem;max-width:900px">
+    <div>
+      <h3 style="color:var(--accent-green);margin-bottom:1rem">✅ Complete (Phases 1–6)</h3>
+      <div class="timeline">
+        <div class="timeline-item done"><h3>User Authentication</h3><p>JWT + bcrypt + account lockout</p></div>
+        <div class="timeline-item done"><h3>Notebook CRUD + Versions</h3><p>Full version history with restore</p></div>
+        <div class="timeline-item done"><h3>Real-time Comments</h3><p>Threaded, Socket.io-powered</p></div>
+        <div class="timeline-item done"><h3>Collaborator Management</h3><p>Read/write/admin levels</p></div>
+        <div class="timeline-item done"><h3>Remote Cursors</h3><p>Live presence indicators</p></div>
+        <div class="timeline-item done"><h3>Share Dialog + QR Code</h3><p>Social sharing integration</p></div>
+        <div class="timeline-item done"><h3>Modern UI Redesign</h3><p>Landing, Auth, Dashboard, Editor, Profile</p></div>
+        <div class="timeline-item done"><h3>Profile Page</h3><p>Real data, activity tracking, stats</p></div>
+      </div>
+    </div>
+    <div>
+      <h3 style="color:var(--accent-amber);margin-bottom:1rem">⏳ Roadmap (Phase 7+)</h3>
+      <div class="timeline">
+        <div class="timeline-item pending"><h3>Conflict Resolution UI</h3><p>Smart merge for concurrent edits</p></div>
+        <div class="timeline-item pending"><h3>Export / Import</h3><p>JSON, Markdown, PDF formats</p></div>
+        <div class="timeline-item pending"><h3>Mobile Responsiveness</h3><p>Optimized mobile editor</p></div>
+        <div class="timeline-item pending"><h3>Offline Support</h3><p>Service workers + local queue</p></div>
+        <div class="timeline-item pending"><h3>TypeScript Migration</h3><p>Better type safety</p></div>
+        <div class="timeline-item pending"><h3>E2E Testing</h3><p>Playwright/Cypress integration</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 13: Quick Start ═══════════════ -->
+<div class="slide" data-slide="12">
+  <h2>Quick Start</h2>
+  <pre style="margin-top:1.5rem;text-align:left"><code><span class="cm"># Clone and start everything</span>
+<span class="fn">git</span> clone https://github.com/PritOrg/Sync-Not-Net.git
+<span class="fn">cd</span> Sync-Not-Net
+<span class="fn">npm</span> run setup    <span class="cm"># install deps + create .env files</span>
+<span class="fn">npm</span> start        <span class="cm"># backend :5000 + frontend :3000</span>
+
+<span class="cm"># Or start manually</span>
+<span class="fn">cd</span> api && <span class="fn">npm</span> install && <span class="fn">npm</span> start   <span class="cm"># terminal 1</span>
+<span class="fn">cd</span> pro && <span class="fn">npm</span> install && <span class="fn">npm</span> start   <span class="cm"># terminal 2</span>
+
+<span class="cm"># Run tests</span>
+<span class="fn">cd</span> api && <span class="fn">npm</span> test</code></pre>
+  <div class="flex" style="margin-top:2rem;gap:1.5rem;flex-wrap:wrap;justify-content:center">
+    <div class="card" style="padding:1rem 1.5rem">
+      <h3>🌐 Frontend</h3>
+      <p style="margin:0"><code>http://localhost:3000</code></p>
+    </div>
+    <div class="card" style="padding:1rem 1.5rem">
+      <h3>🔌 Backend</h3>
+      <p style="margin:0"><code>http://localhost:5000</code></p>
+    </div>
+    <div class="card" style="padding:1rem 1.5rem">
+      <h3>🗄️ MongoDB</h3>
+      <p style="margin:0"><code>mongodb://localhost:27017</code></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 14: Thank You ═══════════════ -->
+<div class="slide" data-slide="13">
+  <div style="font-size:4rem;margin-bottom:1rem" class="float">🚀</div>
+  <h1>Thank You</h1>
+  <p class="lead" style="margin-top:1rem">
+    Sync Note Net — Collaborative note-taking,<br>reimagined.
+  </p>
+  <div class="flex" style="margin-top:2rem;gap:1rem;flex-wrap:wrap;justify-content:center">
+    <span class="badge" style="background:rgba(34,197,94,.15);color:#22c55e">138 Tests</span>
+    <span class="badge" style="background:rgba(99,102,241,.15);color:#818cf8">MERN Stack</span>
+    <span class="badge" style="background:rgba(6,182,212,.15);color:#06b6d4">Real-time</span>
+    <span class="badge" style="background:rgba(245,158,11,.15);color:#f59e0b">Open Source</span>
+  </div>
+  <p style="margin-top:2rem;color:var(--text-dim);font-size:.9rem">
+    <code>github.com/PritOrg/Sync-Not-Net</code>
+  </p>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prev" aria-label="Previous slide">◀</button>
+  <span class="counter" id="counter">1 / 14</span>
+  <button id="next" aria-label="Next slide">▶</button>
+</div>
+<div class="keys"><kbd>←</kbd> <kbd>→</kbd> or click to navigate</div>
+
+<script>
+(function(){
+  const slides=document.querySelectorAll('.slide');
+  const total=slides.length;
+  let current=0;
+  const counter=document.getElementById('counter');
+  const progress=document.getElementById('progress');
+
+  function go(n){
+    if(n<0||n>=total)return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(()=>slides[current===n?current:n-1<0?total-1:current].classList.remove('exit'),500);
+    // clean all
+    slides.forEach(s=>{s.classList.remove('active','exit')});
+    current=n;
+    slides[current].classList.add('active');
+    counter.textContent=`${current+1} / ${total}`;
+    progress.style.width=`${((current+1)/total)*100}%`;
+  }
+
+  document.getElementById('prev').onclick=()=>go(current-1);
+  document.getElementById('next').onclick=()=>go(current+1);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' ')go(current+1);
+    if(e.key==='ArrowLeft')go(current-1);
+  });
+
+  // Touch/swipe
+  let sx=0;
+  document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX});
+  document.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx;
+    if(dx<-50)go(current+1);
+    if(dx>50)go(current-1);
+  });
+
+  // Init
+  progress.style.width=`${(1/total)*100}%`;
+})();
+</script>
+</body>
+</html>
