@@ -34,6 +34,10 @@ cd api && npm test
 - Remote cursors (basic implementation)
 - Share dialog with QR code
 - Modern UI (Landing, Auth, Dashboard, Editor pages)
+- Centralized error handling for API responses
+- **Profile page with real data, activity tracking, and enhanced stats**
+- **Improved notebook listing (owned + shared notebooks only)**
+- **Redesigned presentation.html with modern UI/UX**
 
 ### ⚠️ Needs Work
 - Phase 6: Conflict resolution dialog (placeholder exists)
@@ -63,24 +67,29 @@ cd api && npm test
 | `pro/src/NotebookEditorPage/ShareDialog.jsx` | Share with QR code |
 | `pro/src/NotebookEditorPage/UnifiedAccessPrompt.jsx` | Guest name + password prompts |
 | `pro/src/NotebooksPage/NotebooksDashboard.jsx` | Dashboard with filters |
-| `pro/src/SigninSignup/ModernAuthPage.jsx` | Login/Register |
+| `pro/src/SigninSignup/ModernAuthPage.jsx` | Login/Register (enhanced error handling) |
 | `pro/src/LandingPage/ModernLandingPage.jsx` | Landing page |
+| `pro/src/Profile/ProfilePage.jsx` | User profile with activity tracking, stats, last login |
 | `pro/src/Components/EnhancedEditor.jsx` | Monaco/Quill editor wrapper |
 | `pro/src/Components/RemoteCursorsOverlay.jsx` | Remote cursor display |
 | `pro/src/Components/ToastProvider.jsx` | Global notifications |
+| `pro/src/utils/errorHandler.js` | API error handling utilities |
+| `pro/src/utils/apiRoutes.js` | API route definitions (includes new endpoints) |
 
 ## API Endpoints
 
 ### Auth
 - `POST /api/users/register` - Register
 - `POST /api/users/login` - Login
-- `GET /api/users/profile` - Get profile
+- `GET /api/users/profile` - Get profile (includes lastLogin, profilePicture)
+- `GET /api/users/stats` - Get user statistics (notebooks, collaborators, etc.)
+- `GET /api/users/activity` - Get recent user activity (notebooks)
 - `GET /api/users/search?q=name` - Search users (returns array directly)
 
 ### Notebooks
-- `GET /api/notebooks` - List user's notebooks
+- `GET /api/notebooks` - List owned + shared notebooks (excludes public notebooks)
 - `GET /api/notebooks/favorites` - Get favorites
-- `GET /api/notebooks/shared` - Get shared notebooks
+- `GET /api/notebooks/shared` - Get shared notebooks (excludes own notebooks)
 - `POST /api/notebooks` - Create notebook
 - `GET /api/notebooks/:urlId` - Get notebook (handles password/guest flow)
 - `PUT /api/notebooks/:id` - Update notebook (creates version)
@@ -106,6 +115,16 @@ cd api && npm test
 - `GET /api/notebooks/:id/versions` - List versions
 - `GET /api/notebooks/:id/versions/:versionId` - Get version content
 - `POST /api/notebooks/:id/versions/:versionId/restore` - Restore version
+
+## Error Handling Utilities
+
+`pro/src/utils/errorHandler.js` provides centralized error handling:
+- `getErrorMessage(error)` - Extracts user-friendly messages from API errors (handles 400, 401, 403, 404, 409, 422, 429, 500+)
+- `getErrorCode(error)` - Returns error code from response or HTTP status
+- `isAuthError(error)` - Checks for 401/403 authentication errors
+- `isNetworkError(error)` - Detects network/connection failures
+- `isValidationError(error)` - Identifies validation errors (400 or VALIDATION_ERROR)
+- `getValidationErrors(error)` - Extracts field-level validation errors from `details` array
 
 ## Password Protection Flow
 1. User accesses notebook via URL
@@ -144,14 +163,49 @@ cd api && npm test
 5. ✅ `notebookData._id` optional chaining throughout
 6. ✅ Duplicate routes removed
 7. ✅ Unused components removed
+8. ✅ Centralized error handling utilities added (`errorHandler.js`)
+9. ✅ ModernAuthPage and ProfilePage use enhanced error handling
+10. ✅ Fixed stats endpoint to return correct notebook counts (using `creatorID`, `collaborators.userId`, `permissions: 'everyone'`)
+11. ✅ Added activity endpoint for recent notebook activity
+12. ✅ Added `lastLogin` and `profilePicture` to user profile responses
+13. ✅ Fixed notebook listing to exclude public notebooks (dashboard now shows owned + shared only)
+14. ✅ Fixed collaborator populate calls to use `collaborators.userId`
+15. ✅ Updated presentation.html with modern UI/UX design and updated content
 
-## Recent Commits
+## Recent Changes (March 29, 2026)
+
+### Backend Fixes (Commit: 62680f7)
+- Fixed user stats endpoint field names (`creatorID`, `collaborators.userId`, `permissions: 'everyone'`)
+- Added activity endpoint `GET /api/users/activity` for recent notebook activity
+- Enhanced user profile with `lastLogin` and `profilePicture` fields
+- Added comment schema with likes support and normalization
+- Added collaboration request model and routes
+- Security middleware updates (rate limiting, helmet, etc.)
+
+### Frontend Improvements (Commit: 842e990)
+- Profile page with real data, activity tracking, and enhanced stats
+- Improved dashboard (owned + shared notebooks only)
+- Share dialog with URL personalization (quick edit + advanced settings)
+- Comment panel with real-time sync and deduplication
+- Centralized error handling utilities (`errorHandler.js`, `apiRoutes.js`)
+- Notebook URL settings dialog for personalization
+
+### Presentation Updates (Commit: 5a2ca47)
+- Complete UI/UX redesign with modern CSS (gradients, glass-morphism)
+- Updated content reflecting current implementation
+- Added profile page to completed features
+
+### Bug Fixes (Commit: f9c98f3)
+- Fixed `onUrlSettings` undefined error in SettingsDrawerContent
+- Fixed `item.onClick is not a function` error with defensive guards
+- Fixed guest access blank skeleton by preventing unnecessary refetch after registration
+
+### Recent Commits
 ```
-177bf46 fix: Password prompt and collaborator search now working correctly
-dee9420 fix: Add onSave callbacks to Password and Permissions dialogs
-0e3951b feat(ui): Add favorites and shared notebooks filtering to dashboard
-e87fd2a feat: Add favorites, shared notebooks, guest access, and 25 new TDD tests
-7efb9a3 cleanup: Remove 6 unused/replaced component files
+f9c98f3 Fix guest access blank skeleton by preventing unnecessary refetch
+5a2ca47 Update README and presentation with latest features
+842e990 Frontend improvements: profile page, dashboard, share dialog, error handling
+62680f7 Backend fixes: user stats, notebook queries, comment schema, security updates
 ```
 
 ## Test Suites (138 tests, all passing)
@@ -164,9 +218,19 @@ e87fd2a feat: Add favorites, shared notebooks, guest access, and 25 new TDD test
 - `management.test.js` - Password/favorites/shared/guests (25 tests)
 - `auth.test.js`, `health.test.js`, `notebookVersions.test.js`
 
-## Next Steps for New Agent
-1. Implement conflict resolution dialog (placeholder exists in EnhancedNotebookEditor)
-2. Add export/import functionality
-3. Improve mobile responsiveness
-4. Add offline support with service workers
-5. Consider TypeScript migration for better type safety
+## Priority Tasks (Do These First)
+
+1. **Profile page enhancements** — ✅ Completed (real data, activity tracking, stats)
+2. **Notebook listing fixes** — ✅ Completed (correct queries, owned + shared only)
+3. **Presentation updates** — ✅ Completed (modern UI/UX, updated content)
+4. **Fix test timeout** — `npm test` hangs (MongoMemoryServer.create() in beforeAll)
+5. **Conflict resolution dialog** — placeholder in EnhancedNotebookEditor.jsx
+6. **Export/import** — notebooks as JSON/Markdown/PDF
+7. **Mobile responsiveness** — editor and dashboard
+8. **Offline support** — service workers, local queue
+9. **JWT_SECRET enforcement** — remove fallback, fail fast in production
+10. **Login throttling / account lockout** — progressive delay on failed attempts
+
+## Agent Onboarding
+
+Read `HANDOFF.md` in project root for full context: file locations, env vars, import conventions, API endpoints, socket events, and known issues.
