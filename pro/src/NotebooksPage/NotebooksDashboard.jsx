@@ -121,14 +121,27 @@ const NotebookCard = ({ notebook, onEdit, onDelete, onShare, onToggleFavorite, i
                 <BookOutlined sx={{ fontSize: 18, color: theme.palette.primary.main }} />
               </Box>
 
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography variant="subtitle1" fontWeight={600} noWrap>
-                  {notebook.title || 'Untitled'}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" noWrap>
-                  {notebook.content?.replace(/<[^>]+>/g, '').slice(0, 80) || 'No content'}
-                </Typography>
-              </Box>
+               <Box sx={{ flex: 1, minWidth: 0 }}>
+                 <Typography variant="subtitle1" fontWeight={600} noWrap>
+                   {notebook.title || 'Untitled'}
+                 </Typography>
+                 {notebook.collaborators && notebook.collaborators.length > 0 && (
+                   <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5 }}>
+                     <AvatarGroup max={2} sx={{ '& .MuiAvatar-root': { width: 20, height: 20, fontSize: '0.6rem' } }}>
+                       {notebook.collaborators.map((collab, i) => (
+                         <Tooltip title={`${collab.userId?.name || 'Unknown'} (${collab.userId?.email || ''})`} key={i}>
+                           <Avatar sx={{ bgcolor: theme.palette.secondary.main }}>
+                             {(collab.userId?.name || 'U').charAt(0).toUpperCase()}
+                           </Avatar>
+                         </Tooltip>
+                       ))}
+                     </AvatarGroup>
+                   </Box>
+                 )}
+                 <Typography variant="body2" color="text.secondary" noWrap>
+                   {notebook.content?.replace(/<[^>]+>/g, '').slice(0, 80) || 'No content'}
+                 </Typography>
+               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
                 <Chip
@@ -276,6 +289,21 @@ const NotebookCard = ({ notebook, onEdit, onDelete, onShare, onToggleFavorite, i
           >
             {notebook.title || 'Untitled'}
           </Typography>
+
+          {/* Collaborators */}
+          {notebook.collaborators && notebook.collaborators.length > 0 && (
+            <Box sx={{ mb: 1 }}>
+              <AvatarGroup max={3} sx={{ justifyContent: 'flex-start' }}>
+                {notebook.collaborators.map((collab, i) => (
+                  <Tooltip title={`${collab.userId?.name || 'Unknown'} (${collab.userId?.email || ''})`} key={i}>
+                    <Avatar sx={{ width: 24, height: 24, fontSize: '0.7rem', bgcolor: theme.palette.primary.main }}>
+                      {(collab.userId?.name || 'U').charAt(0).toUpperCase()}
+                    </Avatar>
+                  </Tooltip>
+                ))}
+              </AvatarGroup>
+            </Box>
+          )}
 
           {/* Preview */}
           <Typography
