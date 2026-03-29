@@ -18,6 +18,7 @@ import {
   Paper,
   alpha,
   Avatar,
+  AvatarGroup,
   Stack,
   Divider,
   Tooltip,
